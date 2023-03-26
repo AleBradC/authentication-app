@@ -1,10 +1,20 @@
 import express from "express";
 import { Request, Response } from "express";
 
-const router = express.Router();
+import connectDB from "../connectionDB";
+import { User } from "../entities/User";
+import authencatication from "../middlewares/authentication";
 
-router.get("/api/users", (req: Request, res: Response) => {
-  return res.status(200).send("TEST");
-});
+const usersRoute = express.Router();
 
-export { router as userRoute };
+usersRoute.get(
+  "/api/users",
+  authencatication,
+  async (req: Request, res: Response) => {
+    const result = await connectDB.getRepository(User).find();
+
+    res.send(result);
+  }
+);
+
+export default usersRoute;

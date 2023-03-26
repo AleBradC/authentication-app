@@ -4,13 +4,14 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 
+import connectDB from "../connectionDB";
 import { User } from "../entities/User";
-import { connectDB } from "../connectionDB";
 
 dotenv.config();
-const router = express.Router();
 
-router.post("/api/register", async (req: Request, res: Response) => {
+const registerRoute = express.Router();
+
+registerRoute.post("/api/register", async (req: Request, res: Response) => {
   try {
     const { firstName, lastName, email, password } = req.body;
 
@@ -25,27 +26,29 @@ router.post("/api/register", async (req: Request, res: Response) => {
     if (existedUser) {
       return res.status(409).send("User already exists");
     }
-    // Encrypt the user password.
+
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(password, salt);
 
-    // Create token
-
-    // Create a user in our database.
     const user = connectDB.getRepository(User).create({
       first_name: firstName,
       last_name: lastName,
       email: email,
       password: passwordHash,
-      // token: token,
     });
 
+    const accesToken = jwt.sign(
+      { user: user.id },
+      process.env.ACCESS_TOKEN_SECRET as string,
+      { expiresIn: "2h" }
+    );
+    user.token = accesToken;
+
     await connectDB.getRepository(User).save(user);
-    // return the user
     return res.status(201).json(user);
   } catch (error) {
     throw error;
   }
 });
 
-export { router as registerRoute };
+export default registerRoute;

@@ -1,7 +1,7 @@
 import { DataSource } from "typeorm";
 import { User } from "./entities/User";
 
-export const connectDB = new DataSource({
+const connectDB = new DataSource({
   type: "postgres",
   host: process.env.HOST,
   port: 5432,
@@ -11,3 +11,5 @@ export const connectDB = new DataSource({
   entities: [User],
   synchronize: true,
 });
+
+export default connectDB;
