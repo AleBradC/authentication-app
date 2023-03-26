@@ -3,7 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import * as dotenv from "dotenv";
 
-import connectDB from "./connectionDB";
+import connectDB from "./dataBase/connectionDB";
 import registerRoute from "./routes/register";
 import loginRoute from "./routes/login";
 import usersRoute from "./routes/users";

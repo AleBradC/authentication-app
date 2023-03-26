@@ -1,8 +1,8 @@
 import express from "express";
 import { Request, Response } from "express";
 
-import connectDB from "../connectionDB";
-import { User } from "../entities/User";
+import connectDB from "../dataBase/connectionDB";
+import { User } from "../dataBase/entities/User";
 import authencatication from "../middlewares/authentication";
 
 const usersRoute = express.Router();

@@ -4,8 +4,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 
-import connectDB from "../connectionDB";
-import { User } from "../entities/User";
+import connectDB from "../dataBase/connectionDB";
+import { User } from "../dataBase/entities/User";
 
 dotenv.config();
 

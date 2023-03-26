@@ -19,4 +19,9 @@ export class User {
 
   @Column()
   token: string;
+
+  @Column({
+    default: "normalUser",
+  })
+  role: string;
 }

@@ -6,9 +6,9 @@ dotenv.config();
 
 const authencatication = (req: Request, res: Response, next: NextFunction) => {
   try {
-    const authHeader = req.headers["authorization"];
+    const authHeader = req.headers.authorization;
     if (!authHeader) {
-      res.status(401).json("Unauthorized");
+      return res.status(401).json("Unauthorized");
     }
     const token = authHeader!.split(" ")[1];
     const decode = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string);
