@@ -1,8 +1,12 @@
 import express from "express";
+import cors from "cors";
+import helmet from "helmet";
 import * as dotenv from "dotenv";
 
-import { connectDB } from "./connectionDB";
-import { getUsersRoute } from "./routes/getUsers";
+import connectDB from "./connectionDB";
+import registerRoute from "./routes/register";
+import loginRoute from "./routes/login";
+import usersRoute from "./routes/users";
 
 dotenv.config();
 const PORT = process.env.PORT;
@@ -15,7 +19,12 @@ connectDB
     console.log("Data base has been initialized");
 
     app.use(express.json());
-    app.use(getUsersRoute);
+    app.use(cors());
+    app.use(helmet());
+
+    app.use(usersRoute);
+    app.use(registerRoute);
+    app.use(loginRoute);
 
     app.listen(PORT, () => {
       console.log(`Listen on server ${PORT}`);
