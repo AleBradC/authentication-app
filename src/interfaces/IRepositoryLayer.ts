@@ -1,10 +1,10 @@
-import { User } from "../dataBase/entities/User";
+import { UserDTO } from "./DTOs/UserDTO";
 import { IUser } from "./IUser";
 
 export interface IRepositoryLayer {
-  findAll: () => void;
-  findOneByEmail: (email: string) => Promise<User | null>;
-  createUser: (details: IUser) => Promise<User>;
-  saveUser: (currentUser: IUser) => Promise<User | null>;
+  findAll: () => Promise<UserDTO[]>;
+  findOneByEmail: (email: string) => Promise<UserDTO | null>;
+  findOneById: (itemId: number) => Promise<UserDTO | null>;
+  createUser: (details: IUser) => Promise<UserDTO | null>;
+  saveUser: (currentUser: IUser) => Promise<UserDTO | null>;
 }
-export { IUser };

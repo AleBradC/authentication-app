@@ -1,3 +1,5 @@
+import { UserDTO } from "./DTOs/UserDTO";
+
 export interface IUserDetails {
   id?: number;
   firstName: string;
@@ -14,7 +16,7 @@ export interface IUserLogin {
 }
 
 export interface IAuthService {
-  register: (data: IUserDetails) => void;
-  login: (data: IUserLogin) => void;
+  register: (data: IUserDetails) => Promise<UserDTO | string>;
+  login: (data: IUserLogin) => Promise<UserDTO | string>;
   // logout: () => void;
 }

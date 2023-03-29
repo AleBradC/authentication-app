@@ -41,6 +41,7 @@ export class AuthService implements IAuthService {
     user.token = accesToken;
 
     await this.repository.saveUser(user);
+    // const response = await this.repository.findOneById(user.id);
 
     return user;
   };

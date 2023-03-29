@@ -1,3 +1,5 @@
+import { UserDTO } from "./DTOs/UserDTO";
+
 export interface IUsersService {
-  getAllUsers: () => void;
+  getAllUsers: () => Promise<UserDTO[]>;
 }
