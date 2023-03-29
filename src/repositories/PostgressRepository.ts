@@ -1,5 +1,4 @@
 import { Service } from "typedi";
-import "reflect-metadata";
 
 import connectDB from "../dataBase/connectionDB";
 import { User } from "../dataBase/entities/User";

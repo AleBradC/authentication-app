@@ -1,15 +1,22 @@
 import { Service, Container } from "typedi";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import * as dotenv from "dotenv";
 
-import { IAuthService, UserDetails } from "../interfaces/IAuthService";
+dotenv.config();
+
+import {
+  IAuthService,
+  IUserDetails,
+  IUserLogin,
+} from "../interfaces/IAuthService";
 import { PostgressRepository } from "../repositories/PostgressRepository";
 
 @Service()
 export class AuthService implements IAuthService {
   private repository = Container.get(PostgressRepository);
 
-  register = async (details: UserDetails) => {
+  register = async (details: IUserDetails) => {
     const existingUser = await this.repository.findOneByEmail(details.email);
 
     if (existingUser) {
@@ -37,6 +44,24 @@ export class AuthService implements IAuthService {
 
     return user;
   };
-  // login = () => void;
+
+  login = async (details: IUserLogin) => {
+    const user = await this.repository.findOneByEmail(details.email);
+
+    if (!user) {
+      return "Invalid credential";
+    }
+
+    await bcrypt.compare(details.password, user.password);
+
+    const token = jwt.sign(
+      { user: user.id },
+      process.env.ACCESS_TOKEN_SECRET as string,
+      { expiresIn: "2h" }
+    );
+    user.token = token;
+
+    return user;
+  };
   // logout = () => void;
 }

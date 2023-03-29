@@ -1,4 +1,4 @@
-export interface UserDetails {
+export interface IUserDetails {
   id?: number;
   firstName: string;
   lastName: string;
@@ -8,8 +8,13 @@ export interface UserDetails {
   role?: string;
 }
 
+export interface IUserLogin {
+  email: string;
+  password: string;
+}
+
 export interface IAuthService {
-  register: (type: UserDetails) => void;
-  // login: () => void;
+  register: (data: IUserDetails) => void;
+  login: (data: IUserLogin) => void;
   // logout: () => void;
 }

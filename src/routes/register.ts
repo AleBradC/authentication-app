@@ -1,11 +1,8 @@
 import express from "express";
 import { Request, Response } from "express";
-import * as dotenv from "dotenv";
-
 import Container from "typedi";
-import { AuthService } from "../services/AuthService";
 
-dotenv.config();
+import { AuthService } from "../services/AuthService";
 
 const registerRoute = express.Router();
 

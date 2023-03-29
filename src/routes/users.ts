@@ -1,10 +1,8 @@
 import express from "express";
 import { Request, Response } from "express";
-import "reflect-metadata";
 import { Container } from "typedi";
 
 import { UsersService } from "../services/UsersService";
-import authencatication from "../middlewares/authentication";
 
 const usersRoute = express.Router();
 

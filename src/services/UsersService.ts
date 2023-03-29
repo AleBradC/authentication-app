@@ -1,5 +1,4 @@
 import { Service, Container } from "typedi";
-import "reflect-metadata";
 
 import { PostgressRepository } from "../repositories/PostgressRepository";
 import { IUsersService } from "../interfaces/IUsersService";
