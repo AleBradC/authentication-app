@@ -1,17 +1,14 @@
 import express from "express";
 import { Request, Response } from "express";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import * as dotenv from "dotenv";
+import Container from "typedi";
 
-import connectDB from "../dataBase/connectionDB";
-import { User } from "../dataBase/entities/User";
-
-dotenv.config();
+import { AuthService } from "../services/AuthService";
 
 const registerRoute = express.Router();
 
 registerRoute.post("/api/register", async (req: Request, res: Response) => {
+  const authService = Container.get(AuthService);
+
   try {
     const { firstName, lastName, email, password } = req.body;
 
@@ -19,33 +16,14 @@ registerRoute.post("/api/register", async (req: Request, res: Response) => {
       return res.status(400).send("All inputs are required");
     }
 
-    const existedUser = await connectDB.getRepository(User).findOneBy({
+    const response = await authService.register({
+      firstName: firstName,
+      lastName: lastName,
       email: email,
+      password: password,
     });
 
-    if (existedUser) {
-      return res.status(409).send("User already exists");
-    }
-
-    const salt = await bcrypt.genSalt();
-    const passwordHash = await bcrypt.hash(password, salt);
-
-    const user = connectDB.getRepository(User).create({
-      first_name: firstName,
-      last_name: lastName,
-      email: email,
-      password: passwordHash,
-    });
-
-    const accesToken = jwt.sign(
-      { user: user.id },
-      process.env.ACCESS_TOKEN_SECRET as string,
-      { expiresIn: "2h" }
-    );
-    user.token = accesToken;
-
-    await connectDB.getRepository(User).save(user);
-    return res.status(201).json(user);
+    return res.status(200).json(response);
   } catch (error) {
     throw error;
   }

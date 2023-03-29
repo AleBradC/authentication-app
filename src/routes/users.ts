@@ -1,20 +1,16 @@
 import express from "express";
 import { Request, Response } from "express";
+import { Container } from "typedi";
 
-import connectDB from "../dataBase/connectionDB";
-import { User } from "../dataBase/entities/User";
-import authencatication from "../middlewares/authentication";
+import { UsersService } from "../services/UsersService";
 
 const usersRoute = express.Router();
 
-usersRoute.get(
-  "/api/users",
-  authencatication,
-  async (req: Request, res: Response) => {
-    const result = await connectDB.getRepository(User).find();
+usersRoute.get("/api/users", async (req: Request, res: Response) => {
+  const userService = Container.get(UsersService);
+  const result = await userService.getAllUsers();
 
-    res.send(result);
-  }
-);
+  return res.send(result);
+});
 
 export default usersRoute;
