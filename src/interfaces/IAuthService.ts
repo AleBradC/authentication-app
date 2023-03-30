@@ -1,5 +1,3 @@
-import { UserDTO } from "./DTOs/UserDTO";
-
 export interface IUserDetails {
   firstName: string;
   lastName: string;

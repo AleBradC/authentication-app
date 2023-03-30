@@ -1,6 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Team } from "./Team";
 
-@Entity()
+type IUserRole = "normal" | "member" | "admin";
+
+@Entity("users")
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -18,7 +21,12 @@ export class User {
   password: string;
 
   @Column({
-    default: "normalUser",
+    default: "normal",
   })
-  role: string;
+  role: IUserRole;
+
+  @Column({
+    default: [],
+  })
+  teams: Team[];
 }

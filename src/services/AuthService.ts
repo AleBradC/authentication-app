@@ -16,7 +16,9 @@ export class AuthService implements IAuthService {
   private repository = Container.get(PostgressRepository);
 
   register = async (details: IUserDetails) => {
-    const existingUser = await this.repository.findOneByEmail(details.email);
+    const existingUser = await this.repository.findOneUserByEmail(
+      details.email
+    );
 
     if (existingUser) {
       return "User already exists";
@@ -41,7 +43,7 @@ export class AuthService implements IAuthService {
   };
 
   login = async (details: IUserLogin) => {
-    const user = await this.repository.findOneByEmail(details.email);
+    const user = await this.repository.findOneUserByEmail(details.email);
 
     if (!user) {
       return "Invalid credential";

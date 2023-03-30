@@ -4,13 +4,13 @@ import connectDB from "../dataBase/connectionDB";
 import { User } from "../dataBase/entities/User";
 import { IUser } from "../interfaces/IUser";
 
-import { IRepositoryLayer } from "../interfaces/IRepositoryLayer";
+import { IUserRepositoryLayer } from "../interfaces/IRepositoryLayer";
 
 @Service()
-export class PostgressRepository implements IRepositoryLayer {
+export class PostgressRepository implements IUserRepositoryLayer {
   private db_connection = connectDB;
 
-  findAll = async () => {
+  findAllUsers = async () => {
     return await this.db_connection.getRepository(User).find({
       select: {
         first_name: true,
@@ -21,13 +21,13 @@ export class PostgressRepository implements IRepositoryLayer {
     });
   };
 
-  findOneByEmail = async (email: string) => {
+  findOneUserByEmail = async (email: string) => {
     return await this.db_connection.getRepository(User).findOneBy({
       email: email,
     });
   };
 
-  findOneById = async (itemId: number) => {
+  findOneUserById = async (itemId: number) => {
     return await this.db_connection.getRepository(User).findOneBy({
       id: itemId,
     });

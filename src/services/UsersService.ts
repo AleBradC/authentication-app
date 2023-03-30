@@ -8,10 +8,10 @@ export class UsersService implements IUsersService {
   private repository = Container.get(PostgressRepository);
 
   getAllUsers = async () => {
-    return await this.repository.findAll();
+    return await this.repository.findAllUsers();
   };
 
-  findUserById = async (id: number) => {
-    return await this.repository.findOneById(id);
+  getUserById = async (id: number) => {
+    return await this.repository.findOneUserById(id);
   };
 }

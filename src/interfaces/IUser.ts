@@ -4,3 +4,7 @@ export interface IUser {
   email: string;
   password: string;
 }
+
+// to do role - se schimba
+// teams - unde e admin
+// teams - unde e membru
