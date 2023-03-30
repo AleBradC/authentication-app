@@ -1,13 +1,10 @@
 import { UserDTO } from "./DTOs/UserDTO";
 
 export interface IUserDetails {
-  id?: number;
   firstName: string;
   lastName: string;
   email: string;
   password: string;
-  token?: string;
-  role?: string;
 }
 
 export interface IUserLogin {
@@ -15,8 +12,12 @@ export interface IUserLogin {
   password: string;
 }
 
+export interface IUserToken {
+  accessToken: string;
+}
+
 export interface IAuthService {
-  register: (data: IUserDetails) => Promise<UserDTO | string>;
-  login: (data: IUserLogin) => Promise<UserDTO | string>;
+  register: (data: IUserDetails) => Promise<IUserToken | string>;
+  login: (data: IUserLogin) => Promise<IUserToken | string>;
   // logout: () => void;
 }

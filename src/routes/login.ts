@@ -21,7 +21,7 @@ loginRoute.post("/api/login", async (req: Request, res: Response) => {
       password: password,
     });
 
-    return res.status(200).json(response);
+    return res.status(200).json({ accessToken: response });
   } catch (error) {
     throw error;
   }

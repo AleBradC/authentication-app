@@ -1,23 +1,24 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import * as dotenv from "dotenv";
+import config from "../../config";
 
-dotenv.config();
+const jwt_secret = config.jwt_secret;
 
-const authencatication = (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-      return res.status(401).json("Unauthorized");
-    }
-    const token = authHeader!.split(" ")[1];
-    const decode = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string);
-    req.body.user = decode;
-  } catch (error) {
-    return res.status(404).json("some error");
+const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  const token = req.header("x-auth-token");
+
+  if (!token) {
+    return res.status(403).send("A token is required for authentication");
   }
 
+  try {
+    const decoded = jwt.verify(token, jwt_secret!);
+
+    req.body = decoded;
+  } catch (err) {
+    return res.status(401).send("Invalid Token");
+  }
   return next();
 };
 
-export default authencatication;
+export default authMiddleware;

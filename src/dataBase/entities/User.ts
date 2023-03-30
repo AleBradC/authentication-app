@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -16,9 +16,6 @@ export class User {
 
   @Column()
   password: string;
-
-  @Column()
-  token: string;
 
   @Column({
     default: "normalUser",

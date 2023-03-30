@@ -10,4 +10,8 @@ export class UsersService implements IUsersService {
   getAllUsers = async () => {
     return await this.repository.findAll();
   };
+
+  findUserById = async (id: number) => {
+    return await this.repository.findOneById(id);
+  };
 }
