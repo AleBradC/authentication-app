@@ -38,12 +38,10 @@ export class AuthService implements IAuthService {
       process.env.ACCESS_TOKEN_SECRET as string,
       { expiresIn: "2h" }
     );
-    user.token = accesToken;
 
     await this.repository.saveUser(user);
-    // const response = await this.repository.findOneById(user.id);
 
-    return user;
+    return accesToken;
   };
 
   login = async (details: IUserLogin) => {
@@ -55,14 +53,13 @@ export class AuthService implements IAuthService {
 
     await bcrypt.compare(details.password, user.password);
 
-    const token = jwt.sign(
+    const accesToken = jwt.sign(
       { user: user.id },
       process.env.ACCESS_TOKEN_SECRET as string,
       { expiresIn: "2h" }
     );
-    user.token = token;
 
-    return user;
+    return accesToken;
   };
   // logout = () => void;
 }

@@ -5,18 +5,23 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 const authencatication = (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-      return res.status(401).json("Unauthorized");
-    }
-    const token = authHeader!.split(" ")[1];
-    const decode = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string);
-    req.body.user = decode;
-  } catch (error) {
-    return res.status(404).json("some error");
+  const token =
+    req.body.token || req.query.token || req.headers["x-access-token"];
+
+  if (!token) {
+    return res.status(403).send("A token is required for authentication");
   }
 
+  try {
+    const decoded = jwt.verify(
+      token,
+      process.env.ACCESS_TOKEN_SECRET as string
+    );
+
+    req.body = decoded;
+  } catch (err) {
+    return res.status(401).send("Invalid Token");
+  }
   return next();
 };
 

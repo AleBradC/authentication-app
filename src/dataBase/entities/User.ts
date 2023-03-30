@@ -17,9 +17,6 @@ export class User {
   @Column()
   password: string;
 
-  @Column()
-  token: string;
-
   @Column({
     default: "normalUser",
   })

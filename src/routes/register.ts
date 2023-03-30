@@ -16,14 +16,14 @@ registerRoute.post("/api/register", async (req: Request, res: Response) => {
       return res.status(400).send("All inputs are required");
     }
 
-    const result = await authService.register({
+    const response = await authService.register({
       firstName: firstName,
       lastName: lastName,
       email: email,
       password: password,
     });
 
-    return res.status(200).json(result);
+    return res.status(200).json({ accessToken: response });
   } catch (error) {
     throw error;
   }
