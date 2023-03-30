@@ -1,9 +1,6 @@
 import { Service, Container } from "typedi";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import * as dotenv from "dotenv";
-
-dotenv.config();
 
 import {
   IAuthService,
@@ -11,7 +8,9 @@ import {
   IUserLogin,
 } from "../interfaces/IAuthService";
 import { PostgressRepository } from "../repositories/PostgressRepository";
+import config from "../../config";
 
+const jwt_secret = config.jwt_secret;
 @Service()
 export class AuthService implements IAuthService {
   private repository = Container.get(PostgressRepository);
@@ -33,12 +32,9 @@ export class AuthService implements IAuthService {
       password: passwordHash,
     });
 
-    const accesToken = jwt.sign(
-      { user: user.id },
-      process.env.ACCESS_TOKEN_SECRET as string,
-      { expiresIn: "2h" }
-    );
-
+    const accesToken = jwt.sign({ email: user.email }, jwt_secret!, {
+      expiresIn: "2h",
+    });
     await this.repository.saveUser(user);
 
     return accesToken;
@@ -51,15 +47,17 @@ export class AuthService implements IAuthService {
       return "Invalid credential";
     }
 
-    await bcrypt.compare(details.password, user.password);
+    const isValid = await bcrypt.compare(details.password, user.password);
 
-    const accesToken = jwt.sign(
-      { user: user.id },
-      process.env.ACCESS_TOKEN_SECRET as string,
-      { expiresIn: "2h" }
-    );
+    if (isValid) {
+      const accesToken = jwt.sign({ email: user.email }, jwt_secret!, {
+        expiresIn: "2h",
+      });
 
-    return accesToken;
+      return accesToken;
+    }
+
+    return "Error";
   };
   // logout = () => void;
 }

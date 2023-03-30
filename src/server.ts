@@ -1,17 +1,15 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import * as dotenv from "dotenv";
 
 import connectDB from "./dataBase/connectionDB";
 import registerRoute from "./routes/register";
 import loginRoute from "./routes/login";
 import usersRoute from "./routes/users";
-
-dotenv.config();
-const PORT = process.env.PORT;
+import config from "../config";
 
 const app = express();
+const port = config.port;
 
 connectDB
   .initialize()
@@ -26,8 +24,8 @@ connectDB
     app.use(registerRoute);
     app.use(loginRoute);
 
-    app.listen(PORT, () => {
-      console.log(`Listen on server ${PORT}`);
+    app.listen(port, () => {
+      console.log(`Listen on server ${port}`);
     });
   })
   .catch((error) => {

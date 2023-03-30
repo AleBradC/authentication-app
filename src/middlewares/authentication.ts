@@ -1,22 +1,18 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import * as dotenv from "dotenv";
+import config from "../../config";
 
-dotenv.config();
+const jwt_secret = config.jwt_secret;
 
-const authencatication = (req: Request, res: Response, next: NextFunction) => {
-  const token =
-    req.body.token || req.query.token || req.headers["x-access-token"];
+const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  const token = req.header("x-auth-token");
 
   if (!token) {
     return res.status(403).send("A token is required for authentication");
   }
 
   try {
-    const decoded = jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN_SECRET as string
-    );
+    const decoded = jwt.verify(token, jwt_secret!);
 
     req.body = decoded;
   } catch (err) {
@@ -25,4 +21,4 @@ const authencatication = (req: Request, res: Response, next: NextFunction) => {
   return next();
 };
 
-export default authencatication;
+export default authMiddleware;
