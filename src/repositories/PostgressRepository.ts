@@ -4,7 +4,7 @@ import connectDB from "../dataBase/connectionDB";
 import { User } from "../dataBase/entities/User";
 import { IUser } from "../interfaces/IUser";
 
-import { IUserRepositoryLayer } from "../interfaces/IRepositoryLayer";
+import { IUserRepositoryLayer } from "../interfaces/repository/IUserRepositoryLayer";
 
 @Service()
 export class PostgressRepository implements IUserRepositoryLayer {

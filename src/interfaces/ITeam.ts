@@ -1,8 +1,7 @@
 import { IUser } from "./IUser";
 
 export interface ITeam {
-  id: number;
   name: string;
+  members?: IUser[];
   admin: IUser;
-  members: IUser[];
 }

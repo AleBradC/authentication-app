@@ -1,5 +1,7 @@
+import { IUser } from "../IUser";
+
 export interface TeamDTO {
-  id: number;
-  admin: string;
-  members: string;
+  name: string;
+  admin: IUser;
+  members: IUser[];
 }
