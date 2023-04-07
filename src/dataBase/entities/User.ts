@@ -1,4 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  JoinColumn,
+  ManyToMany,
+  ManyToOne,
+  JoinTable,
+} from "typeorm";
 import { Team } from "./Team";
 
 type IUserRole = "normal" | "member" | "admin";
@@ -25,8 +33,14 @@ export class User {
   })
   role: IUserRole;
 
-  @Column({
-    default: [],
+  @ManyToMany(() => Team)
+  @JoinTable()
+  teams: User[];
+
+  // one user (admin) -> multiple owned teams
+  @ManyToOne(() => Team, (team) => team.admin)
+  @JoinColumn({
+    name: "owned_teams",
   })
-  teams: Team[];
+  owned_teams: Team[];
 }

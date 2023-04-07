@@ -1,4 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  JoinColumn,
+  OneToOne,
+  ManyToMany,
+  JoinTable,
+} from "typeorm";
+import { User } from "./User";
 
 @Entity("teams")
 export class Team {
@@ -8,9 +17,14 @@ export class Team {
   @Column()
   name: string;
 
-  @Column()
-  admin: string;
+  @ManyToMany(() => User)
+  @JoinTable()
+  members: User[];
 
-  @Column()
-  members: string;
+  // one team -> only one admin
+  @OneToOne(() => User)
+  @JoinColumn({
+    name: "admin_id",
+  })
+  admin: User;
 }
