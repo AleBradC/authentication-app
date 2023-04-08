@@ -36,4 +36,17 @@ teamRoute.get("/api/teams", async (req: Request, res: Response) => {
   return res.status(200).send(result);
 });
 
+teamRoute.delete("/api/teams/:id", async (req: Request, res: Response) => {
+  const teamService = Container.get(TeamService);
+
+  try {
+    const { id } = req.params;
+
+    await teamService.deleteTeam(id);
+    return res.status(200).json("deleted");
+  } catch (error) {
+    throw error;
+  }
+});
+
 export default teamRoute;

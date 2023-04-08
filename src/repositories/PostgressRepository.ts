@@ -27,7 +27,7 @@ export class PostgressRepository implements IUserRepositoryLayer {
     });
   };
 
-  findOneUserById = async (itemId: number) => {
+  findOneUserById = async (itemId: string) => {
     return await this.db_connection.getRepository(User).findOneBy({
       id: itemId,
     });

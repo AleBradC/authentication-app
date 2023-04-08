@@ -11,7 +11,7 @@ export class UsersService implements IUsersService {
     return await this.repository.findAllUsers();
   };
 
-  getUserById = async (id: number) => {
+  getUserById = async (id: string) => {
     return await this.repository.findOneUserById(id);
   };
 }

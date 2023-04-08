@@ -14,7 +14,7 @@ type IUserRole = "normal" | "member" | "admin";
 @Entity("users")
 export class User {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;
 
   @Column()
   first_name: string;

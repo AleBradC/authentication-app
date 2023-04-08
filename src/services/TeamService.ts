@@ -21,4 +21,8 @@ export class TeamService implements ITeamService {
   getAllTeams = async () => {
     return await this.repository.findAllTeams();
   };
+
+  deleteTeam = async (id: string) => {
+    return await this.repository.deleteTeam(id);
+  };
 }

@@ -30,4 +30,8 @@ export class PostgressTeamRepository implements ITeamRepositoryLayer {
   saveTeam = async (currentTeam: ITeam) => {
     return await this.db_connection.getRepository(Team).save(currentTeam);
   };
+
+  deleteTeam = async (id: string) => {
+    return await this.db_connection.getRepository(Team).delete(id);
+  };
 }

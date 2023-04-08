@@ -4,7 +4,7 @@ import { ITeam } from "./ITeam";
 export interface ITeamService {
   createTeam: (data: ITeam) => Promise<TeamDTO>;
   getAllTeams: () => Promise<TeamDTO[]>;
-  //   deleteTeam: () => void;
+  deleteTeam: (id: string) => void;
   //   updateTeam: () => void;
   //   addMember: () => void;
   //   deleteMember: () => void;
