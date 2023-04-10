@@ -33,9 +33,9 @@ export class User {
   })
   role: IUserRole;
 
-  @ManyToMany(() => Team)
+  @ManyToMany(() => Team, (team) => team.id)
   @JoinTable()
-  teams: User[];
+  teams: Team[];
 
   // one user (admin) -> multiple owned teams
   @ManyToOne(() => Team, (team) => team.admin)

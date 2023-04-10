@@ -2,6 +2,6 @@ import { IUser } from "./IUser";
 
 export interface ITeam {
   name: string;
-  members?: IUser[];
+  members: IUser[];
   admin: IUser;
 }

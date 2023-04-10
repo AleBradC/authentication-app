@@ -1,11 +1,11 @@
 import { Service, Container } from "typedi";
 
-import { PostgressRepository } from "../repositories/PostgressRepository";
+import { PostgressUserRepository } from "../repositories/PostgressUserRepository";
 import { IUsersService } from "../interfaces/IUsersService";
 
 @Service()
 export class UsersService implements IUsersService {
-  private repository = Container.get(PostgressRepository);
+  private repository = Container.get(PostgressUserRepository);
 
   getAllUsers = async () => {
     return await this.repository.findAllUsers();

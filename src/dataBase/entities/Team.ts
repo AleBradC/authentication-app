@@ -17,7 +17,7 @@ export class Team {
   @Column()
   name: string;
 
-  @ManyToMany(() => User)
+  @ManyToMany(() => User, (user) => user.id)
   @JoinTable()
   members: User[];
 

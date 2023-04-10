@@ -5,18 +5,21 @@ import { User } from "../dataBase/entities/User";
 import { IUser } from "../interfaces/IUser";
 
 import { IUserRepositoryLayer } from "../interfaces/repository/IUserRepositoryLayer";
+import { UserDTO } from "src/interfaces/DTOs/UserDTO";
 
 @Service()
-export class PostgressRepository implements IUserRepositoryLayer {
+export class PostgressUserRepository implements IUserRepositoryLayer {
   private db_connection = connectDB;
 
   findAllUsers = async () => {
     return await this.db_connection.getRepository(User).find({
       select: {
+        id: true,
         first_name: true,
         last_name: true,
-        id: true,
         role: true,
+        teams: true,
+        owned_teams: true,
       },
     });
   };
@@ -34,10 +37,8 @@ export class PostgressRepository implements IUserRepositoryLayer {
   };
 
   createUser = async (details: IUser) => {
-    return await this.db_connection.getRepository(User).create(details);
-  };
+    const newUser = this.db_connection.getRepository(User).create(details);
 
-  saveUser = async (currentUser: IUser) => {
-    return await this.db_connection.getRepository(User).save(currentUser);
+    return await this.db_connection.getRepository(User).save(newUser);
   };
 }

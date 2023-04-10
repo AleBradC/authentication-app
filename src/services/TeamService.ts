@@ -9,13 +9,11 @@ export class TeamService implements ITeamService {
   private repository = Container.get(PostgressTeamRepository);
 
   createTeam = async (details: ITeam) => {
-    const newTeam = await this.repository.createTeam({
+    return await this.repository.createTeam({
       name: details.name,
-      members: details?.members,
+      members: details.members,
       admin: details.admin,
     });
-
-    return await this.repository.saveTeam(newTeam);
   };
 
   getAllTeams = async () => {
@@ -24,5 +22,13 @@ export class TeamService implements ITeamService {
 
   deleteTeam = async (id: string) => {
     return await this.repository.deleteTeam(id);
+  };
+
+  updateTeamName = async (id: string, name: string) => {
+    return await this.repository.updateTeamName(id, name);
+  };
+
+  addMember = async (teamId: string, userId: any) => {
+    return await this.repository.addUser(teamId, userId);
   };
 }

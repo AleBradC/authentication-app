@@ -1,7 +1,9 @@
 import express from "express";
-import { Request, Response } from "express";
-import { TeamService } from "../services/TeamService";
 import Container from "typedi";
+import { Request, Response } from "express";
+
+import { IUser } from "../interfaces/IUser";
+import { TeamService } from "../services/TeamService";
 
 const teamRoute = express.Router();
 
@@ -44,6 +46,36 @@ teamRoute.delete("/api/teams/:id", async (req: Request, res: Response) => {
 
     await teamService.deleteTeam(id);
     return res.status(200).json("deleted");
+  } catch (error) {
+    throw error;
+  }
+});
+
+teamRoute.put("/api/team/:id", async (req: Request, res: Response) => {
+  const teamService = Container.get(TeamService);
+
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+
+    await teamService.updateTeamName(id, name);
+
+    return res.status(200).json("Updated");
+  } catch (error) {
+    throw error;
+  }
+});
+
+teamRoute.put("/api/team/:id/user", async (req: Request, res: Response) => {
+  const teamService = Container.get(TeamService);
+
+  try {
+    const { id } = req.params;
+    const { userId } = req.body;
+
+    await teamService.addMember(id, userId);
+
+    return res.status(200).json("User added");
   } catch (error) {
     throw error;
   }
