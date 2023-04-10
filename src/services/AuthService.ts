@@ -8,24 +8,25 @@ import {
   IUserLogin,
 } from "../interfaces/services/IAuthService";
 import { PostgressUserRepository } from "../repositories/PostgressUserRepository";
+import { UsersService } from "./UsersService";
 import config from "../../config";
 
 const jwt_secret = config.jwt_secret;
 @Service()
 export class AuthService implements IAuthService {
-  private repository = Container.get(PostgressUserRepository);
+  private userService = Container.get(UsersService);
 
   register = async (details: IUserDetails) => {
-    const existingUser = await this.repository.findOneByEmail(details.email);
+    const existingUser = await this.userService.getUserByEmail(details.email);
 
     if (existingUser) {
-      return "User already exists";
+      return null;
     }
 
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(details.password, salt);
 
-    const user = await this.repository.createUser({
+    const user = await this.userService.createUser({
       first_name: details.firstName,
       last_name: details.lastName,
       email: details.email,
@@ -40,23 +41,26 @@ export class AuthService implements IAuthService {
   };
 
   login = async (details: IUserLogin) => {
-    const user = await this.repository.findOneByEmail(details.email);
+    const existingUser = await this.userService.getUserByEmail(details.email);
 
-    if (!user) {
-      return "Invalid credential";
+    if (!existingUser) {
+      return null;
     }
 
-    const isValid = await bcrypt.compare(details.password, user.password);
+    const isValid = await bcrypt.compare(
+      details.password,
+      existingUser.password
+    );
 
     if (isValid) {
-      const accesToken = jwt.sign({ email: user.email }, jwt_secret!, {
+      const accesToken = jwt.sign({ email: existingUser.email }, jwt_secret!, {
         expiresIn: "2h",
       });
 
       return accesToken;
     }
 
-    return "Error";
+    return null;
   };
   // logout = () => void;
 }

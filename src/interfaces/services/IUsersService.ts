@@ -1,6 +1,9 @@
 import { UserDTO } from "../DTOs/UserDTO";
+import { IUser } from "../IUser";
 
 export interface IUsersService {
-  getAllUsers: () => any;
-  getUser: (id: string) => any;
+  createUser: (details: IUser) => void;
+  getAllUsers: () => Promise<UserDTO[]>;
+  getUserByEmail: (email: string) => Promise<UserDTO | null>;
+  getUserById: (id: string) => Promise<UserDTO | null>;
 }

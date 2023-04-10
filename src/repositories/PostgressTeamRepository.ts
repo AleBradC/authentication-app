@@ -22,7 +22,7 @@ export class PostgressTeamRepository implements ITeamRepositoryLayer {
       select: {
         id: true,
         name: true,
-        members: true,
+        members: {},
       },
       relations: {
         admin: true,

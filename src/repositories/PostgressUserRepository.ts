@@ -23,20 +23,24 @@ export class PostgressUserRepository implements IUserRepositoryLayer {
         first_name: true,
         last_name: true,
         role: true,
-        owned_teams: true,
+      },
+      relations: {
+        owned_teams: {
+          admin: true,
+        },
       },
     });
   };
 
   findOneByEmail = async (email: string) => {
     return await this.db_connection.getRepository(User).findOneBy({
-      email,
+      email: email,
     });
   };
 
   findOneById = async (id: string) => {
     return await this.db_connection.getRepository(User).findOneBy({
-      id,
+      id: id,
     });
   };
 }

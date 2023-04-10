@@ -5,6 +5,6 @@ export interface UserDTO {
   first_name: string;
   last_name: string;
   role: string;
+  owned_teams: ITeam[];
   teams: ITeam[];
-  owned_teams: ITeam;
 }
