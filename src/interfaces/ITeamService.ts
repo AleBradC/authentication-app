@@ -8,5 +8,5 @@ export interface ITeamService {
   deleteTeam: (id: string) => void;
   updateTeamName: (id: string, name: string) => Promise<unknown>;
   addMember: (teamId: string, userId: IUser) => void;
-  //   deleteMember: () => void;
+  removeMember: (teamId: string, userId: string) => Promise<unknown>;
 }

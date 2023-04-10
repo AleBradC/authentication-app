@@ -3,9 +3,9 @@ import {
   Column,
   PrimaryGeneratedColumn,
   JoinColumn,
-  OneToOne,
   ManyToMany,
   JoinTable,
+  ManyToOne,
 } from "typeorm";
 import { User } from "./User";
 
@@ -17,14 +17,28 @@ export class Team {
   @Column()
   name: string;
 
-  @ManyToMany(() => User, (user) => user.id)
-  @JoinTable()
-  members: User[];
-
-  // one team -> only one admin
-  @OneToOne(() => User)
+  // many teams can have one admin
+  // for in key
+  @ManyToOne(() => User, (user) => user.owned_teams, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({
-    name: "admin_id",
+    name: "admin_id", // name of the primary key
   })
   admin: User;
+
+  // many teams can have multiple users
+  @ManyToMany(() => User, (user) => user.id, { cascade: true })
+  @JoinTable({
+    name: "members",
+    joinColumn: {
+      name: "team",
+      referencedColumnName: "id",
+    },
+    inverseJoinColumn: {
+      name: "user",
+      referencedColumnName: "id",
+    },
+  })
+  members: User[]; // -> tabel separat
 }

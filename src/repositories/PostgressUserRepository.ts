@@ -5,7 +5,6 @@ import { User } from "../dataBase/entities/User";
 import { IUser } from "../interfaces/IUser";
 
 import { IUserRepositoryLayer } from "../interfaces/repository/IUserRepositoryLayer";
-import { UserDTO } from "src/interfaces/DTOs/UserDTO";
 
 @Service()
 export class PostgressUserRepository implements IUserRepositoryLayer {
@@ -18,7 +17,6 @@ export class PostgressUserRepository implements IUserRepositoryLayer {
         first_name: true,
         last_name: true,
         role: true,
-        teams: true,
         owned_teams: true,
       },
     });

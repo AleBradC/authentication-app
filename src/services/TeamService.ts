@@ -11,8 +11,8 @@ export class TeamService implements ITeamService {
   createTeam = async (details: ITeam) => {
     return await this.repository.createTeam({
       name: details.name,
-      members: details.members,
       admin: details.admin,
+      members: [],
     });
   };
 
@@ -30,5 +30,9 @@ export class TeamService implements ITeamService {
 
   addMember = async (teamId: string, userId: any) => {
     return await this.repository.addUser(teamId, userId);
+  };
+
+  removeMember = async (teamId: string, userId: any) => {
+    return await this.repository.removeUser(teamId, userId);
   };
 }

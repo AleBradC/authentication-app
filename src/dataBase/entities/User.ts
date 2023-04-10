@@ -2,10 +2,8 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  JoinColumn,
   ManyToMany,
-  ManyToOne,
-  JoinTable,
+  OneToMany,
 } from "typeorm";
 import { Team } from "./Team";
 
@@ -33,14 +31,10 @@ export class User {
   })
   role: IUserRole;
 
-  @ManyToMany(() => Team, (team) => team.id)
-  @JoinTable()
-  teams: Team[];
-
   // one user (admin) -> multiple owned teams
-  @ManyToOne(() => Team, (team) => team.admin)
-  @JoinColumn({
-    name: "owned_teams",
-  })
-  owned_teams: Team[];
+  @OneToMany(() => Team, (team) => team.admin)
+  owned_teams: Team[]; // -> nu o sa apara in tabel
+
+  @ManyToMany(() => Team, { cascade: true })
+  teams: Team[]; // ->  tabel separat
 }

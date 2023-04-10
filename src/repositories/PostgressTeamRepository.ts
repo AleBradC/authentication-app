@@ -1,11 +1,11 @@
 import { Service } from "typedi";
-
 import connectDB from "../dataBase/connectionDB";
 
 import { ITeamRepositoryLayer } from "../interfaces/repository/ITeamRepository";
 import { ITeam } from "../interfaces/ITeam";
 import { Team } from "../dataBase/entities/Team";
-import { IUser } from "src/interfaces/IUser";
+import { User } from "../dataBase/entities/User";
+import { IUser } from "../interfaces/IUser";
 
 @Service()
 export class PostgressTeamRepository implements ITeamRepositoryLayer {
@@ -45,14 +45,43 @@ export class PostgressTeamRepository implements ITeamRepositoryLayer {
     );
   };
 
-  addUser = async (teamId: string, userId: any) => {
-    return await this.db_connection.getRepository(Team).update(
-      {
-        id: teamId,
+  addUser = async (teamId: string, userId: string) => {
+    const team = (await this.db_connection.getRepository(Team).findOne({
+      relations: {
+        members: true,
       },
-      {
-        members: userId,
-      }
-    );
+      where: { id: teamId },
+    })) as ITeam;
+
+    const user = (await this.db_connection.getRepository(User).findOne({
+      relations: {
+        teams: true,
+      },
+      where: { id: userId },
+    })) as IUser;
+
+    team.members = [user];
+
+    return await this.db_connection.manager.save(team);
+  };
+
+  removeUser = async (teamId: string, userId: string) => {
+    const team = await this.db_connection.getRepository(Team).findOne({
+      relations: {
+        members: true, // just on the many side
+      },
+      where: { id: teamId },
+    });
+
+    const user = await this.db_connection.getRepository(User).findOne({
+      where: { id: userId },
+    });
+
+    if (team && user) {
+      team.members = team.members.filter((member) => member.id !== user.id);
+      return await this.db_connection.getRepository(Team).save(team);
+    }
+
+    return null;
   };
 }

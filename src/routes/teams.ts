@@ -2,7 +2,6 @@ import express from "express";
 import Container from "typedi";
 import { Request, Response } from "express";
 
-import { IUser } from "../interfaces/IUser";
 import { TeamService } from "../services/TeamService";
 
 const teamRoute = express.Router();
@@ -11,21 +10,20 @@ teamRoute.post("/api/teams", async (req: Request, res: Response) => {
   const teamService = Container.get(TeamService);
 
   try {
+    // admin -> userul logat care creeaza echipa
     const { name, admin, members } = req.body;
 
     if (!name) {
       return res.status(400).json("Please add a name");
     }
 
-    const newTeam = {
+    const newTeam = await teamService.createTeam({
       name: name,
       admin: admin,
       members: members,
-    };
+    });
 
-    const response = await teamService.createTeam(newTeam);
-
-    return res.status(200).json(response);
+    return res.status(200).json(newTeam);
   } catch (error) {
     throw error;
   }
@@ -66,19 +64,38 @@ teamRoute.put("/api/team/:id", async (req: Request, res: Response) => {
   }
 });
 
-teamRoute.put("/api/team/:id/user", async (req: Request, res: Response) => {
-  const teamService = Container.get(TeamService);
+teamRoute.put(
+  "/api/team/:teamId/member/:memberId",
+  async (req: Request, res: Response) => {
+    const teamService = Container.get(TeamService);
 
-  try {
-    const { id } = req.params;
-    const { userId } = req.body;
+    try {
+      const { teamId, memberId } = req.params;
 
-    await teamService.addMember(id, userId);
+      await teamService.addMember(teamId, memberId);
 
-    return res.status(200).json("User added");
-  } catch (error) {
-    throw error;
+      return res.status(200).json("User added");
+    } catch (error) {
+      throw error;
+    }
   }
-});
+);
+
+teamRoute.delete(
+  "/api/team/:teamId/member/:memberId",
+  async (req: Request, res: Response) => {
+    const teamService = Container.get(TeamService);
+
+    try {
+      const { teamId, memberId } = req.params;
+
+      await teamService.removeMember(teamId, memberId);
+
+      return res.status(200).json("User removed");
+    } catch (error) {
+      throw error;
+    }
+  }
+);
 
 export default teamRoute;
