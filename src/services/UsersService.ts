@@ -1,7 +1,7 @@
 import { Service, Container } from "typedi";
 
 import { PostgressUserRepository } from "../repositories/PostgressUserRepository";
-import { IUsersService } from "../interfaces/IUsersService";
+import { IUsersService } from "../interfaces/services/IUsersService";
 
 @Service()
 export class UsersService implements IUsersService {
@@ -11,7 +11,7 @@ export class UsersService implements IUsersService {
     return await this.repository.findAllUsers();
   };
 
-  getUserById = async (id: string) => {
-    return await this.repository.findOneUserById(id);
+  getUser = async (id: string) => {
+    return await this.repository.findOneById(id);
   };
 }

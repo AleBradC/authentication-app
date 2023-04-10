@@ -1,6 +1,6 @@
 import { Service, Container } from "typedi";
 
-import { ITeamService } from "../interfaces/ITeamService";
+import { ITeamService } from "../interfaces/services/ITeamService";
 import { ITeam } from "../interfaces/ITeam";
 import { PostgressTeamRepository } from "../repositories/PostgressTeamRepository";
 
@@ -25,14 +25,14 @@ export class TeamService implements ITeamService {
   };
 
   updateTeamName = async (id: string, name: string) => {
-    return await this.repository.updateTeamName(id, name);
+    return await this.repository.updateTeam(id, name);
   };
 
   addMember = async (teamId: string, userId: any) => {
-    return await this.repository.addUser(teamId, userId);
+    return await this.repository.addMember(teamId, userId);
   };
 
   removeMember = async (teamId: string, userId: any) => {
-    return await this.repository.removeUser(teamId, userId);
+    return await this.repository.removeMember(teamId, userId);
   };
 }

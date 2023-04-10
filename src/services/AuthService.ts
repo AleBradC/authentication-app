@@ -6,7 +6,7 @@ import {
   IAuthService,
   IUserDetails,
   IUserLogin,
-} from "../interfaces/IAuthService";
+} from "../interfaces/services/IAuthService";
 import { PostgressUserRepository } from "../repositories/PostgressUserRepository";
 import config from "../../config";
 
@@ -16,9 +16,7 @@ export class AuthService implements IAuthService {
   private repository = Container.get(PostgressUserRepository);
 
   register = async (details: IUserDetails) => {
-    const existingUser = await this.repository.findOneUserByEmail(
-      details.email
-    );
+    const existingUser = await this.repository.findOneByEmail(details.email);
 
     if (existingUser) {
       return "User already exists";
@@ -42,7 +40,7 @@ export class AuthService implements IAuthService {
   };
 
   login = async (details: IUserLogin) => {
-    const user = await this.repository.findOneUserByEmail(details.email);
+    const user = await this.repository.findOneByEmail(details.email);
 
     if (!user) {
       return "Invalid credential";
