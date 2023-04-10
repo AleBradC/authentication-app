@@ -9,7 +9,7 @@ const usersRoute = express.Router();
 
 usersRoute.get(
   "/api/users",
-  authMiddleware,
+  // authMiddleware,
   async (req: Request, res: Response) => {
     const userService = Container.get(UsersService);
     const result = await userService.getAllUsers();

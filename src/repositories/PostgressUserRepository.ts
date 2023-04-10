@@ -4,40 +4,39 @@ import connectDB from "../dataBase/connectionDB";
 import { User } from "../dataBase/entities/User";
 import { IUser } from "../interfaces/IUser";
 
-import { IRepositoryLayer } from "../interfaces/IRepositoryLayer";
+import { IUserRepositoryLayer } from "../interfaces/repository/IUserRepositoryLayer";
 
 @Service()
-export class PostgressRepository implements IRepositoryLayer {
+export class PostgressUserRepository implements IUserRepositoryLayer {
   private db_connection = connectDB;
 
-  findAll = async () => {
+  findAllUsers = async () => {
     return await this.db_connection.getRepository(User).find({
       select: {
+        id: true,
         first_name: true,
         last_name: true,
-        id: true,
         role: true,
+        owned_teams: true,
       },
     });
   };
 
-  findOneByEmail = async (email: string) => {
+  findOneUserByEmail = async (email: string) => {
     return await this.db_connection.getRepository(User).findOneBy({
       email: email,
     });
   };
 
-  findOneById = async (itemId: number) => {
+  findOneUserById = async (itemId: string) => {
     return await this.db_connection.getRepository(User).findOneBy({
       id: itemId,
     });
   };
 
   createUser = async (details: IUser) => {
-    return await this.db_connection.getRepository(User).create(details);
-  };
+    const newUser = this.db_connection.getRepository(User).create(details);
 
-  saveUser = async (currentUser: IUser) => {
-    return await this.db_connection.getRepository(User).save(currentUser);
+    return await this.db_connection.getRepository(User).save(newUser);
   };
 }

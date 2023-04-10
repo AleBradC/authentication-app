@@ -1,9 +1,18 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToMany,
+  OneToMany,
+} from "typeorm";
+import { Team } from "./Team";
 
-@Entity()
+type IUserRole = "normal" | "member" | "admin";
+
+@Entity("users")
 export class User {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;
 
   @Column()
   first_name: string;
@@ -18,7 +27,14 @@ export class User {
   password: string;
 
   @Column({
-    default: "normalUser",
+    default: "normal",
   })
-  role: string;
+  role: IUserRole;
+
+  // one user (admin) -> multiple owned teams
+  @OneToMany(() => Team, (team) => team.admin)
+  owned_teams: Team[]; // -> nu o sa apara in tabel
+
+  @ManyToMany(() => Team, { cascade: true })
+  teams: Team[]; // ->  tabel separat
 }

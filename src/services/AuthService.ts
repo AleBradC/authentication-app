@@ -7,16 +7,18 @@ import {
   IUserDetails,
   IUserLogin,
 } from "../interfaces/IAuthService";
-import { PostgressRepository } from "../repositories/PostgressRepository";
+import { PostgressUserRepository } from "../repositories/PostgressUserRepository";
 import config from "../../config";
 
 const jwt_secret = config.jwt_secret;
 @Service()
 export class AuthService implements IAuthService {
-  private repository = Container.get(PostgressRepository);
+  private repository = Container.get(PostgressUserRepository);
 
   register = async (details: IUserDetails) => {
-    const existingUser = await this.repository.findOneByEmail(details.email);
+    const existingUser = await this.repository.findOneUserByEmail(
+      details.email
+    );
 
     if (existingUser) {
       return "User already exists";
@@ -35,13 +37,12 @@ export class AuthService implements IAuthService {
     const accesToken = jwt.sign({ email: user.email }, jwt_secret!, {
       expiresIn: "2h",
     });
-    await this.repository.saveUser(user);
 
     return accesToken;
   };
 
   login = async (details: IUserLogin) => {
-    const user = await this.repository.findOneByEmail(details.email);
+    const user = await this.repository.findOneUserByEmail(details.email);
 
     if (!user) {
       return "Invalid credential";

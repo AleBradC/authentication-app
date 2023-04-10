@@ -1,5 +1,6 @@
 import { DataSource } from "typeorm";
 import { User } from "./entities/User";
+import { Team } from "./entities/Team";
 import config from "../../config";
 
 const host = config.host;
@@ -12,7 +13,7 @@ const connectDB = new DataSource({
   username: username,
   database: "authentication_app",
   password: undefined,
-  entities: [User],
+  entities: [User, Team],
   synchronize: true,
 });
 
