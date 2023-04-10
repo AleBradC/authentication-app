@@ -15,7 +15,7 @@ export interface IUserToken {
 }
 
 export interface IAuthService {
-  register: (data: IUserDetails) => Promise<IUserToken | string>;
-  login: (data: IUserLogin) => Promise<IUserToken | string>;
+  register: (data: IUserDetails) => Promise<IUserToken | string | null>;
+  login: (data: IUserLogin) => Promise<IUserToken | string | null>;
   // logout: () => void;
 }

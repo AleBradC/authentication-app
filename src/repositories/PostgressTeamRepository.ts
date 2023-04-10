@@ -22,7 +22,7 @@ export class PostgressTeamRepository implements ITeamRepositoryLayer {
       select: {
         id: true,
         name: true,
-        members: true,
+        members: {},
       },
       relations: {
         admin: true,
@@ -34,29 +34,26 @@ export class PostgressTeamRepository implements ITeamRepositoryLayer {
     return await this.db_connection.getRepository(Team).delete(id);
   };
 
-  updateTeamName = async (id: string, name: string) => {
+  updateTeam = async (id: string, name: string) => {
     return await this.db_connection.getRepository(Team).update(
       {
-        id,
+        id: id,
       },
       {
-        name,
+        name: name,
       }
     );
   };
 
-  addUser = async (teamId: string, userId: string) => {
+  addMember = async (teamId: string, userId: string) => {
     const team = (await this.db_connection.getRepository(Team).findOne({
       relations: {
-        members: true,
+        members: true, // just on the many side
       },
       where: { id: teamId },
     })) as ITeam;
 
     const user = (await this.db_connection.getRepository(User).findOne({
-      relations: {
-        teams: true,
-      },
       where: { id: userId },
     })) as IUser;
 
@@ -65,7 +62,7 @@ export class PostgressTeamRepository implements ITeamRepositoryLayer {
     return await this.db_connection.manager.save(team);
   };
 
-  removeUser = async (teamId: string, userId: string) => {
+  removeMember = async (teamId: string, userId: string) => {
     const team = await this.db_connection.getRepository(Team).findOne({
       relations: {
         members: true, // just on the many side

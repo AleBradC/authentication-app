@@ -2,8 +2,8 @@ import { UserDTO } from "../DTOs/UserDTO";
 import { IUser } from "../IUser";
 
 export interface IUserRepositoryLayer {
-  findAllUsers: () => any;
-  findOneUserById: (itemId: string) => any;
-  findOneUserByEmail: (email: string) => any;
-  createUser: (details: IUser) => any;
+  createUser: (details: IUser) => void;
+  findAllUsers: () => Promise<UserDTO[]>;
+  findOneByEmail: (email: string) => Promise<UserDTO | null>;
+  findOneById: (id: string) => Promise<UserDTO | null>;
 }

@@ -10,6 +10,12 @@ import { IUserRepositoryLayer } from "../interfaces/repository/IUserRepositoryLa
 export class PostgressUserRepository implements IUserRepositoryLayer {
   private db_connection = connectDB;
 
+  createUser = async (details: IUser) => {
+    const newUser = this.db_connection.getRepository(User).create(details);
+
+    return await this.db_connection.getRepository(User).save(newUser);
+  };
+
   findAllUsers = async () => {
     return await this.db_connection.getRepository(User).find({
       select: {
@@ -17,26 +23,24 @@ export class PostgressUserRepository implements IUserRepositoryLayer {
         first_name: true,
         last_name: true,
         role: true,
-        owned_teams: true,
+      },
+      relations: {
+        owned_teams: {
+          admin: true,
+        },
       },
     });
   };
 
-  findOneUserByEmail = async (email: string) => {
+  findOneByEmail = async (email: string) => {
     return await this.db_connection.getRepository(User).findOneBy({
       email: email,
     });
   };
 
-  findOneUserById = async (itemId: string) => {
+  findOneById = async (id: string) => {
     return await this.db_connection.getRepository(User).findOneBy({
-      id: itemId,
+      id: id,
     });
-  };
-
-  createUser = async (details: IUser) => {
-    const newUser = this.db_connection.getRepository(User).create(details);
-
-    return await this.db_connection.getRepository(User).save(newUser);
   };
 }
