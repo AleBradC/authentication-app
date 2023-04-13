@@ -1,32 +1,48 @@
 import express from "express";
-import Container from "typedi";
 import { Request, Response } from "express";
+import Container from "typedi";
+import jwt from "jsonwebtoken";
+import config from "../../config";
 
 import { TeamService } from "../services/TeamService";
+import authMiddleware from "../middlewares/authentication";
 
 const teamRoute = express.Router();
 const teamService = Container.get(TeamService);
+const jwt_secret = config.jwt_secret;
 
-teamRoute.post("/api/team", async (req: Request, res: Response) => {
-  try {
-    // admin -> userul logat care creeaza echipa
-    const { name, admin, members } = req.body;
+teamRoute.post(
+  "/api/team",
+  authMiddleware,
+  async (req: Request, res: Response) => {
+    const token = req.header("x-auth-token");
 
-    if (!name) {
-      return res.status(400).json("Please add a name");
+    try {
+      const { name } = req.body;
+
+      if (!token) {
+        return res.status(403).send("A token is required for authentication");
+      }
+
+      if (!name) {
+        return res.status(400).json("Please add a name");
+      }
+
+      const decoded = jwt.verify(token, jwt_secret!);
+
+      req.body.id = decoded;
+
+      const newTeam = await teamService.createTeam({
+        name: name,
+        // admin: "test",
+      });
+
+      return res.status(200).json(newTeam);
+    } catch (error) {
+      throw error;
     }
-
-    const newTeam = await teamService.createTeam({
-      name: name,
-      admin: admin,
-      members: members,
-    });
-
-    return res.status(200).json(newTeam);
-  } catch (error) {
-    throw error;
   }
-});
+);
 
 teamRoute.get("/api/teams", async (req: Request, res: Response) => {
   try {

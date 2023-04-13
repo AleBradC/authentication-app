@@ -12,7 +12,6 @@ export class TeamService implements ITeamService {
     return await this.repository.createTeam({
       name: details.name,
       admin: details.admin,
-      members: [],
     });
   };
 
