@@ -1,15 +1,15 @@
 import express from "express";
 import { Request, Response } from "express";
 import Container from "typedi";
-import jwt from "jsonwebtoken";
-import config from "../../config";
 
 import { TeamService } from "../services/TeamService";
+import { UsersService } from "../services/UsersService";
+import { IAdmin } from "../interfaces/IAdmin";
 import authMiddleware from "../middlewares/authentication";
 
 const teamRoute = express.Router();
 const teamService = Container.get(TeamService);
-const jwt_secret = config.jwt_secret;
+const userService = Container.get(UsersService);
 
 teamRoute.post(
   "/api/team",
@@ -18,7 +18,7 @@ teamRoute.post(
     const token = req.header("x-auth-token");
 
     try {
-      const { name } = req.body;
+      const { name, data } = req.body;
 
       if (!token) {
         return res.status(403).send("A token is required for authentication");
@@ -27,14 +27,19 @@ teamRoute.post(
       if (!name) {
         return res.status(400).json("Please add a name");
       }
+      const { id, first_name, last_name } = (await userService.getUserByEmail(
+        data.email
+      )) as IAdmin;
 
-      const decoded = jwt.verify(token, jwt_secret!);
-
-      req.body.id = decoded;
+      const admin = {
+        id: id,
+        first_name: first_name,
+        last_name: last_name,
+      };
 
       const newTeam = await teamService.createTeam({
         name: name,
-        // admin: "test",
+        admin: admin,
       });
 
       return res.status(200).json(newTeam);
