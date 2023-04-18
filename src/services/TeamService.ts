@@ -34,4 +34,8 @@ export class TeamService implements ITeamService {
   removeMember = async (teamId: string, userId: any) => {
     return await this.repository.removeMember(teamId, userId);
   };
+
+  getTeamById = async (teamId: string) => {
+    return await this.repository.findOneById(teamId);
+  };
 }

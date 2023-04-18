@@ -7,8 +7,6 @@ import {
 } from "typeorm";
 import { Team } from "./Team";
 
-type IUserRole = "normal" | "member" | "admin";
-
 @Entity("users")
 export class User {
   @PrimaryGeneratedColumn()
@@ -26,15 +24,11 @@ export class User {
   @Column()
   password: string;
 
-  @Column({
-    default: "normal",
-  })
-  role: IUserRole;
-
   // one user (admin) -> multiple owned teams
   @OneToMany(() => Team, (team) => team.admin)
   owned_teams: Team[]; // -> nu o sa apara in tabel
 
+  // just a member
   @ManyToMany(() => Team, { cascade: true })
   teams: Team[]; // ->  tabel separat
 }

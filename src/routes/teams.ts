@@ -6,23 +6,19 @@ import { TeamService } from "../services/TeamService";
 import { UsersService } from "../services/UsersService";
 import { IAdmin } from "../interfaces/IAdmin";
 import authMiddleware from "../middlewares/authentication";
+import checkRole from "../middlewares/checkRole";
 
 const teamRoute = express.Router();
 const teamService = Container.get(TeamService);
 const userService = Container.get(UsersService);
 
+// create team
 teamRoute.post(
   "/api/team",
   authMiddleware,
   async (req: Request, res: Response) => {
-    const token = req.header("x-auth-token");
-
     try {
       const { name, data } = req.body;
-
-      if (!token) {
-        return res.status(403).send("A token is required for authentication");
-      }
 
       if (!name) {
         return res.status(400).json("Please add a name");
@@ -49,6 +45,7 @@ teamRoute.post(
   }
 );
 
+// get user teams -> owned & member
 teamRoute.get("/api/teams", async (req: Request, res: Response) => {
   try {
     const teams = await teamService.getAllTeams();
@@ -59,33 +56,53 @@ teamRoute.get("/api/teams", async (req: Request, res: Response) => {
   }
 });
 
-teamRoute.delete("/api/teams/:id", async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
+// delete team -> only by the admin
+teamRoute.delete(
+  "/api/teams/:id",
+  authMiddleware,
+  async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const { data } = req.body;
 
-    await teamService.deleteTeam(id);
+      const team = await teamService.getTeamById(id);
+      const teamAdmin = team?.admin.id;
+      const userId = await userService.getUserByEmail(data.email);
 
-    return res.status(200).json("Deleted");
-  } catch (error) {
-    throw error;
+      if (teamAdmin === userId?.id) {
+        await teamService.deleteTeam(id);
+        return res.status(200).json("Deleted");
+      } else {
+        return res.status(400).json("Nu merge");
+      }
+    } catch (error) {
+      throw error;
+    }
   }
-});
+);
 
-teamRoute.put("/api/team/:id", async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const { name } = req.body;
+// update team name -> only by the admin by the admin
+teamRoute.put(
+  "/api/team/:id",
+  authMiddleware,
+  async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const { name } = req.body;
 
-    await teamService.updateTeamName(id, name);
+      await teamService.updateTeamName(id, name);
 
-    return res.status(200).json("Updated");
-  } catch (error) {
-    throw error;
+      return res.status(200).json("Updated");
+    } catch (error) {
+      throw error;
+    }
   }
-});
+);
 
+// add member in the team -> only by the admin
 teamRoute.put(
   "/api/team/:teamId/member/:memberId",
+  authMiddleware,
   async (req: Request, res: Response) => {
     try {
       const { teamId, memberId } = req.params;
@@ -99,8 +116,10 @@ teamRoute.put(
   }
 );
 
+// delete member from team -> only by the admin
 teamRoute.delete(
   "/api/team/:teamId/member/:memberId",
+  authMiddleware,
   async (req: Request, res: Response) => {
     try {
       const { teamId, memberId } = req.params;

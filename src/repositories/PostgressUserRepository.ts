@@ -22,7 +22,6 @@ export class PostgressUserRepository implements IUserRepositoryLayer {
         id: true,
         first_name: true,
         last_name: true,
-        role: true,
       },
       relations: {
         owned_teams: {
