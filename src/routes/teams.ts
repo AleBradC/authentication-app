@@ -4,8 +4,6 @@ import Container from "typedi";
 
 import authMiddleware from "../middlewares/authentication";
 
-import IAdmin from "../interfaces/base/IAdmin";
-
 import TeamService from "../services/TeamService";
 import UsersService from "../services/UsersService";
 
@@ -26,21 +24,21 @@ teamRoute.post(
         return res.status(400).json("Please add a name");
       }
 
-      const { id, user_name, owned_teams, teams, email } =
-        (await userService.getUserByEmail(data.email)) as IAdmin;
+      const user = await userService.getUserByEmail(data.email);
+
+      if (!user) {
+        return res.status(400).json("User not found");
+      }
 
       const admin = {
-        id: id,
-        user_name: user_name,
-        owned_teams: owned_teams,
-        teams: teams,
-        email: email,
+        id: user.id,
+        user_name: user.user_name,
+        email: user.email,
+        owned_teams: user.owned_teams,
+        teams: user.teams,
       };
 
-      const newTeam = await teamService.createTeam({
-        name: name,
-        admin: admin,
-      });
+      const newTeam = await teamService.postTeam({ name: name, admin: admin });
 
       return res.status(200).json(newTeam);
     } catch (error) {
@@ -70,7 +68,7 @@ teamRoute.delete(
       const { data } = req.body;
 
       const team = await teamService.getTeamById(id);
-      const teamAdmin = team?.admin.id;
+      const teamAdmin = team?.admin;
       const userId = await userService.getUserByEmail(data.email);
 
       if (teamAdmin === userId?.id) {
@@ -111,7 +109,7 @@ teamRoute.put(
     try {
       const { teamId, memberId } = req.params;
 
-      await teamService.addMember(teamId, memberId);
+      await teamService.putMemberInTeam(teamId, memberId);
 
       return res.status(200).json("User added");
     } catch (error) {
@@ -128,7 +126,7 @@ teamRoute.delete(
     try {
       const { teamId, memberId } = req.params;
 
-      await teamService.removeMember(teamId, memberId);
+      await teamService.deleteMemberFronTeam(teamId, memberId);
 
       return res.status(200).json("User removed");
     } catch (error) {

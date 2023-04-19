@@ -5,12 +5,7 @@ export interface IUserLogin {
   password: string;
 }
 
-export interface IUserToken {
-  accessToken: string;
-}
-
 export interface IAuthService {
-  register: (data: IUser) => Promise<IUserToken | string | null>;
-  login: (data: IUserLogin) => Promise<IUserToken | string | null>;
-  // logout: () => void;
+  register: (data: IUser) => Promise<string | null>;
+  login: (data: IUserLogin) => Promise<string | null>;
 }

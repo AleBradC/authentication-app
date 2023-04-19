@@ -1,7 +1,9 @@
-import ITeam from "../base/ITeam";
+import OwnedTeamsDTO from "./OwnedTeamsDTO";
+import TeamDTO from "./TeamDTO";
 export default interface UserDTO {
   id: string;
   user_name: string;
-  owned_teams: ITeam[];
-  teams: ITeam[];
+  email: string;
+  owned_teams: OwnedTeamsDTO[];
+  teams: TeamDTO[]; // -> to do
 }

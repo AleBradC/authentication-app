@@ -10,9 +10,13 @@ import { IAuthService, IUserLogin } from "../interfaces/services/IAuthService";
 const jwt_secret = config.jwt_secret;
 @Service()
 export class AuthService implements IAuthService {
-  private userService = Container.get(UsersService);
+  private userService;
 
-  register = async (details: IUser) => {
+  constructor() {
+    this.userService = Container.get(UsersService);
+  }
+
+  register = async (details: IUser): Promise<string | null> => {
     const existingUser = await this.userService.getUserByEmail(details.email);
 
     if (existingUser) {
@@ -35,7 +39,7 @@ export class AuthService implements IAuthService {
     return accesToken;
   };
 
-  login = async (details: IUserLogin) => {
+  login = async (details: IUserLogin): Promise<string | null> => {
     const existingUser = await this.userService.getAllUsersDetails(
       details.email
     );
@@ -59,5 +63,4 @@ export class AuthService implements IAuthService {
 
     return null;
   };
-  // logout = () => void;
 }

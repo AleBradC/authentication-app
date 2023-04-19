@@ -1,7 +1,7 @@
-import IUser from "../base/IUser";
+import UserDTO from "./UserDTO";
 export default interface TeamDTO {
   id: string;
   name: string;
-  admin: IUser;
-  members: IUser[];
+  admin: UserDTO;
+  members: UserDTO[];
 }

@@ -23,7 +23,7 @@ export default class Team {
     onDelete: "CASCADE",
   })
   @JoinColumn({
-    name: "admin_id", // name of the primary key
+    name: "admin", // name of the primary key
   })
   admin: User;
 

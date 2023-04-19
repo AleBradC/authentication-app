@@ -5,8 +5,9 @@ import Team from "../dataBase/entities/Team";
 import User from "../dataBase/entities/User";
 
 import ITeam from "../interfaces/base/ITeam";
-import IUser from "../interfaces/base/IUser";
 import ITeamRepositoryLayer from "../interfaces/repository/ITeamRepository";
+import TeamDTO from "src/interfaces/DTOs/TeamDTO";
+import UserDTO from "src/interfaces/DTOs/UserDTO";
 
 @Service()
 export default class PostgressTeamRepository implements ITeamRepositoryLayer {
@@ -18,20 +19,13 @@ export default class PostgressTeamRepository implements ITeamRepositoryLayer {
     return await this.db_connection.getRepository(Team).save(newTeam);
   };
 
-  findTeamMembers = async (id: string) => {
-    return await this.db_connection.getRepository(Team).find;
-  };
-
-  findAllTeams = async () => {
+  findAllTeams = async (): Promise<any> => {
     return await this.db_connection.getRepository(Team).find({
       select: {
         id: true,
         name: true,
       },
-      relations: {
-        admin: true,
-        members: true,
-      },
+      relations: ["admin", "members"],
     });
   };
 
@@ -56,11 +50,11 @@ export default class PostgressTeamRepository implements ITeamRepositoryLayer {
         members: true, // just on the many side
       },
       where: { id: teamId },
-    })) as ITeam;
+    })) as TeamDTO;
 
     const user = (await this.db_connection.getRepository(User).findOne({
       where: { id: userId },
-    })) as IUser;
+    })) as UserDTO;
 
     team.members = [user];
 
@@ -87,7 +81,7 @@ export default class PostgressTeamRepository implements ITeamRepositoryLayer {
     return null;
   };
 
-  findOneById = async (teamId: string) => {
+  findOneById = async (teamId: string): Promise<TeamDTO | null> => {
     return await this.db_connection.getRepository(Team).findOne({
       relations: {
         admin: true,

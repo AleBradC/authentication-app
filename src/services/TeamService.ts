@@ -3,12 +3,15 @@ import { Service, Container } from "typedi";
 import PostgressTeamRepository from "../repositories/PostgressTeamRepository";
 import ITeamService from "../interfaces/services/ITeamService";
 import ITeam from "../interfaces/base/ITeam";
+import TeamDTO from "src/interfaces/DTOs/TeamDTO";
+import IUser from "src/interfaces/base/IUser";
+import UserDTO from "src/interfaces/DTOs/UserDTO";
 
 @Service()
 export default class TeamService implements ITeamService {
   private repository = Container.get(PostgressTeamRepository);
 
-  createTeam = async (details: ITeam) => {
+  postTeam = async (details: ITeam) => {
     return await this.repository.createTeam({
       name: details.name,
       admin: details.admin,
@@ -27,15 +30,15 @@ export default class TeamService implements ITeamService {
     return await this.repository.updateTeam(id, name);
   };
 
-  addMember = async (teamId: string, userId: any) => {
+  putMemberInTeam = async (teamId: string, userId: any) => {
     return await this.repository.addMember(teamId, userId);
   };
 
-  removeMember = async (teamId: string, userId: any) => {
+  deleteMemberFronTeam = async (teamId: string, userId: string) => {
     return await this.repository.removeMember(teamId, userId);
   };
 
-  getTeamById = async (teamId: string) => {
+  getTeamById = async (teamId: string): Promise<TeamDTO | null> => {
     return await this.repository.findOneById(teamId);
   };
 }
