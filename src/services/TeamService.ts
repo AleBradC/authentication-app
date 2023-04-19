@@ -12,7 +12,6 @@ export class TeamService implements ITeamService {
     return await this.repository.createTeam({
       name: details.name,
       admin: details.admin,
-      members: [],
     });
   };
 
@@ -34,5 +33,9 @@ export class TeamService implements ITeamService {
 
   removeMember = async (teamId: string, userId: any) => {
     return await this.repository.removeMember(teamId, userId);
+  };
+
+  getTeamById = async (teamId: string) => {
+    return await this.repository.findOneById(teamId);
   };
 }

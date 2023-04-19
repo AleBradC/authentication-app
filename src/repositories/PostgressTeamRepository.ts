@@ -85,4 +85,13 @@ export class PostgressTeamRepository implements ITeamRepositoryLayer {
 
     return null;
   };
+
+  findOneById = async (teamId: string) => {
+    return await this.db_connection.getRepository(Team).findOne({
+      relations: {
+        admin: true,
+      },
+      where: { id: teamId },
+    });
+  };
 }

@@ -1,3 +1,4 @@
+import { IAdmin } from "./IAdmin";
 import { IUser } from "./IUser";
 
 export interface ITeam {
