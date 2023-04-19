@@ -1,11 +1,11 @@
 import { Service, Container } from "typedi";
 
-import { PostgressTeamRepository } from "../repositories/PostgressTeamRepository";
+import PostgressTeamRepository from "../repositories/PostgressTeamRepository";
 import ITeamService from "../interfaces/services/ITeamService";
 import ITeam from "../interfaces/base/ITeam";
 
 @Service()
-export class TeamService implements ITeamService {
+export default class TeamService implements ITeamService {
   private repository = Container.get(PostgressTeamRepository);
 
   createTeam = async (details: ITeam) => {

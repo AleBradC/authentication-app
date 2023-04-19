@@ -2,7 +2,7 @@ import express from "express";
 import { Request, Response } from "express";
 import { Container } from "typedi";
 
-import { UsersService } from "../services/UsersService";
+import UsersService from "../services/UsersService";
 
 const usersRoute = express.Router();
 

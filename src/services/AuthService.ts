@@ -1,11 +1,11 @@
 import { Service, Container } from "typedi";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
-import { IAuthService, IUserLogin } from "../interfaces/services/IAuthService";
-import { UsersService } from "./UsersService";
 import config from "../../config";
+
 import IUser from "../interfaces/base/IUser";
+import UsersService from "./UsersService";
+import { IAuthService, IUserLogin } from "../interfaces/services/IAuthService";
 
 const jwt_secret = config.jwt_secret;
 @Service()

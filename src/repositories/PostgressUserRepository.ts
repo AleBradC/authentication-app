@@ -1,9 +1,9 @@
 import { Service } from "typedi";
+import { Repository } from "typeorm";
 
 import connectDB from "../dataBase/connectionDB";
-
-import { Repository } from "typeorm";
 import User from "../dataBase/entities/User";
+
 import UserDTO from "../interfaces/DTOs/UserDTO";
 import IUser from "../interfaces/base/IUser";
 import IUserRepositoryLayer from "../interfaces/repository/IUserRepositoryLayer";

@@ -4,11 +4,13 @@ import Container from "typedi";
 
 import authMiddleware from "../middlewares/authentication";
 
-import { TeamService } from "../services/TeamService";
-import { UsersService } from "../services/UsersService";
 import IAdmin from "../interfaces/base/IAdmin";
 
+import TeamService from "../services/TeamService";
+import UsersService from "../services/UsersService";
+
 const teamRoute = express.Router();
+
 const teamService = Container.get(TeamService);
 const userService = Container.get(UsersService);
 

@@ -1,6 +1,6 @@
 import { Service } from "typedi";
-import connectDB from "../dataBase/connectionDB";
 
+import connectDB from "../dataBase/connectionDB";
 import Team from "../dataBase/entities/Team";
 import User from "../dataBase/entities/User";
 
@@ -9,7 +9,7 @@ import IUser from "../interfaces/base/IUser";
 import ITeamRepositoryLayer from "../interfaces/repository/ITeamRepository";
 
 @Service()
-export class PostgressTeamRepository implements ITeamRepositoryLayer {
+export default class PostgressTeamRepository implements ITeamRepositoryLayer {
   private db_connection = connectDB;
 
   createTeam = async (details: ITeam) => {

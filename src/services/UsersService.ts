@@ -5,7 +5,7 @@ import IUsersService from "../interfaces/services/IUsersService";
 import IUser from "../interfaces/base/IUser";
 import UserDTO from "../interfaces/DTOs/UserDTO";
 @Service()
-export class UsersService implements IUsersService {
+export default class UsersService implements IUsersService {
   private repository;
 
   constructor() {
