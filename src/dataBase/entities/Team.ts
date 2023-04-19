@@ -7,10 +7,10 @@ import {
   JoinTable,
   ManyToOne,
 } from "typeorm";
-import { User } from "./User";
+import User from "./User";
 
 @Entity("teams")
-export class Team {
+export default class Team {
   @PrimaryGeneratedColumn()
   id: string;
 

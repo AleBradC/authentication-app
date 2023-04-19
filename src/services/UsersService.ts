@@ -1,26 +1,34 @@
 import { Service, Container } from "typedi";
 
-import { PostgressUserRepository } from "../repositories/PostgressUserRepository";
-import { IUsersService } from "../interfaces/services/IUsersService";
-import { IUser } from "../interfaces/IUser";
-
+import PostgressUserRepository from "../repositories/PostgressUserRepository";
+import IUsersService from "../interfaces/services/IUsersService";
+import IUser from "../interfaces/base/IUser";
+import UserDTO from "../interfaces/DTOs/UserDTO";
 @Service()
 export class UsersService implements IUsersService {
-  private repository = Container.get(PostgressUserRepository);
+  private repository;
+
+  constructor() {
+    this.repository = Container.get(PostgressUserRepository);
+  }
 
   postUser = async (details: IUser) => {
     return await this.repository.createUser(details);
   };
 
-  getAllUsers = async () => {
+  getAllUsers = async (): Promise<UserDTO[]> => {
     return await this.repository.findAllUsers();
   };
 
-  getUserByEmail = async (email: string) => {
+  getUserByEmail = async (email: string): Promise<UserDTO | null> => {
     return await this.repository.findOneByEmail(email);
   };
 
-  getUserById = async (id: string) => {
+  getUserById = async (id: string): Promise<UserDTO | null> => {
     return await this.repository.findOneById(id);
+  };
+
+  getAllUsersDetails = async (email: string): Promise<IUser | null> => {
+    return await this.repository.findAllUserDetails(email);
   };
 }

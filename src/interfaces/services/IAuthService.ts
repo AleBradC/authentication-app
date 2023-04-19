@@ -1,8 +1,4 @@
-export interface IUserDetails {
-  userName: string;
-  email: string;
-  password: string;
-}
+import IUser from "../base/IUser";
 
 export interface IUserLogin {
   email: string;
@@ -14,7 +10,7 @@ export interface IUserToken {
 }
 
 export interface IAuthService {
-  register: (data: IUserDetails) => Promise<IUserToken | string | null>;
+  register: (data: IUser) => Promise<IUserToken | string | null>;
   login: (data: IUserLogin) => Promise<IUserToken | string | null>;
   // logout: () => void;
 }

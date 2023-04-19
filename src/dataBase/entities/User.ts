@@ -5,10 +5,10 @@ import {
   ManyToMany,
   OneToMany,
 } from "typeorm";
-import { Team } from "./Team";
+import Team from "./Team";
 
 @Entity("users")
-export class User {
+export default class User {
   @PrimaryGeneratedColumn()
   id: string;
 

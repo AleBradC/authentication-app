@@ -1,8 +1,8 @@
 import { Service, Container } from "typedi";
 
-import { ITeamService } from "../interfaces/services/ITeamService";
-import { ITeam } from "../interfaces/ITeam";
 import { PostgressTeamRepository } from "../repositories/PostgressTeamRepository";
+import ITeamService from "../interfaces/services/ITeamService";
+import ITeam from "../interfaces/base/ITeam";
 
 @Service()
 export class TeamService implements ITeamService {

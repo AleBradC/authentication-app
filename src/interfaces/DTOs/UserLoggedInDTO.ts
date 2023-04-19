@@ -1,4 +1,3 @@
-export interface UserLoggedInDTO {
+export default interface UserLoggedInDTO {
   accessToken: string;
-  id: string;
 }

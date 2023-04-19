@@ -1,7 +1,8 @@
 import { DataSource } from "typeorm";
-import { User } from "./entities/User";
-import { Team } from "./entities/Team";
 import config from "../../config";
+
+import Team from "./entities/Team";
+import User from "./entities/User";
 
 const host = config.host;
 const username = config.username;

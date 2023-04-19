@@ -1,11 +1,12 @@
 import { Service } from "typedi";
 import connectDB from "../dataBase/connectionDB";
 
-import { ITeamRepositoryLayer } from "../interfaces/repository/ITeamRepository";
-import { ITeam } from "../interfaces/ITeam";
-import { Team } from "../dataBase/entities/Team";
-import { User } from "../dataBase/entities/User";
-import { IUser } from "../interfaces/IUser";
+import Team from "../dataBase/entities/Team";
+import User from "../dataBase/entities/User";
+
+import ITeam from "../interfaces/base/ITeam";
+import IUser from "../interfaces/base/IUser";
+import ITeamRepositoryLayer from "../interfaces/repository/ITeamRepository";
 
 @Service()
 export class PostgressTeamRepository implements ITeamRepositoryLayer {

@@ -1,8 +1,7 @@
-import { TeamDTO } from "../DTOs/TeamDTO";
-import { ITeam } from "../ITeam";
-import { IUser } from "../IUser";
+import ITeam from "../base/ITeam";
+import TeamDTO from "../DTOs/TeamDTO";
 
-export interface ITeamRepositoryLayer {
+export default interface ITeamRepositoryLayer {
   createTeam: (details: ITeam) => void;
   findTeamMembers: (id: string) => Promise<any>;
   findAllTeams: () => Promise<TeamDTO[]>;

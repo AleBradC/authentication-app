@@ -17,7 +17,7 @@ registerRoute.post("/api/register", async (req: Request, res: Response) => {
     }
 
     const response = await authService.register({
-      userName: userName,
+      user_name: userName,
       email: email,
       password: password,
     });

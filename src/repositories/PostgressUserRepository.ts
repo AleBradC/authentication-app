@@ -1,23 +1,29 @@
 import { Service } from "typedi";
 
 import connectDB from "../dataBase/connectionDB";
-import { User } from "../dataBase/entities/User";
-import { IUser } from "../interfaces/IUser";
 
-import { IUserRepositoryLayer } from "../interfaces/repository/IUserRepositoryLayer";
+import { Repository } from "typeorm";
+import User from "../dataBase/entities/User";
+import UserDTO from "../interfaces/DTOs/UserDTO";
+import IUser from "../interfaces/base/IUser";
+import IUserRepositoryLayer from "../interfaces/repository/IUserRepositoryLayer";
 
 @Service()
-export class PostgressUserRepository implements IUserRepositoryLayer {
-  private db_connection = connectDB;
+export default class PostgressUserRepository implements IUserRepositoryLayer {
+  private repository: Repository<User>;
+
+  constructor() {
+    this.repository = connectDB.getRepository(User);
+  }
 
   createUser = async (details: IUser) => {
-    const newUser = this.db_connection.getRepository(User).create(details);
+    const newUser = this.repository.create(details);
 
-    return await this.db_connection.getRepository(User).save(newUser);
+    return await this.repository.save(newUser);
   };
 
-  findAllUsers = async () => {
-    return await this.db_connection.getRepository(User).find({
+  findAllUsers = async (): Promise<UserDTO[]> => {
+    return await this.repository.find({
       select: {
         id: true,
         user_name: true,
@@ -30,8 +36,8 @@ export class PostgressUserRepository implements IUserRepositoryLayer {
     });
   };
 
-  findOneByEmail = async (email: string) => {
-    const user = await this.db_connection.getRepository(User).findOneBy({
+  findOneByEmail = async (email: string): Promise<UserDTO | null> => {
+    const user = await this.repository.findOneBy({
       email,
     });
 
@@ -41,9 +47,20 @@ export class PostgressUserRepository implements IUserRepositoryLayer {
     return user;
   };
 
-  findOneById = async (id: string) => {
-    const user = await this.db_connection.getRepository(User).findOneBy({
+  findOneById = async (id: string): Promise<UserDTO | null> => {
+    const user = await this.repository.findOneBy({
       id,
+    });
+
+    if (!user) {
+      return null;
+    }
+    return user;
+  };
+
+  findAllUserDetails = async (email: string): Promise<IUser | null> => {
+    const user = await this.repository.findOneBy({
+      email,
     });
 
     if (!user) {

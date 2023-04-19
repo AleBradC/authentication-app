@@ -1,8 +1,7 @@
-import { TeamDTO } from "../DTOs/TeamDTO";
-import { ITeam } from "../ITeam";
-import { IUser } from "../IUser";
-
-export interface ITeamService {
+import TeamDTO from "../DTOs/TeamDTO";
+import ITeam from "../base/ITeam";
+import IUser from "../base/IUser";
+export default interface ITeamService {
   createTeam: (data: ITeam) => void;
   getAllTeams: () => Promise<TeamDTO[]>;
   deleteTeam: (id: string) => void;

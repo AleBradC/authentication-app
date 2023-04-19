@@ -2,11 +2,11 @@ import express from "express";
 import { Request, Response } from "express";
 import Container from "typedi";
 
+import authMiddleware from "../middlewares/authentication";
+
 import { TeamService } from "../services/TeamService";
 import { UsersService } from "../services/UsersService";
-import { IAdmin } from "../interfaces/IAdmin";
-import authMiddleware from "../middlewares/authentication";
-import checkRole from "../middlewares/checkRole";
+import IAdmin from "../interfaces/base/IAdmin";
 
 const teamRoute = express.Router();
 const teamService = Container.get(TeamService);
@@ -23,14 +23,16 @@ teamRoute.post(
       if (!name) {
         return res.status(400).json("Please add a name");
       }
-      const { id, first_name, last_name } = (await userService.getUserByEmail(
-        data.email
-      )) as IAdmin;
+
+      const { id, user_name, owned_teams, teams, email } =
+        (await userService.getUserByEmail(data.email)) as IAdmin;
 
       const admin = {
         id: id,
-        first_name: first_name,
-        last_name: last_name,
+        user_name: user_name,
+        owned_teams: owned_teams,
+        teams: teams,
+        email: email,
       };
 
       const newTeam = await teamService.createTeam({

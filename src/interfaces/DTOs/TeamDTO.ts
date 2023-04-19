@@ -1,6 +1,5 @@
-import { IUser } from "../IUser";
-
-export interface TeamDTO {
+import IUser from "../base/IUser";
+export default interface TeamDTO {
   id: string;
   name: string;
   admin: IUser;
