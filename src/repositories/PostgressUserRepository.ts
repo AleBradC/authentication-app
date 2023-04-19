@@ -20,9 +20,7 @@ export class PostgressUserRepository implements IUserRepositoryLayer {
     return await this.db_connection.getRepository(User).find({
       select: {
         id: true,
-        first_name: true,
-        last_name: true,
-        role: true,
+        user_name: true,
       },
       relations: {
         owned_teams: {
@@ -33,14 +31,24 @@ export class PostgressUserRepository implements IUserRepositoryLayer {
   };
 
   findOneByEmail = async (email: string) => {
-    return await this.db_connection.getRepository(User).findOneBy({
-      email: email,
+    const user = await this.db_connection.getRepository(User).findOneBy({
+      email,
     });
+
+    if (!user) {
+      return null;
+    }
+    return user;
   };
 
   findOneById = async (id: string) => {
-    return await this.db_connection.getRepository(User).findOneBy({
-      id: id,
+    const user = await this.db_connection.getRepository(User).findOneBy({
+      id,
     });
+
+    if (!user) {
+      return null;
+    }
+    return user;
   };
 }

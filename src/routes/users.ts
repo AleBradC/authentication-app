@@ -3,19 +3,14 @@ import { Request, Response } from "express";
 import { Container } from "typedi";
 
 import { UsersService } from "../services/UsersService";
-import authMiddleware from "../middlewares/authentication";
 
 const usersRoute = express.Router();
 
-usersRoute.get(
-  "/api/users",
-  // authMiddleware,
-  async (req: Request, res: Response) => {
-    const userService = Container.get(UsersService);
-    const result = await userService.getAllUsers();
+usersRoute.get("/api/users", async (_req: Request, res: Response) => {
+  const userService = Container.get(UsersService);
+  const result = await userService.getAllUsers();
 
-    return res.status(200).send(result);
-  }
-);
+  return res.status(200).send(result);
+});
 
 export default usersRoute;

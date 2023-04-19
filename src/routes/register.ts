@@ -10,15 +10,14 @@ registerRoute.post("/api/register", async (req: Request, res: Response) => {
   const authService = Container.get(AuthService);
 
   try {
-    const { firstName, lastName, email, password } = req.body;
+    const { userName, email, password } = req.body;
 
-    if (!(firstName && lastName && email && password)) {
+    if (!(userName && email && password)) {
       return res.status(400).send("All inputs are required");
     }
 
     const response = await authService.register({
-      firstName: firstName,
-      lastName: lastName,
+      userName: userName,
       email: email,
       password: password,
     });

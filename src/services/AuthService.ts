@@ -26,9 +26,8 @@ export class AuthService implements IAuthService {
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(details.password, salt);
 
-    const user = await this.userService.createUser({
-      first_name: details.firstName,
-      last_name: details.lastName,
+    const user = await this.userService.postUser({
+      user_name: details.userName,
       email: details.email,
       password: passwordHash,
     });

@@ -17,15 +17,19 @@ export class PostgressTeamRepository implements ITeamRepositoryLayer {
     return await this.db_connection.getRepository(Team).save(newTeam);
   };
 
+  findTeamMembers = async (id: string) => {
+    return await this.db_connection.getRepository(Team).find;
+  };
+
   findAllTeams = async () => {
     return await this.db_connection.getRepository(Team).find({
       select: {
         id: true,
         name: true,
-        members: {},
       },
       relations: {
         admin: true,
+        members: true,
       },
     });
   };

@@ -15,21 +15,13 @@ export class User {
   id: string;
 
   @Column()
-  first_name: string;
-
-  @Column()
-  last_name: string;
+  user_name: string;
 
   @Column()
   email: string;
 
   @Column()
   password: string;
-
-  @Column({
-    default: "normal",
-  })
-  role: IUserRole;
 
   // one user (admin) -> multiple owned teams
   @OneToMany(() => Team, (team) => team.admin)

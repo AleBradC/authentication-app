@@ -9,7 +9,7 @@ const username = config.username;
 const connectDB = new DataSource({
   type: "postgres",
   host: host,
-  port: 5432,
+  port: 5433,
   username: username,
   database: "authentication_app",
   password: undefined,

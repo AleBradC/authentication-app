@@ -2,13 +2,13 @@ import { Service, Container } from "typedi";
 
 import { PostgressUserRepository } from "../repositories/PostgressUserRepository";
 import { IUsersService } from "../interfaces/services/IUsersService";
-import { IUser } from "src/interfaces/IUser";
+import { IUser } from "../interfaces/IUser";
 
 @Service()
 export class UsersService implements IUsersService {
   private repository = Container.get(PostgressUserRepository);
 
-  createUser = async (details: IUser) => {
+  postUser = async (details: IUser) => {
     return await this.repository.createUser(details);
   };
 
