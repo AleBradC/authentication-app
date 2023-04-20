@@ -38,9 +38,11 @@ teamRoute.post(
         teams: user.teams,
       };
 
-      const newTeam = await teamService.postTeam({ name: name, admin: admin });
+      const teamDetails = { name: name, admin: admin };
 
-      return res.status(200).json(newTeam);
+      await teamService.postTeam(teamDetails);
+
+      return res.status(200).json("Team created");
     } catch (error) {
       throw error;
     }
@@ -48,7 +50,7 @@ teamRoute.post(
 );
 
 // get user teams -> owned & member
-teamRoute.get("/api/teams", async (req: Request, res: Response) => {
+teamRoute.get("/api/teams", async (_req: Request, res: Response) => {
   try {
     const teams = await teamService.getAllTeams();
 

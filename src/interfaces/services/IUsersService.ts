@@ -1,4 +1,3 @@
-import Team from "src/dataBase/entities/Team";
 import IUser from "../base/IUser";
 import TeamDTO from "../DTOs/TeamDTO";
 import UserDTO from "../DTOs/UserDTO";

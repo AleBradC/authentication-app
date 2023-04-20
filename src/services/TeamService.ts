@@ -3,9 +3,7 @@ import { Service, Container } from "typedi";
 import PostgressTeamRepository from "../repositories/PostgressTeamRepository";
 import ITeamService from "../interfaces/services/ITeamService";
 import ITeam from "../interfaces/base/ITeam";
-import TeamDTO from "src/interfaces/DTOs/TeamDTO";
-import IUser from "src/interfaces/base/IUser";
-import UserDTO from "src/interfaces/DTOs/UserDTO";
+import TeamDTO from "../interfaces/DTOs/TeamDTO";
 
 @Service()
 export default class TeamService implements ITeamService {

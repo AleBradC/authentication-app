@@ -2,7 +2,7 @@ import TeamDTO from "../DTOs/TeamDTO";
 import ITeam from "../base/ITeam";
 import IUser from "../base/IUser";
 export default interface ITeamService {
-  postTeam: (data: ITeam) => void;
+  postTeam: (details: ITeam) => void;
   getAllTeams: () => Promise<TeamDTO[]>;
   getTeamById: (teamId: string) => Promise<TeamDTO | null>;
   deleteTeam: (id: string) => void;

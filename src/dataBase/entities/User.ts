@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToMany,
   OneToMany,
+  Relation,
 } from "typeorm";
 import Team from "./Team";
 
@@ -23,9 +24,8 @@ export default class User {
 
   // one user (admin) -> multiple owned teams
   @OneToMany(() => Team, (team) => team.admin)
-  owned_teams: Team[]; // -> nu o sa apara in tabel
+  owned_teams: Relation<Team[]>;
 
-  // just a member
-  @ManyToMany(() => Team, { cascade: true })
-  teams: Team[]; // ->  tabel separat
+  @ManyToMany(() => Team, (team) => team.members)
+  teams: Relation<Team[]>;
 }

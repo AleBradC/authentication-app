@@ -29,7 +29,7 @@ export default class PostgressUserRepository implements IUserRepositoryLayer {
         user_name: true,
         email: true,
       },
-      relations: ["owned_teams"],
+      relations: ["owned_teams", "teams"],
     });
   };
 
@@ -40,7 +40,7 @@ export default class PostgressUserRepository implements IUserRepositoryLayer {
         user_name: true,
         email: true,
       },
-      relations: ["owned_teams"],
+      relations: ["owned_teams", "teams"],
       where: {
         id,
       },
@@ -59,7 +59,7 @@ export default class PostgressUserRepository implements IUserRepositoryLayer {
         user_name: true,
         email: true,
       },
-      relations: ["owned_teams"],
+      relations: ["owned_teams", "teams"],
       where: {
         email,
       },
@@ -71,6 +71,7 @@ export default class PostgressUserRepository implements IUserRepositoryLayer {
     return user;
   };
 
+  // get all the details, incuding the passward
   findAllUserDetails = async (email: string): Promise<IUser | null> => {
     const user = await this.repository.findOneBy({
       email,

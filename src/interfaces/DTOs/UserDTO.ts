@@ -5,5 +5,5 @@ export default interface UserDTO {
   user_name: string;
   email: string;
   owned_teams: OwnedTeamsDTO[];
-  teams: TeamDTO[]; // -> to do
+  teams: TeamDTO[];
 }
