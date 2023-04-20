@@ -10,8 +10,7 @@ import IUserRepositoryLayer from "../interfaces/repository/IUserRepositoryLayer"
 
 @Service()
 export default class PostgressUserRepository implements IUserRepositoryLayer {
-  // private repository: Repository<User>;
-  private repository;
+  private repository: Repository<User>;
 
   constructor() {
     this.repository = connectDB.getRepository(User);
@@ -34,6 +33,25 @@ export default class PostgressUserRepository implements IUserRepositoryLayer {
     });
   };
 
+  findOneById = async (id: string): Promise<UserDTO | null> => {
+    const user = await this.repository.findOne({
+      select: {
+        id: true,
+        user_name: true,
+        email: true,
+      },
+      relations: ["owned_teams"],
+      where: {
+        id,
+      },
+    });
+
+    if (!user) {
+      return null;
+    }
+    return user;
+  };
+
   findOneByEmail = async (email: string): Promise<UserDTO | null> => {
     const user = await this.repository.findOne({
       select: {
@@ -43,16 +61,8 @@ export default class PostgressUserRepository implements IUserRepositoryLayer {
       },
       relations: ["owned_teams"],
       where: {
-        email: email,
+        email,
       },
-    });
-
-    return user;
-  };
-
-  findOneById = async (id: string): Promise<UserDTO | null> => {
-    const user = await this.repository.findOneBy({
-      id,
     });
 
     if (!user) {
