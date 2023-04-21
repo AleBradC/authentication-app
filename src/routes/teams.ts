@@ -34,8 +34,6 @@ teamRoute.post(
         id: user.id,
         user_name: user.user_name,
         email: user.email,
-        owned_teams: user.owned_teams,
-        teams: user.teams,
       };
 
       const teamDetails = { name: name, admin: admin };

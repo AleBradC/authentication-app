@@ -23,28 +23,56 @@ export default class PostgressUserRepository implements IUserRepositoryLayer {
   };
 
   findAllUsers = async (): Promise<UserDTO[]> => {
-    return await this.repository.find({
-      select: {
-        id: true,
-        user_name: true,
-        email: true,
-      },
-      relations: ["owned_teams", "teams"],
-    });
+    const users = await this.repository
+      .createQueryBuilder("users")
+      .leftJoinAndSelect("users.owned_teams", "owned_teams")
+      .leftJoinAndSelect("owned_teams.members", "members")
+      .leftJoinAndSelect("users.teams", "teams")
+      .leftJoinAndSelect("teams.admin", "admin")
+      .select([
+        "users.id",
+        "users.user_name",
+        "users.email",
+        "owned_teams.id",
+        "owned_teams.name",
+        "members.id",
+        "members.user_name",
+        "members.email",
+        "teams.id",
+        "teams.name",
+        "admin.id",
+        "admin.user_name",
+        "admin.email",
+      ])
+      .getMany();
+
+    return users;
   };
 
   findOneById = async (id: string): Promise<UserDTO | null> => {
-    const user = await this.repository.findOne({
-      select: {
-        id: true,
-        user_name: true,
-        email: true,
-      },
-      relations: ["owned_teams", "teams"],
-      where: {
-        id,
-      },
-    });
+    const user = await this.repository
+      .createQueryBuilder("users")
+      .leftJoinAndSelect("users.owned_teams", "owned_teams")
+      .leftJoinAndSelect("owned_teams.members", "members")
+      .leftJoinAndSelect("users.teams", "teams")
+      .leftJoinAndSelect("teams.admin", "admin")
+      .select([
+        "users.id",
+        "users.user_name",
+        "users.email",
+        "owned_teams.id",
+        "owned_teams.name",
+        "members.id",
+        "members.user_name",
+        "members.email",
+        "teams.id",
+        "teams.name",
+        "admin.id",
+        "admin.user_name",
+        "admin.email",
+      ])
+      .where({ id })
+      .getOne();
 
     if (!user) {
       return null;

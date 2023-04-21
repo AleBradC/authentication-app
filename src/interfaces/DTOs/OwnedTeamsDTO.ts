@@ -1,7 +1,7 @@
-import UserDTO from "./UserDTO";
+import MemberDTO from "./MemberDTO";
 
 export default interface OwnedTeamsDTO {
   id: string;
   name: string;
-  members: UserDTO[];
+  members: MemberDTO[];
 }

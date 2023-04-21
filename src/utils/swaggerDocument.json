@@ -44,7 +44,7 @@
     }
   },
   "definitions": {
-    "User": {
+    "users": {
       "properties": {
         "id": {
           "type": "integer",
@@ -59,20 +59,74 @@
         "owned_teams": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "uniqueItems": true
+              },
+              "name": {
+                "type": "string"
+              },
+              "members": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "uniqueItems": true
+                    },
+                    "user_name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "teams": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "uniqueItems": true
+              },
+              "name": {
+                "type": "string"
+              },
+              "admin": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "uniqueItems": true
+                    },
+                    "user_name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
     "Users": {
       "type": "array",
-      "$ref": "#/definitions/User"
+      "$ref": "#/definitions/users"
     }
   }
 }

@@ -14,4 +14,13 @@ usersRoute.get("/api/users", async (_req: Request, res: Response) => {
   return res.status(200).send(result);
 });
 
+usersRoute.get("/api/users/:id", async (req: Request, res: Response) => {
+  const userService = Container.get(UsersService);
+  const { id } = req.params;
+
+  const result = await userService.getUserById(id);
+
+  return res.status(200).send(result);
+});
+
 export default usersRoute;

@@ -1,7 +1,6 @@
-import UserDTO from "../DTOs/UserDTO";
-import IUser from "./IUser";
+import IAdmin from "./IAdimn";
 
 export default interface ITeam {
   name: string;
-  admin: UserDTO;
+  admin: IAdmin;
 }
