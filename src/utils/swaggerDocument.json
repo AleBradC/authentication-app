@@ -12,6 +12,10 @@
       "description": "Get all users"
     },
     {
+      "name": "User",
+      "description": "Get user by id"
+    },
+    {
       "name": "Register",
       "description": "API for users in the system"
     },
@@ -37,6 +41,20 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/Users"
+            }
+          }
+        }
+      }
+    },
+    "/users/:id": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get all user by id",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/User"
             }
           }
         }
@@ -124,9 +142,93 @@
         }
       }
     },
+    "user": {
+      "properties": {
+        "id": {
+          "type": "integer",
+          "uniqueItems": true
+        },
+        "user_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "owned_teams": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "uniqueItems": true
+              },
+              "name": {
+                "type": "string"
+              },
+              "members": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "uniqueItems": true
+                    },
+                    "user_name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "teams": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "uniqueItems": true
+              },
+              "name": {
+                "type": "string"
+              },
+              "admin": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "uniqueItems": true
+                    },
+                    "user_name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "Users": {
       "type": "array",
       "$ref": "#/definitions/users"
+    },
+    "User": {
+      "type": "array",
+      "$ref": "#/definitions/user"
     }
   }
 }
