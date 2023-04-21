@@ -23,56 +23,30 @@ export default class PostgressUserRepository implements IUserRepositoryLayer {
   };
 
   findAllUsers = async (): Promise<UserDTO[]> => {
-    const users = await this.repository
-      .createQueryBuilder("users")
-      .leftJoinAndSelect("users.owned_teams", "owned_teams")
-      .leftJoinAndSelect("owned_teams.members", "members")
-      .leftJoinAndSelect("users.teams", "teams")
-      .leftJoinAndSelect("teams.admin", "admin")
-      .select([
-        "users.id",
-        "users.user_name",
-        "users.email",
-        "owned_teams.id",
-        "owned_teams.name",
-        "members.id",
-        "members.user_name",
-        "members.email",
-        "teams.id",
-        "teams.name",
-        "admin.id",
-        "admin.user_name",
-        "admin.email",
-      ])
-      .getMany();
+    const users = await this.repository.find({
+      relations: [
+        "owned_teams",
+        "owned_teams.members",
+        "teams",
+        "teams.admin",
+        "teams.members",
+      ],
+    });
 
     return users;
   };
 
   findOneById = async (id: string): Promise<UserDTO | null> => {
-    const user = await this.repository
-      .createQueryBuilder("users")
-      .leftJoinAndSelect("users.owned_teams", "owned_teams")
-      .leftJoinAndSelect("owned_teams.members", "members")
-      .leftJoinAndSelect("users.teams", "teams")
-      .leftJoinAndSelect("teams.admin", "admin")
-      .select([
-        "users.id",
-        "users.user_name",
-        "users.email",
-        "owned_teams.id",
-        "owned_teams.name",
-        "members.id",
-        "members.user_name",
-        "members.email",
-        "teams.id",
-        "teams.name",
-        "admin.id",
-        "admin.user_name",
-        "admin.email",
-      ])
-      .where({ id })
-      .getOne();
+    const user = await this.repository.findOne({
+      relations: [
+        "owned_teams",
+        "owned_teams.members",
+        "teams",
+        "teams.admin",
+        "teams.members",
+      ],
+      where: { id },
+    });
 
     if (!user) {
       return null;
@@ -82,15 +56,14 @@ export default class PostgressUserRepository implements IUserRepositoryLayer {
 
   findOneByEmail = async (email: string): Promise<UserDTO | null> => {
     const user = await this.repository.findOne({
-      select: {
-        id: true,
-        user_name: true,
-        email: true,
-      },
-      relations: ["owned_teams", "teams"],
-      where: {
-        email,
-      },
+      relations: [
+        "owned_teams",
+        "owned_teams.members",
+        "teams",
+        "teams.admin",
+        "teams.members",
+      ],
+      where: { email },
     });
 
     if (!user) {
@@ -101,8 +74,11 @@ export default class PostgressUserRepository implements IUserRepositoryLayer {
 
   // get all the details, incuding the passward
   findAllUserDetails = async (email: string): Promise<IUser | null> => {
-    const user = await this.repository.findOneBy({
-      email,
+    const user = await this.repository.findOne({
+      select: {
+        password: true,
+      },
+      where: { email },
     });
 
     if (!user) {

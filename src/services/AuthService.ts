@@ -47,7 +47,7 @@ export class AuthService implements IAuthService {
     if (!existingUser) {
       return null;
     }
-
+    console.log(existingUser);
     const isValid = await bcrypt.compare(
       details.password,
       existingUser.password

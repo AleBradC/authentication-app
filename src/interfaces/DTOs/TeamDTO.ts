@@ -5,5 +5,5 @@ export default interface TeamDTO {
   id: string;
   name: string;
   admin: AdminDTO;
-  members?: MemberDTO[];
+  members: MemberDTO[];
 }

@@ -19,7 +19,7 @@ export default class User {
   @Column()
   email: string;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
   // one user (admin) -> multiple owned teams

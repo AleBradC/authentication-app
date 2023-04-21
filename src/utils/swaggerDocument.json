@@ -17,11 +17,11 @@
     },
     {
       "name": "Register",
-      "description": "API for users in the system"
+      "description": "Register user"
     },
     {
       "name": "Login",
-      "description": "API for users in the system"
+      "description": "Login user"
     },
     {
       "name": "Teams",
@@ -55,6 +55,56 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "tags": ["Register"],
+        "description": "Create new user",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User that we want to create",
+            "schema": {
+              "$ref": "#/definitions/Register"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": ["Login"],
+        "description": "Login user",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User that we to log",
+            "schema": {
+              "$ref": "#/definitions/Login"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Token"
             }
           }
         }
@@ -120,6 +170,24 @@
                 "type": "string"
               },
               "admin": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "uniqueItems": true
+                    },
+                    "user_name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "members": {
                 "type": "array",
                 "items": {
                   "type": "object",
@@ -216,9 +284,59 @@
                     }
                   }
                 }
+              },
+              "members": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "uniqueItems": true
+                    },
+                    "user_name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
             }
           }
+        }
+      }
+    },
+    "register": {
+      "required": ["user_name", "email", "passward"],
+      "properties": {
+        "user_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "passward": {
+          "type": "string"
+        }
+      }
+    },
+    "login": {
+      "required": ["email", "passward"],
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "passward": {
+          "type": "string"
+        }
+      }
+    },
+    "token": {
+      "properties": {
+        "token": {
+          "type": "string"
         }
       }
     },
@@ -229,6 +347,18 @@
     "User": {
       "type": "array",
       "$ref": "#/definitions/user"
+    },
+    "Register": {
+      "type": "string",
+      "$ref": "#/definitions/register"
+    },
+    "Login": {
+      "type": "string",
+      "$ref": "#/definitions/login"
+    },
+    "Token": {
+      "type": "string",
+      "$ref": "#/definitions/token"
     }
   }
 }
