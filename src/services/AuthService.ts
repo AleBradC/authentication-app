@@ -1,22 +1,22 @@
 import { Service, Container } from "typedi";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
-import {
-  IAuthService,
-  IUserDetails,
-  IUserLogin,
-} from "../interfaces/services/IAuthService";
-import { PostgressUserRepository } from "../repositories/PostgressUserRepository";
-import { UsersService } from "./UsersService";
 import config from "../../config";
+
+import IUser from "../interfaces/base/IUser";
+import UsersService from "./UsersService";
+import { IAuthService, IUserLogin } from "../interfaces/services/IAuthService";
 
 const jwt_secret = config.jwt_secret;
 @Service()
 export class AuthService implements IAuthService {
-  private userService = Container.get(UsersService);
+  private userService;
 
-  register = async (details: IUserDetails) => {
+  constructor() {
+    this.userService = Container.get(UsersService);
+  }
+
+  register = async (details: IUser): Promise<string | null> => {
     const existingUser = await this.userService.getUserByEmail(details.email);
 
     if (existingUser) {
@@ -26,9 +26,8 @@ export class AuthService implements IAuthService {
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(details.password, salt);
 
-    const user = await this.userService.createUser({
-      first_name: details.firstName,
-      last_name: details.lastName,
+    const user = await this.userService.postUser({
+      user_name: details.user_name,
       email: details.email,
       password: passwordHash,
     });
@@ -40,13 +39,15 @@ export class AuthService implements IAuthService {
     return accesToken;
   };
 
-  login = async (details: IUserLogin) => {
-    const existingUser = await this.userService.getUserByEmail(details.email);
+  login = async (details: IUserLogin): Promise<string | null> => {
+    const existingUser = await this.userService.getAllUsersDetails(
+      details.email
+    );
 
     if (!existingUser) {
       return null;
     }
-
+    console.log(existingUser);
     const isValid = await bcrypt.compare(
       details.password,
       existingUser.password
@@ -62,5 +63,4 @@ export class AuthService implements IAuthService {
 
     return null;
   };
-  // logout = () => void;
 }

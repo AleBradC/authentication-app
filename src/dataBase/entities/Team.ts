@@ -6,39 +6,28 @@ import {
   ManyToMany,
   JoinTable,
   ManyToOne,
+  Relation,
 } from "typeorm";
-import { User } from "./User";
+import User from "./User";
 
 @Entity("teams")
-export class Team {
+export default class Team {
   @PrimaryGeneratedColumn()
   id: string;
 
   @Column()
   name: string;
 
-  // many teams can have one admin
   // for in key
-  @ManyToOne(() => User, (user) => user.owned_teams, {
-    onDelete: "CASCADE",
-  })
+  @ManyToOne(() => User, (user) => user.owned_teams)
   @JoinColumn({
-    name: "admin_id", // name of the primary key
+    name: "admin", // name of the primary key
   })
-  admin: User;
+  admin: Relation<User>;
 
-  // many teams can have multiple users
-  @ManyToMany(() => User, (user) => user.id, { cascade: true })
+  @ManyToMany(() => User, (user) => user.teams)
   @JoinTable({
     name: "members",
-    joinColumn: {
-      name: "team",
-      referencedColumnName: "id",
-    },
-    inverseJoinColumn: {
-      name: "user",
-      referencedColumnName: "id",
-    },
   })
-  members: User[]; // -> tabel separat
+  members: Relation<User[]>;
 }

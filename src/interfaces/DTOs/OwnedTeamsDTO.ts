@@ -1,9 +1,7 @@
-import AdminDTO from "./AdminDTO";
 import MemberDTO from "./MemberDTO";
 
-export default interface TeamDTO {
+export default interface OwnedTeamsDTO {
   id: string;
   name: string;
-  admin: AdminDTO;
   members: MemberDTO[];
 }

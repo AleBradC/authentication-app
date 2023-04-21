@@ -16,10 +16,12 @@ loginRoute.post("/api/login", async (req: Request, res: Response) => {
       return res.status(400).send("All inputs are required");
     }
 
-    const response = await authService.login({
+    const details = {
       email: email,
       password: password,
-    });
+    };
+
+    const response = await authService.login(details);
 
     return res.status(200).json({ accessToken: response });
   } catch (error) {

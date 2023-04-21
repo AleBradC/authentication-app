@@ -2,13 +2,13 @@ import express from "express";
 import { Request, Response } from "express";
 import Container from "typedi";
 
-import { TeamService } from "../services/TeamService";
-import { UsersService } from "../services/UsersService";
-import { IAdmin } from "../interfaces/IAdmin";
 import authMiddleware from "../middlewares/authentication";
-import checkRole from "../middlewares/checkRole";
+
+import TeamService from "../services/TeamService";
+import UsersService from "../services/UsersService";
 
 const teamRoute = express.Router();
+
 const teamService = Container.get(TeamService);
 const userService = Container.get(UsersService);
 
@@ -23,22 +23,24 @@ teamRoute.post(
       if (!name) {
         return res.status(400).json("Please add a name");
       }
-      const { id, first_name, last_name } = (await userService.getUserByEmail(
-        data.email
-      )) as IAdmin;
+
+      const user = await userService.getUserByEmail(data.email);
+
+      if (!user) {
+        return res.status(400).json("User not found");
+      }
 
       const admin = {
-        id: id,
-        first_name: first_name,
-        last_name: last_name,
+        id: user.id,
+        user_name: user.user_name,
+        email: user.email,
       };
 
-      const newTeam = await teamService.createTeam({
-        name: name,
-        admin: admin,
-      });
+      const teamDetails = { name: name, admin: admin };
 
-      return res.status(200).json(newTeam);
+      await teamService.postTeam(teamDetails);
+
+      return res.status(200).json("Team created");
     } catch (error) {
       throw error;
     }
@@ -46,7 +48,7 @@ teamRoute.post(
 );
 
 // get user teams -> owned & member
-teamRoute.get("/api/teams", async (req: Request, res: Response) => {
+teamRoute.get("/api/teams", async (_req: Request, res: Response) => {
   try {
     const teams = await teamService.getAllTeams();
 
@@ -66,7 +68,7 @@ teamRoute.delete(
       const { data } = req.body;
 
       const team = await teamService.getTeamById(id);
-      const teamAdmin = team?.admin.id;
+      const teamAdmin = team?.admin;
       const userId = await userService.getUserByEmail(data.email);
 
       if (teamAdmin === userId?.id) {
@@ -107,7 +109,7 @@ teamRoute.put(
     try {
       const { teamId, memberId } = req.params;
 
-      await teamService.addMember(teamId, memberId);
+      await teamService.putMemberInTeam(teamId, memberId);
 
       return res.status(200).json("User added");
     } catch (error) {
@@ -124,7 +126,7 @@ teamRoute.delete(
     try {
       const { teamId, memberId } = req.params;
 
-      await teamService.removeMember(teamId, memberId);
+      await teamService.deleteMemberFronTeam(teamId, memberId);
 
       return res.status(200).json("User removed");
     } catch (error) {

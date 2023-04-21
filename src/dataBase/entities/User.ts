@@ -4,31 +4,28 @@ import {
   PrimaryGeneratedColumn,
   ManyToMany,
   OneToMany,
+  Relation,
 } from "typeorm";
-import { Team } from "./Team";
+import Team from "./Team";
 
 @Entity("users")
-export class User {
+export default class User {
   @PrimaryGeneratedColumn()
   id: string;
 
   @Column()
-  first_name: string;
-
-  @Column()
-  last_name: string;
+  user_name: string;
 
   @Column()
   email: string;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
   // one user (admin) -> multiple owned teams
   @OneToMany(() => Team, (team) => team.admin)
-  owned_teams: Team[]; // -> nu o sa apara in tabel
+  owned_teams: Relation<Team[]>;
 
-  // just a member
-  @ManyToMany(() => Team, { cascade: true })
-  teams: Team[]; // ->  tabel separat
+  @ManyToMany(() => Team, (team) => team.members)
+  teams: Relation<Team[]>;
 }

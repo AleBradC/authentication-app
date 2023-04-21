@@ -1,9 +1,9 @@
-import { ITeam } from "../ITeam";
-
-export interface UserDTO {
+import OwnedTeamsDTO from "./OwnedTeamsDTO";
+import TeamDTO from "./TeamDTO";
+export default interface UserDTO {
   id: string;
-  first_name: string;
-  last_name: string;
-  owned_teams: ITeam[];
-  teams: ITeam[];
+  user_name: string;
+  email: string;
+  owned_teams: OwnedTeamsDTO[];
+  teams: TeamDTO[];
 }
