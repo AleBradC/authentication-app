@@ -20,8 +20,8 @@ export default class TeamService implements ITeamService {
     return await this.repository.findAllTeams();
   };
 
-  deleteTeam = async (id: string) => {
-    return await this.repository.deleteTeam(id);
+  getTeamById = async (id: string): Promise<TeamDTO | null> => {
+    return await this.repository.findOneById(id);
   };
 
   updateTeamName = async (id: string, name: string) => {
@@ -32,11 +32,11 @@ export default class TeamService implements ITeamService {
     return await this.repository.addMember(teamId, userId);
   };
 
-  deleteMemberFronTeam = async (teamId: string, userId: string) => {
-    return await this.repository.removeMember(teamId, userId);
+  deleteTeam = async (id: string) => {
+    return await this.repository.deleteTeam(id);
   };
 
-  getTeamById = async (teamId: string): Promise<TeamDTO | null> => {
-    return await this.repository.findOneById(teamId);
+  deleteMemberFronTeam = async (teamId: string, userId: string) => {
+    return await this.repository.removeMember(teamId, userId);
   };
 }

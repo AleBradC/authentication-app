@@ -17,50 +17,44 @@ export class AuthService implements IAuthService {
   }
 
   register = async (details: IUser): Promise<string | null> => {
-    const existingUser = await this.userService.getUserByEmail(details.email);
+    const { user_name, email, password } = details;
 
+    const existingUser = await this.userService.getUserByEmail(email);
     if (existingUser) {
-      return null;
+      return "This email is already used";
     }
 
     const salt = await bcrypt.genSalt();
-    const passwordHash = await bcrypt.hash(details.password, salt);
+    const passwordHash = await bcrypt.hash(password, salt);
 
-    const user = await this.userService.postUser({
-      user_name: details.user_name,
-      email: details.email,
+    await this.userService.postUser({
+      user_name: user_name,
+      email: email,
       password: passwordHash,
     });
 
-    const accesToken = jwt.sign({ email: user.email }, jwt_secret!, {
+    const accesToken = jwt.sign({ email: email }, jwt_secret!, {
       expiresIn: "2h",
     });
-
     return accesToken;
   };
 
   login = async (details: IUserLogin): Promise<string | null> => {
-    const existingUser = await this.userService.getAllUsersDetails(
-      details.email
-    );
+    const { email, password } = details;
 
+    const existingUser = await this.userService.getAllUsersDetails(email);
     if (!existingUser) {
-      return null;
+      return "This user doesn't exist";
     }
-    console.log(existingUser);
-    const isValid = await bcrypt.compare(
-      details.password,
-      existingUser.password
-    );
 
+    const isValid = await bcrypt.compare(password, existingUser.password);
     if (isValid) {
-      const accesToken = jwt.sign({ email: existingUser.email }, jwt_secret!, {
+      const accesToken = jwt.sign({ email: email }, jwt_secret!, {
         expiresIn: "2h",
       });
 
       return accesToken;
     }
-
-    return null;
+    return "Email or passward is incorrect";
   };
 }

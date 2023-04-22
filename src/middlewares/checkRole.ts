@@ -12,19 +12,9 @@ const checkRole =
     const { email } = req.body;
     const { id } = req.params;
 
-    try {
-      //   const user = await userService.getUserByEmail(email);
-      //   const team = await teamService.getTeamById(id);
-      //   if (user) {
-      //     if (team?.admin.id.includes(user.id)) {
-      //       return next();
-      //     } else {
-      //       return res.send("you have no rights");
-      //     }
-      //   }
-    } catch (error) {
-      console.log(error);
-    }
+    console.log(req);
+
+    return next();
   };
 
 export default checkRole;

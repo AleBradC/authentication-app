@@ -8,22 +8,14 @@ const registerRoute = express.Router();
 
 registerRoute.post("/api/register", async (req: Request, res: Response) => {
   const authService = Container.get(AuthService);
+  const { user_name, email, password } = req.body;
 
   try {
-    const { userName, email, password } = req.body;
-
-    if (!(userName && email && password)) {
+    if (!(user_name && email && password)) {
       return res.status(400).send("All inputs are required");
     }
 
-    const details = {
-      user_name: userName,
-      email: email,
-      password: password,
-    };
-
-    const response = await authService.register(details);
-
+    const response = await authService.register(req.body);
     return res.status(200).json({ accessToken: response });
   } catch (error) {
     throw error;

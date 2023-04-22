@@ -6,7 +6,7 @@ import Team from "../dataBase/entities/Team";
 import User from "../dataBase/entities/User";
 
 import ITeam from "../interfaces/base/ITeam";
-import ITeamRepositoryLayer from "../interfaces/repository/ITeamRepository";
+import ITeamRepositoryLayer from "../interfaces/repository/ITeamRepositoryLayer";
 import TeamDTO from "../interfaces/DTOs/TeamDTO";
 import UserDTO from "../interfaces/DTOs/UserDTO";
 
@@ -30,52 +30,20 @@ export default class PostgressTeamRepository implements ITeamRepositoryLayer {
 
   findAllTeams = async (): Promise<TeamDTO[]> => {
     return await this.repository.find({
-      select: {
-        id: true,
-        name: true,
-        admin: {
-          id: true,
-          user_name: true,
-          email: true,
-        },
-        members: {
-          id: true,
-          user_name: true,
-          email: true,
-        },
-      },
       relations: ["admin", "members"],
     });
   };
 
-  findOneById = async (teamId: string): Promise<TeamDTO | null> => {
+  findOneById = async (id: string): Promise<TeamDTO | null> => {
     const team = await this.repository.findOne({
-      select: {
-        id: true,
-        name: true,
-        admin: {
-          id: true,
-          user_name: true,
-          email: true,
-        },
-        members: {
-          id: true,
-          user_name: true,
-          email: true,
-        },
-      },
       relations: ["admin", "members"],
-      where: { id: teamId },
+      where: { id },
     });
 
     if (!team) {
       return null;
     }
     return team;
-  };
-
-  deleteTeam = async (id: string) => {
-    return await this.repository.delete(id);
   };
 
   updateTeam = async (id: string, name: string) => {
@@ -104,6 +72,10 @@ export default class PostgressTeamRepository implements ITeamRepositoryLayer {
     team.members = [user];
 
     return await this.db_connection.manager.save(team);
+  };
+
+  deleteTeam = async (id: string) => {
+    return await this.repository.delete(id);
   };
 
   removeMember = async (teamId: string, userId: string) => {

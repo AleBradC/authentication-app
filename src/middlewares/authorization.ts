@@ -4,7 +4,7 @@ import config from "../../config";
 
 const jwt_secret = config.jwt_secret;
 
-const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+const authorization = (req: Request, res: Response, next: NextFunction) => {
   const token = req.header("x-auth-token");
 
   if (!token) {
@@ -22,4 +22,4 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export default authMiddleware;
+export default authorization;

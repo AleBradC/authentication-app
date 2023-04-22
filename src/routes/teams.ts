@@ -2,7 +2,7 @@ import express from "express";
 import { Request, Response } from "express";
 import Container from "typedi";
 
-import authMiddleware from "../middlewares/authentication";
+import authorization from "../middlewares/authorization";
 
 import TeamService from "../services/TeamService";
 import UsersService from "../services/UsersService";
@@ -15,7 +15,7 @@ const userService = Container.get(UsersService);
 // create team
 teamRoute.post(
   "/api/team",
-  authMiddleware,
+  authorization,
   async (req: Request, res: Response) => {
     try {
       const { name, data } = req.body;
@@ -24,7 +24,7 @@ teamRoute.post(
         return res.status(400).json("Please add a name");
       }
 
-      const user = await userService.getUserByEmail(data.email);
+      const user = await userService.getUserByEmail(data);
 
       if (!user) {
         return res.status(400).json("User not found");
@@ -39,7 +39,6 @@ teamRoute.post(
       const teamDetails = { name: name, admin: admin };
 
       await teamService.postTeam(teamDetails);
-
       return res.status(200).json("Team created");
     } catch (error) {
       throw error;
@@ -61,7 +60,7 @@ teamRoute.get("/api/teams", async (_req: Request, res: Response) => {
 // delete team -> only by the admin
 teamRoute.delete(
   "/api/teams/:id",
-  authMiddleware,
+  authorization,
   async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
@@ -86,7 +85,7 @@ teamRoute.delete(
 // update team name -> only by the admin by the admin
 teamRoute.put(
   "/api/team/:id",
-  authMiddleware,
+  authorization,
   async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
@@ -104,7 +103,7 @@ teamRoute.put(
 // add member in the team -> only by the admin
 teamRoute.put(
   "/api/team/:teamId/member/:memberId",
-  authMiddleware,
+  authorization,
   async (req: Request, res: Response) => {
     try {
       const { teamId, memberId } = req.params;
@@ -121,7 +120,7 @@ teamRoute.put(
 // delete member from team -> only by the admin
 teamRoute.delete(
   "/api/team/:teamId/member/:memberId",
-  authMiddleware,
+  authorization,
   async (req: Request, res: Response) => {
     try {
       const { teamId, memberId } = req.params;
