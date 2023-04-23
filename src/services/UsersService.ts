@@ -24,6 +24,10 @@ export default class UsersService implements IUsersService {
     return await this.repository.findOneByEmail(email);
   };
 
+  getUserByUserName = async (user_name: string): Promise<UserDTO | null> => {
+    return await this.repository.findOneByUserName(user_name);
+  };
+
   getUserById = async (id: string): Promise<UserDTO | null> => {
     return await this.repository.findOneById(id);
   };

@@ -72,6 +72,24 @@ export default class PostgressUserRepository implements IUserRepositoryLayer {
     return user;
   };
 
+  findOneByUserName = async (user_name: string): Promise<UserDTO | null> => {
+    const user = await this.repository.findOne({
+      relations: [
+        "owned_teams",
+        "owned_teams.members",
+        "teams",
+        "teams.admin",
+        "teams.members",
+      ],
+      where: { user_name },
+    });
+
+    if (!user) {
+      return null;
+    }
+    return user;
+  };
+
   // get all the details, incuding the passward
   findAllUserDetails = async (email: string): Promise<IUser | null> => {
     const user = await this.repository.findOne({

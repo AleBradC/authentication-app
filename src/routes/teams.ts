@@ -7,6 +7,10 @@ import verifyRole from "../middlewares/verifyRole";
 
 import TeamService from "../services/TeamService";
 import UsersService from "../services/UsersService";
+import {
+  TEAM_VALIDATION,
+  GENERAL_VALIDATION,
+} from "../utils/constants/validations";
 
 const teamRoute = express.Router();
 
@@ -22,13 +26,13 @@ teamRoute.post(
       const { name, data } = req.body;
 
       if (!name) {
-        return res.status(400).json("Please add a name");
+        return res.status(400).json(TEAM_VALIDATION.NO_TEAM_NAME);
       }
 
       const user = await userService.getUserByEmail(data.email);
 
       if (!user) {
-        return res.status(400).json("User not found");
+        return res.status(400).json(GENERAL_VALIDATION.USER_NOT_FOUND);
       }
 
       const admin = {
