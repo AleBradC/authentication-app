@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import Container from "typedi";
 
 import authorization from "../middlewares/authorization";
+import verifyRole from "../middlewares/verifyRole";
 
 import TeamService from "../services/TeamService";
 import UsersService from "../services/UsersService";
@@ -24,7 +25,7 @@ teamRoute.post(
         return res.status(400).json("Please add a name");
       }
 
-      const user = await userService.getUserByEmail(data);
+      const user = await userService.getUserByEmail(data.email);
 
       if (!user) {
         return res.status(400).json("User not found");
@@ -57,43 +58,31 @@ teamRoute.get("/api/teams", async (_req: Request, res: Response) => {
   }
 });
 
-// delete team -> only by the admin
-teamRoute.delete(
-  "/api/teams/:id",
-  authorization,
-  async (req: Request, res: Response) => {
-    try {
-      const { id } = req.params;
-      const { data } = req.body;
+// get user teams -> owned & member
+teamRoute.get("/api/teams/:teamId", async (req: Request, res: Response) => {
+  const { teamId } = req.params;
 
-      const team = await teamService.getTeamById(id);
-      const teamAdmin = team?.admin;
-      const userId = await userService.getUserByEmail(data.email);
+  try {
+    const team = await teamService.getTeamById(teamId);
 
-      if (teamAdmin === userId?.id) {
-        await teamService.deleteTeam(id);
-        return res.status(200).json("Deleted");
-      } else {
-        return res.status(400).json("Nu merge");
-      }
-    } catch (error) {
-      throw error;
-    }
+    return res.status(200).send(team);
+  } catch (error) {
+    throw error;
   }
-);
+});
 
 // update team name -> only by the admin by the admin
 teamRoute.put(
-  "/api/team/:id",
+  "/api/team/:teamId",
   authorization,
+  verifyRole,
   async (req: Request, res: Response) => {
     try {
-      const { id } = req.params;
+      const { teamId } = req.params;
       const { name } = req.body;
 
-      await teamService.updateTeamName(id, name);
-
-      return res.status(200).json("Updated");
+      await teamService.updateTeamName(teamId, name);
+      return res.status(200).json("updated");
     } catch (error) {
       throw error;
     }
@@ -104,6 +93,7 @@ teamRoute.put(
 teamRoute.put(
   "/api/team/:teamId/member/:memberId",
   authorization,
+  verifyRole,
   async (req: Request, res: Response) => {
     try {
       const { teamId, memberId } = req.params;
@@ -117,10 +107,28 @@ teamRoute.put(
   }
 );
 
+// delete team -> only by the admin
+teamRoute.delete(
+  "/api/teams/:teamId",
+  authorization,
+  verifyRole,
+  async (req: Request, res: Response) => {
+    try {
+      const { teamId } = req.params;
+
+      await teamService.deleteTeam(teamId);
+      return res.status(200).json("Deleted");
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
 // delete member from team -> only by the admin
 teamRoute.delete(
   "/api/team/:teamId/member/:memberId",
   authorization,
+  verifyRole,
   async (req: Request, res: Response) => {
     try {
       const { teamId, memberId } = req.params;

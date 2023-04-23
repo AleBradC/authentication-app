@@ -5,20 +5,19 @@ import config from "../../config";
 const jwt_secret = config.jwt_secret;
 
 const authorization = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.header("x-auth-token");
+  const token = req.header("Authorization");
 
   if (!token) {
-    return res.status(403).send("A token is required for authentication");
-  }
+    res.status(403).send("A token is required for authentication");
+  } else {
+    try {
+      const decoded = jwt.verify(token, jwt_secret!);
+      req.body.data = decoded;
 
-  try {
-    const decoded = jwt.verify(token, jwt_secret!);
-
-    req.body.data = decoded;
-
-    return next();
-  } catch (err) {
-    return res.status(401).send("Invalid Token");
+      next();
+    } catch (err) {
+      res.status(401).send("Invalid Token");
+    }
   }
 };
 
