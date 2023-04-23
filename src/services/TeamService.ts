@@ -24,6 +24,10 @@ export default class TeamService implements ITeamService {
     return await this.repository.findOneById(id);
   };
 
+  getTeamByName = async (id: string): Promise<TeamDTO | null> => {
+    return await this.repository.findOneByName(id);
+  };
+
   updateTeamName = async (id: string, name: string) => {
     return await this.repository.updateTeam(id, name);
   };

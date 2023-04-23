@@ -7,6 +7,11 @@ import verifyRole from "../middlewares/verifyRole";
 
 import TeamService from "../services/TeamService";
 import UsersService from "../services/UsersService";
+import {
+  TEAM_VALIDATION,
+  GENERAL_VALIDATION,
+  SUCCESS,
+} from "../utils/constants/validations";
 
 const teamRoute = express.Router();
 
@@ -18,17 +23,21 @@ teamRoute.post(
   "/api/team",
   authorization,
   async (req: Request, res: Response) => {
-    try {
-      const { name, data } = req.body;
+    const { name, data } = req.body;
 
-      if (!name) {
-        return res.status(400).json("Please add a name");
+    if (!name) {
+      return res.status(400).json(TEAM_VALIDATION.NO_TEAM_NAME);
+    }
+
+    try {
+      const user = await userService.getUserByEmail(data.email);
+      if (!user) {
+        return res.status(400).json(GENERAL_VALIDATION.USER_NOT_FOUND);
       }
 
-      const user = await userService.getUserByEmail(data.email);
-
-      if (!user) {
-        return res.status(400).json("User not found");
+      const existingTeam = await teamService.getTeamByName(name);
+      if (existingTeam) {
+        return res.status(400).json(TEAM_VALIDATION.TEAM_NAME_USED);
       }
 
       const admin = {
@@ -37,10 +46,8 @@ teamRoute.post(
         email: user.email,
       };
 
-      const teamDetails = { name: name, admin: admin };
-
-      await teamService.postTeam(teamDetails);
-      return res.status(200).json("Team created");
+      await teamService.postTeam({ name: name, admin: admin });
+      return res.status(200).json(SUCCESS.TEAM_CREATED);
     } catch (error) {
       throw error;
     }
@@ -64,6 +71,9 @@ teamRoute.get("/api/teams/:teamId", async (req: Request, res: Response) => {
 
   try {
     const team = await teamService.getTeamById(teamId);
+    if (!team) {
+      return res.status(200).send(TEAM_VALIDATION.NO_TEAM);
+    }
 
     return res.status(200).send(team);
   } catch (error) {
@@ -77,12 +87,17 @@ teamRoute.put(
   authorization,
   verifyRole,
   async (req: Request, res: Response) => {
+    const { teamId } = req.params;
+    const { name } = req.body;
+
     try {
-      const { teamId } = req.params;
-      const { name } = req.body;
+      const existingTeam = await teamService.getTeamById(teamId);
+      if (existingTeam?.name === name) {
+        return res.status(400).json(TEAM_VALIDATION.TEAM_NAME_USED);
+      }
 
       await teamService.updateTeamName(teamId, name);
-      return res.status(200).json("updated");
+      return res.status(200).json(SUCCESS.TEAM_UPDATED);
     } catch (error) {
       throw error;
     }
@@ -95,12 +110,27 @@ teamRoute.put(
   authorization,
   verifyRole,
   async (req: Request, res: Response) => {
+    const { teamId, memberId } = req.params;
+
     try {
-      const { teamId, memberId } = req.params;
+      const existingTeam = await teamService.getTeamById(teamId);
+
+      // dont't add the user if it's admin
+      const teamAdminId = existingTeam?.admin.id.toString();
+      if (teamAdminId === memberId) {
+        return res.status(400).json(TEAM_VALIDATION.ADMIN_MEMBER);
+      }
+
+      // check if the user is already a member
+      const existingMembers = existingTeam?.members.map((member) =>
+        member.id.toString()
+      );
+      if (existingMembers?.includes(memberId)) {
+        return res.status(400).json(TEAM_VALIDATION.IS_MEMBER);
+      }
 
       await teamService.putMemberInTeam(teamId, memberId);
-
-      return res.status(200).json("User added");
+      return res.status(200).json(SUCCESS.USER_ADDED);
     } catch (error) {
       throw error;
     }
@@ -113,11 +143,16 @@ teamRoute.delete(
   authorization,
   verifyRole,
   async (req: Request, res: Response) => {
-    try {
-      const { teamId } = req.params;
+    const { teamId } = req.params;
 
-      await teamService.deleteTeam(teamId);
-      return res.status(200).json("Deleted");
+    try {
+      const team = await teamService.deleteTeam(teamId);
+
+      if (!team) {
+        return res.status(200).json(TEAM_VALIDATION.NO_TEAM);
+      }
+
+      return res.status(200).json(SUCCESS.TEAM_DELETED);
     } catch (error) {
       throw error;
     }
@@ -130,12 +165,27 @@ teamRoute.delete(
   authorization,
   verifyRole,
   async (req: Request, res: Response) => {
+    const { teamId, memberId } = req.params;
+
     try {
-      const { teamId, memberId } = req.params;
+      const existingTeam = await teamService.getTeamById(teamId);
+
+      // dont't delete the current user / admin
+      const teamAdminId = existingTeam?.admin.id.toString();
+      if (teamAdminId === memberId) {
+        return res.status(400).json(TEAM_VALIDATION.ADMIN_NO_REMOVE);
+      }
+
+      // check if user is in the team
+      const existingMembers = existingTeam?.members.map((member) =>
+        member.id.toString()
+      );
+      if (!existingMembers?.includes(memberId)) {
+        return res.status(400).json(GENERAL_VALIDATION.USER_NOT_FOUND);
+      }
 
       await teamService.deleteMemberFronTeam(teamId, memberId);
-
-      return res.status(200).json("User removed");
+      return res.status(200).json(SUCCESS.USER_REMOVED);
     } catch (error) {
       throw error;
     }

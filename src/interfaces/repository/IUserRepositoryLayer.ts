@@ -5,5 +5,6 @@ export default interface IUserRepositoryLayer {
   findAllUsers: () => Promise<UserDTO[]>;
   findOneById: (id: string) => Promise<UserDTO | null>;
   findOneByEmail: (email: string) => Promise<UserDTO | null>;
+  findOneByUserName: (user_name: string) => Promise<UserDTO | null>;
   findAllUserDetails: (email: string) => Promise<IUser | null>;
 }

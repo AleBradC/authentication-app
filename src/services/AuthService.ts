@@ -6,6 +6,10 @@ import config from "../../config";
 import IUser from "../interfaces/base/IUser";
 import UsersService from "./UsersService";
 import { IAuthService, IUserLogin } from "../interfaces/services/IAuthService";
+import {
+  GENERAL_VALIDATION,
+  USER_VALIDATION,
+} from "../utils/constants/validations";
 
 const jwt_secret = config.jwt_secret;
 @Service()
@@ -19,9 +23,23 @@ export class AuthService implements IAuthService {
   register = async (details: IUser): Promise<string | null> => {
     const { user_name, email, password } = details;
 
-    const existingUser = await this.userService.getUserByEmail(email);
-    if (existingUser) {
-      return "This email is already used";
+    if (!user_name || !email || !password) {
+      return USER_VALIDATION.REQUIRED_INPUTS;
+    }
+
+    const existingUserByEmail = await this.userService.getUserByEmail(email);
+    if (existingUserByEmail?.email === email) {
+      return USER_VALIDATION.EMAIL_USED;
+    }
+
+    const existingUserByUserName = await this.userService.getUserByUserName(
+      user_name
+    );
+    if (
+      existingUserByUserName?.user_name.toLowerCase() ===
+      user_name.toLowerCase()
+    ) {
+      return USER_VALIDATION.USER_NAME_USED;
     }
 
     const salt = await bcrypt.genSalt();
@@ -42,19 +60,28 @@ export class AuthService implements IAuthService {
   login = async (details: IUserLogin): Promise<string | null> => {
     const { email, password } = details;
 
-    const existingUser = await this.userService.getAllUsersDetails(email);
-    if (!existingUser) {
-      return "This user doesn't exist";
+    if (!(email && password)) {
+      return USER_VALIDATION.REQUIRED_INPUTS;
     }
 
-    const isValid = await bcrypt.compare(password, existingUser.password);
-    if (isValid) {
-      const accesToken = jwt.sign({ email: email }, jwt_secret!, {
-        expiresIn: "2h",
-      });
-
-      return accesToken;
+    const existingUserByEmail = await this.userService.getAllUsersDetails(
+      email
+    );
+    if (!existingUserByEmail) {
+      return GENERAL_VALIDATION.USER_NOT_FOUND;
     }
-    return "Email or passward is incorrect";
+
+    const isValid = await bcrypt.compare(
+      password,
+      existingUserByEmail.password
+    );
+    if (!isValid) {
+      return USER_VALIDATION.WRONG_PASSWARD_OR_EMAIL;
+    }
+
+    const accesToken = jwt.sign({ email: email }, jwt_secret!, {
+      expiresIn: "2h",
+    });
+    return accesToken;
   };
 }

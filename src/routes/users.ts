@@ -6,21 +6,26 @@ import UsersService from "../services/UsersService";
 
 const usersRoute = express.Router();
 
+const userService = Container.get(UsersService);
+
 usersRoute.get("/api/users", async (_req: Request, res: Response) => {
-  const userService = Container.get(UsersService);
-
-  const result = await userService.getAllUsers();
-
-  return res.status(200).send(result);
+  try {
+    const result = await userService.getAllUsers();
+    return res.status(200).send(result);
+  } catch (err) {
+    return err;
+  }
 });
 
 usersRoute.get("/api/users/:id", async (req: Request, res: Response) => {
-  const userService = Container.get(UsersService);
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  const result = await userService.getUserById(id);
-
-  return res.status(200).send(result);
+    const result = await userService.getUserById(id);
+    return res.status(200).send(result);
+  } catch (error) {
+    return error;
+  }
 });
 
 export default usersRoute;

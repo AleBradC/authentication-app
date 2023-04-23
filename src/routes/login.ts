@@ -6,17 +6,12 @@ import { AuthService } from "../services/AuthService";
 
 const loginRoute = express.Router();
 
+const authService = Container.get(AuthService);
+
 loginRoute.post("/api/login", async (req: Request, res: Response) => {
-  const authService = Container.get(AuthService);
-  const { email, password } = req.body;
-
   try {
-    if (!(email && password)) {
-      return res.status(400).send("All inputs are required");
-    }
-
     const response = await authService.login(req.body);
-    return res.status(200).json({ accessToken: response });
+    return res.status(200).json(response);
   } catch (error) {
     throw error;
   }
