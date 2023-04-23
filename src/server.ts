@@ -3,7 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import bodyParser from "body-parser";
 import swaggerUi from "swagger-ui-express";
-import swaggerDocument from "./utils/swaggerDocument.json";
+import swaggerDocument from "./utils/swagger/swaggerDocument.json";
 
 import connectDB from "./dataBase/connectionDB";
 
@@ -11,8 +11,6 @@ import registerRoute from "./routes/register";
 import loginRoute from "./routes/login";
 import usersRoute from "./routes/users";
 import teamRoute from "./routes/teams";
-
-import { errorHandler } from "./middlewares/errorHandler";
 
 import config from "../config";
 
@@ -37,7 +35,6 @@ connectDB
     app.use(registerRoute);
     app.use(loginRoute);
     app.use(teamRoute);
-    app.use(errorHandler);
 
     // Swagger
     app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));

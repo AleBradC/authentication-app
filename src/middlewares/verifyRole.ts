@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import Container from "typedi";
 
+import { WARNINGS } from "../utils/constants/warnings";
 import TeamService from "../services/TeamService";
 import UsersService from "../services/UsersService";
 
@@ -19,7 +20,7 @@ const verifyRole = async (req: Request, res: Response, next: NextFunction) => {
     if (admin?.id === user?.id) {
       next();
     } else {
-      res.status(401).json("You have no rights!");
+      res.status(401).json(WARNINGS.NO_AUTHORIZED);
     }
   } catch (err) {
     console.log(err);
