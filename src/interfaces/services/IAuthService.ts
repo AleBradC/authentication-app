@@ -8,4 +8,5 @@ export interface IUserLogin {
 export interface IAuthService {
   register: (data: IUser) => Promise<string | null>;
   login: (data: IUserLogin) => Promise<string | null>;
+  // logout: (data: any) => Promise<any>;
 }

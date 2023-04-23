@@ -11,6 +11,7 @@ import registerRoute from "./routes/register";
 import loginRoute from "./routes/login";
 import usersRoute from "./routes/users";
 import teamRoute from "./routes/teams";
+import logoutRoute from "./routes/logout";
 
 import { errorHandler } from "./middlewares/errorHandler";
 
@@ -36,6 +37,7 @@ connectDB
     app.use(usersRoute);
     app.use(registerRoute);
     app.use(loginRoute);
+    // app.use(logoutRoute);
     app.use(teamRoute);
     app.use(errorHandler);
 
