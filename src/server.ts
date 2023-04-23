@@ -12,8 +12,6 @@ import loginRoute from "./routes/login";
 import usersRoute from "./routes/users";
 import teamRoute from "./routes/teams";
 
-import { errorHandler } from "./middlewares/errorHandler";
-
 import config from "../config";
 
 const app = express();
@@ -37,7 +35,6 @@ connectDB
     app.use(registerRoute);
     app.use(loginRoute);
     app.use(teamRoute);
-    app.use(errorHandler);
 
     // Swagger
     app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));

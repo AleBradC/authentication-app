@@ -1,5 +1,4 @@
 import IUser from "../base/IUser";
-import TeamDTO from "../DTOs/TeamDTO";
 import UserDTO from "../DTOs/UserDTO";
 export default interface IUsersService {
   postUser: (details: IUser) => void;
