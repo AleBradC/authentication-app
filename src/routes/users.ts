@@ -6,16 +6,18 @@ import UsersService from "../services/UsersService";
 
 const usersRoute = express.Router();
 
+const userService = Container.get(UsersService);
+
 usersRoute.get("/api/users", async (_req: Request, res: Response) => {
-  const userService = Container.get(UsersService);
-
-  const result = await userService.getAllUsers();
-
-  return res.status(200).send(result);
+  try {
+    const result = await userService.getAllUsers();
+    return res.status(200).send(result);
+  } catch (err) {
+    return err;
+  }
 });
 
 usersRoute.get("/api/users/:id", async (req: Request, res: Response) => {
-  const userService = Container.get(UsersService);
   try {
     const { id } = req.params;
 

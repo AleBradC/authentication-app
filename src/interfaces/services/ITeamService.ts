@@ -5,6 +5,7 @@ export default interface ITeamService {
   postTeam: (details: ITeam) => void;
   getAllTeams: () => Promise<TeamDTO[]>;
   getTeamById: (id: string) => Promise<TeamDTO | null>;
+  getTeamByName: (name: string) => Promise<TeamDTO | null>;
   updateTeamName: (id: string, name: string) => void;
   putMemberInTeam: (teamId: string, userId: IUser) => void;
   deleteTeam: (id: string) => void;

@@ -46,6 +46,18 @@ export default class PostgressTeamRepository implements ITeamRepositoryLayer {
     return team;
   };
 
+  findOneByName = async (name: string): Promise<TeamDTO | null> => {
+    const team = await this.repository.findOne({
+      relations: ["admin", "members"],
+      where: { name },
+    });
+
+    if (!team) {
+      return null;
+    }
+    return team;
+  };
+
   updateTeam = async (id: string, name: string) => {
     return await this.repository.update(
       {
@@ -69,7 +81,7 @@ export default class PostgressTeamRepository implements ITeamRepositoryLayer {
       where: { id: userId },
     })) as UserDTO;
 
-    team.members = [user];
+    team.members.push(user);
 
     return await this.db_connection.manager.save(team);
   };
