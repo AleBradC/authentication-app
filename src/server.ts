@@ -11,6 +11,7 @@ import registerRoute from "./routes/register";
 import loginRoute from "./routes/login";
 import usersRoute from "./routes/users";
 import teamRoute from "./routes/teams";
+import eventRoute from "./routes/event";
 
 import config from "../config";
 
@@ -35,6 +36,7 @@ connectDB
     app.use(registerRoute);
     app.use(loginRoute);
     app.use(teamRoute);
+    app.use(eventRoute);
 
     // Swagger
     app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
