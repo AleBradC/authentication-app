@@ -2,7 +2,7 @@
 
 Authentication app
 
-## Description
+## Status
 
 - in progress...
 
