@@ -12,6 +12,7 @@ import {
   GENERAL_VALIDATION,
   SUCCESS,
 } from "../utils/constants/validations";
+import { eventEmitter } from "./event";
 
 const teamRoute = express.Router();
 
@@ -129,7 +130,10 @@ teamRoute.put(
         return res.status(400).json(TEAM_VALIDATION.IS_MEMBER);
       }
 
+      const data = "User was added";
+
       await teamService.putMemberInTeam(teamId, memberId);
+      eventEmitter.emit("message", data);
       return res.status(200).json(SUCCESS.USER_ADDED);
     } catch (error) {
       throw error;
