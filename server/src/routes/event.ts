@@ -1,24 +1,25 @@
-import express from "express";
+import { Router } from "express";
 import { Request, Response } from "express";
+import { EventEmitter } from "events";
 
-const eventRoute = express.Router();
+const eventEmitter = new EventEmitter();
 
-eventRoute.get("/api/stream", (_req: Request, res: Response) => {
-  try {
-    res.setHeader("Cache-Control", "no-cache");
-    res.setHeader("Content-Type", "text/event-stream");
-    res.setHeader("Connection", "keep-alive");
-    res.setHeader("Access-Control-Allow-Origin", "*");
+const eventRoute = Router();
 
-    setInterval(() => {
-      const data = { message: `Hello! (${new Date().toISOString()})` };
-      console.log(data);
+eventRoute.get("/api/stream", (req: Request, res: Response) => {
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
 
-      res.write(`data: ${JSON.stringify(data)}\n\n`);
-    }, 1000);
-  } catch (error) {
-    console.log(error);
-  }
+  const listener = (data: string) => {
+    res.write(`data: ${JSON.stringify(data)}\n\n`);
+  };
+  eventEmitter.on("message", listener);
+
+  // Remove the listener when the client disconnects
+  req.on("close", () => {
+    eventEmitter.off("message", listener);
+  });
 });
 
-export default eventRoute;
+export { eventRoute, eventEmitter };

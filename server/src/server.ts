@@ -11,7 +11,7 @@ import registerRoute from "./routes/register";
 import loginRoute from "./routes/login";
 import usersRoute from "./routes/users";
 import teamRoute from "./routes/teams";
-import eventRoute from "./routes/event";
+import { eventRoute } from "./routes/event";
 
 import config from "../config";
 
