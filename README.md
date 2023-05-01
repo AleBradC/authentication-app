@@ -10,6 +10,7 @@ Authentication app
 - TypeORM
 - PostgresSQL
 - TypeDI - for dependency injection
+- PM2
 
 # Status
 
