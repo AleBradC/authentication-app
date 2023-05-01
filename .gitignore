@@ -2,6 +2,7 @@ node_modules
 
 eslintrc
 .env
+/.env
 
 private.key
 public.key
