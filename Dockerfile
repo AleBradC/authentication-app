@@ -3,18 +3,15 @@ FROM node:18.13.0
 # Create app directory
 WORKDIR /app
 
-# Install app dependencies
 COPY package*.json ./
 
-RUN npm install
+COPY server/package*.json server/
+RUN npm run install-server --omit=dev
 
-# Bundle app source
-COPY . .
-
-RUN npm install --only=production
+COPY server/ server/
 
 USER node
 
-CMD [ "npm", "start" ]
+CMD [ "npm", "start", "--prefix", "server" ]
 
 EXPOSE 8000
