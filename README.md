@@ -11,6 +11,7 @@ Authentication app
 - PostgresSQL
 - TypeDI - for dependency injection
 - PM2
+- Docker
 
 # Status
 
