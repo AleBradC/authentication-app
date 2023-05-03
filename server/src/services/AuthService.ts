@@ -8,6 +8,7 @@ import UsersService from "./UsersService";
 import { IAuthService, IUserLogin } from "../interfaces/services/IAuthService";
 import {
   GENERAL_VALIDATION,
+  SUCCESS,
   USER_VALIDATION,
 } from "../utils/constants/validations";
 
@@ -51,10 +52,7 @@ export class AuthService implements IAuthService {
       password: passwordHash,
     });
 
-    const accesToken = jwt.sign({ email: email }, jwt_secret!, {
-      expiresIn: "2h",
-    });
-    return accesToken;
+    return SUCCESS.USER_CREATED;
   };
 
   login = async (details: IUserLogin): Promise<string | null> => {

@@ -22,6 +22,7 @@ export enum TEAM_VALIDATION {
 
 export enum SUCCESS {
   USER_ADDED = "User added",
+  USER_CREATED = "User has been created",
   TEAM_UPDATED = "Team updated",
   TEAM_CREATED = "Team created",
   USER_REMOVED = "User removed from team",
