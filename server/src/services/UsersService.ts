@@ -4,6 +4,8 @@ import PostgressUserRepository from "../repositories/PostgressUserRepository";
 import IUsersService from "../interfaces/services/IUsersService";
 import IUser from "../interfaces/base/IUser";
 import UserDTO from "../interfaces/DTOs/UserDTO";
+
+Container.set("IUserRepositoryLayer", PostgressUserRepository);
 @Service()
 export default class UsersService implements IUsersService {
   private repository;

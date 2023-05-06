@@ -13,6 +13,8 @@ import {
 } from "../utils/constants/validations";
 
 const jwt_secret = config.jwt_secret;
+
+Container.set("IUsersService", UsersService);
 @Service()
 export class AuthService implements IAuthService {
   private userService;

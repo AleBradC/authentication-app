@@ -4,12 +4,14 @@ import Container from "typedi";
 
 import { AuthService } from "../services/AuthService";
 
-const loginRoute = express.Router();
+Container.set("IAuthService", AuthService);
 
-const authService = Container.get(AuthService);
+const loginRoute = express.Router();
 
 loginRoute.post("/api/login", async (req: Request, res: Response) => {
   try {
+    const authService = Container.get(AuthService);
+
     const response = await authService.login(req.body);
     return res.status(200).json(response);
   } catch (error) {
