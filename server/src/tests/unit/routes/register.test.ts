@@ -1,15 +1,22 @@
 import request from "supertest";
 import app from "../../../app";
+import connectDB from "../../../dataBase/connectionDB";
 
 describe("registerRoute", () => {
-  test("should return 200 and the response from AuthService.register", async () => {
-    const requestBody = {
+  beforeAll(async () => {
+    await connectDB.initialize();
+  });
+
+  afterAll(async () => {
+    await connectDB.destroy();
+  });
+
+  it("should return 200 and the response from AuthService.register", async () => {
+    const response = await request(app).post("/api/register").send({
       user_name: "test",
       email: "testemail",
       password: "testpassword",
-    };
-
-    const response = await request(app).post("/api/register").send(requestBody);
+    });
 
     expect(response.status).toBe(200);
     expect(response.body).toBe("User created successfully");

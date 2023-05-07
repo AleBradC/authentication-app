@@ -4,18 +4,25 @@ import app from "./app";
 import connectDB from "./dataBase/connectionDB";
 
 const port = config.port;
-const server = http.createServer(app);
 
-connectDB
-  .initialize()
-  .then(() => {
-    console.log("Data base has been initialized");
+function startServer() {
+  const server = http.createServer(app);
 
-    // Start app
-    server.listen(port, async () => {
-      console.log(`Listen on server ${port}`);
+  connectDB
+    .initialize()
+    .then(() => {
+      console.log("Data base has been initialized");
+
+      // Start app
+      server.listen(port, () => {
+        console.log(`Listen on server ${port}`);
+      });
+    })
+    .catch((error) => {
+      console.log(error);
     });
-  })
-  .catch((error) => {
-    console.error(`Error ${error}`);
-  });
+
+  return server;
+}
+
+export default startServer;
