@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import authorization from "../../../middlewares/authorization";
 
-describe("authorization token", () => {
+describe("authorization", () => {
   let mockRequest: Partial<Request>;
   let mockResponse: Partial<Response>;
   let nextFunction: NextFunction = jest.fn();
