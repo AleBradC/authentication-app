@@ -7,8 +7,8 @@
     "watch": "nodemon --watch './**/*.ts' --exec 'ts-node' src/server.ts",
     "start": "./node_modules/.bin/pm2 start src/server.ts --watch",
     "dev": "node ./node_modules/.bin/ts-node src/server.ts",
-    "test": "jest --coverage",
-    "test:watch": "jest --watch"
+    "test": "jest --coverage --detectOpenHandles --watchAll --no-cache",
+    "test:watch": "jest --watch --detectOpenHandles"
   },
   "keywords": [],
   "author": "",
