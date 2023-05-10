@@ -28,4 +28,5 @@ When an admin adds a new member in the team, the client will be notified.
 
 - clone the project
 - npm i
-- npm run dev
+- npm run dev or npm run watch
+- npm run pm2 - to run the project with pm2
