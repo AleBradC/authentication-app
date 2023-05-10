@@ -4,8 +4,8 @@ import cors from "cors";
 import helmet from "helmet";
 import bodyParser from "body-parser";
 import swaggerUi from "swagger-ui-express";
-import swaggerDocument from "./utils/swaggerDocument.json";
-import Container from "typedi";
+import swaggerDocument from "./utils/swaggerDocument.json" assert { type: "json" };
+import { Container } from "typedi";
 
 import registerRoute from "./routes/register";
 import loginRoute from "./routes/login";

@@ -1,6 +1,6 @@
 import express from "express";
 import { Request, Response } from "express";
-import Container from "typedi";
+import { Container } from "typedi";
 
 import authorization from "../middlewares/authorization";
 import verifyRole from "../middlewares/verifyRole";

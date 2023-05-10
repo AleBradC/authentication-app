@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import Container from "typedi";
+import { Container } from "typedi";
 
 import TeamService from "../services/TeamService";
 import UsersService from "../services/UsersService";

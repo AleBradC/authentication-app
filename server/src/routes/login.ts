@@ -1,6 +1,6 @@
 import express from "express";
 import { Request, Response } from "express";
-import Container from "typedi";
+import { Container } from "typedi";
 
 import AuthService from "../services/AuthService";
 import { IAuthService } from "src/interfaces/services/IAuthService";
