@@ -12,7 +12,7 @@ Authentication app
 - TypeDI - for dependency injection
 - PM2
 - Docker
-- Jest & Supertest
+- Jest
 
 # Status
 

@@ -1,6 +1,7 @@
 import User from "../../../dataBase/entities/User";
 import PostgressUserRepository from "../../../repositories/PostgressUserRepository";
 import connectionDB from "../../../dataBase/connectionDB";
+
 jest.mock("../../../dataBase/connectionDB");
 
 describe("PostgressUserRepository", () => {
