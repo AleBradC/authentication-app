@@ -31,9 +31,5 @@ describe("registerRoute", () => {
       email: "testemail",
       password: "testpassword",
     };
-
-    // mockAuthService.register.mockResolvedValueOnce(mockRegisterResponse);
-
-    // request(app).post("/api/register").send(reqBody).expect(200);
   });
 });
