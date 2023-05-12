@@ -8,7 +8,7 @@
     "watch": "nodemon --watch src/server.ts",
     "dev": "ts-node src/server.ts",
     "pm2": "pm2 start src/server.ts --interpreter=/usr/local/bin/node",
-    "test": "jest src/tests/unit/*/*.test.ts",
+    "test": "jest --detectOpenHandles",
     "test:watch": "jest --coverage --watch --detectOpenHandles --watchAll --no-cache"
   },
   "keywords": [],
