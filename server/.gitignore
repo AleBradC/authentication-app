@@ -4,5 +4,4 @@ eslintrc
 .env
 /.env
 
-private.key
-public.key
+.DS_Store

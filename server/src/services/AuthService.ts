@@ -1,4 +1,4 @@
-import { Service, Container } from "typedi";
+import { Service, Inject, Container } from "typedi";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import config from "../../config";
@@ -14,12 +14,8 @@ import {
 
 const jwt_secret = config.jwt_secret;
 @Service()
-export class AuthService implements IAuthService {
-  private userService;
-
-  constructor() {
-    this.userService = Container.get(UsersService);
-  }
+export default class AuthService implements IAuthService {
+  constructor(@Inject() private userService: UsersService) {}
 
   register = async (details: IUser): Promise<string | null> => {
     const { user_name, email, password } = details;
