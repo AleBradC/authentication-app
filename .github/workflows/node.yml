@@ -13,9 +13,6 @@ jobs:
         with:
           node-version: "18"
           run: npm install
-          # Add the following step to build your code
-      - name: Build
-        run: npm run build
   jest:
     runs-on: ubuntu-latest
     steps:
