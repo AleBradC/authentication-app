@@ -1,4 +1,3 @@
-import request from "supertest";
 import AuthService from "../../../services/AuthService";
 import app from "../../../app";
 import Container from "typedi";
