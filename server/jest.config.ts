@@ -8,7 +8,6 @@ const config: Config = {
   transform: { "^.+\\.(ts|tsx)$": "ts-jest" },
   setupFilesAfterEnv: ["./jest.setup.js"],
   coveragePathIgnorePatterns: ["/node_modules/"],
-  testTimeout: 15000,
 };
 
 export default config;

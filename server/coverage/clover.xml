@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1683869801175" clover="3.2.0">
-  <project timestamp="1683869801175" name="All files">
-    <metrics statements="413" coveredstatements="228" conditionals="94" coveredconditionals="17" methods="108" coveredmethods="20" elements="615" coveredelements="265" complexity="0" loc="413" ncloc="413" packages="9" files="18" classes="18"/>
+<coverage generated="1683890194984" clover="3.2.0">
+  <project timestamp="1683890194984" name="All files">
+    <metrics statements="413" coveredstatements="222" conditionals="94" coveredconditionals="17" methods="108" coveredmethods="16" elements="615" coveredelements="255" complexity="0" loc="413" ncloc="413" packages="9" files="18" classes="18"/>
     <package name="config">
       <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <file name="index.ts" path="/Users/alexandraclaudiabrad/Documents/Study/Projects/authentication-app/server/config/index.ts">
@@ -138,7 +138,7 @@
       </file>
     </package>
     <package name="src.repositories">
-      <metrics statements="72" coveredstatements="32" conditionals="9" coveredconditionals="0" methods="31" coveredmethods="6"/>
+      <metrics statements="72" coveredstatements="31" conditionals="9" coveredconditionals="0" methods="31" coveredmethods="4"/>
       <file name="PostgressTeamRepository.ts" path="/Users/alexandraclaudiabrad/Documents/Study/Projects/authentication-app/server/src/repositories/PostgressTeamRepository.ts">
         <metrics statements="40" coveredstatements="17" conditionals="5" coveredconditionals="0" methods="18" coveredmethods="1"/>
         <line num="1" count="1" type="stmt"/>
@@ -183,7 +183,7 @@
         <line num="110" count="0" type="stmt"/>
       </file>
       <file name="PostgressUserRepository.ts" path="/Users/alexandraclaudiabrad/Documents/Study/Projects/authentication-app/server/src/repositories/PostgressUserRepository.ts">
-        <metrics statements="32" coveredstatements="15" conditionals="4" coveredconditionals="0" methods="13" coveredmethods="5"/>
+        <metrics statements="32" coveredstatements="14" conditionals="4" coveredconditionals="0" methods="13" coveredmethods="3"/>
         <line num="1" count="4" type="stmt"/>
         <line num="4" count="4" type="stmt"/>
         <line num="5" count="4" type="stmt"/>
@@ -202,7 +202,7 @@
         <line num="52" count="0" type="stmt"/>
         <line num="54" count="0" type="stmt"/>
         <line num="57" count="3" type="stmt"/>
-        <line num="58" count="1" type="stmt"/>
+        <line num="58" count="0" type="stmt"/>
         <line num="69" count="0" type="cond" truecount="0" falsecount="1"/>
         <line num="70" count="0" type="stmt"/>
         <line num="72" count="0" type="stmt"/>
@@ -219,7 +219,7 @@
       </file>
     </package>
     <package name="src.routes">
-      <metrics statements="146" coveredstatements="49" conditionals="38" coveredconditionals="0" methods="27" coveredmethods="2"/>
+      <metrics statements="146" coveredstatements="45" conditionals="38" coveredconditionals="0" methods="27" coveredmethods="0"/>
       <file name="event.ts" path="/Users/alexandraclaudiabrad/Documents/Study/Projects/authentication-app/server/src/routes/event.ts">
         <metrics statements="14" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
@@ -252,17 +252,17 @@
         <line num="21" count="1" type="stmt"/>
       </file>
       <file name="register.ts" path="/Users/alexandraclaudiabrad/Documents/Study/Projects/authentication-app/server/src/routes/register.ts">
-        <metrics statements="11" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <metrics statements="11" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
         <line num="5" count="1" type="stmt"/>
         <line num="7" count="1" type="stmt"/>
         <line num="9" count="1" type="stmt"/>
-        <line num="10" count="1" type="stmt"/>
-        <line num="11" count="1" type="stmt"/>
-        <line num="13" count="1" type="stmt"/>
+        <line num="10" count="0" type="stmt"/>
+        <line num="11" count="0" type="stmt"/>
+        <line num="13" count="0" type="stmt"/>
         <line num="14" count="0" type="stmt"/>
-        <line num="16" count="1" type="stmt"/>
+        <line num="16" count="0" type="stmt"/>
         <line num="20" count="1" type="stmt"/>
       </file>
       <file name="teams.ts" path="/Users/alexandraclaudiabrad/Documents/Study/Projects/authentication-app/server/src/routes/teams.ts">
@@ -383,24 +383,24 @@
       </file>
     </package>
     <package name="src.services">
-      <metrics statements="73" coveredstatements="40" conditionals="19" coveredconditionals="4" methods="35" coveredmethods="7"/>
+      <metrics statements="73" coveredstatements="39" conditionals="19" coveredconditionals="4" methods="35" coveredmethods="7"/>
       <file name="AuthService.ts" path="/Users/alexandraclaudiabrad/Documents/Study/Projects/authentication-app/server/src/services/AuthService.ts">
-        <metrics statements="36" coveredstatements="16" conditionals="19" coveredconditionals="4" methods="5" coveredmethods="3"/>
-        <line num="1" count="2" type="stmt"/>
-        <line num="2" count="2" type="stmt"/>
-        <line num="3" count="2" type="stmt"/>
-        <line num="4" count="2" type="stmt"/>
-        <line num="7" count="2" type="stmt"/>
-        <line num="9" count="2" type="stmt"/>
-        <line num="15" count="2" type="stmt"/>
-        <line num="16" count="2" type="stmt"/>
-        <line num="17" count="2" type="stmt"/>
-        <line num="18" count="2" type="stmt"/>
-        <line num="20" count="4" type="stmt"/>
-        <line num="21" count="4" type="stmt"/>
-        <line num="23" count="4" type="cond" truecount="4" falsecount="0"/>
+        <metrics statements="36" coveredstatements="15" conditionals="19" coveredconditionals="4" methods="5" coveredmethods="3"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="16" count="1" type="stmt"/>
+        <line num="17" count="1" type="stmt"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="20" count="3" type="stmt"/>
+        <line num="21" count="3" type="stmt"/>
+        <line num="23" count="3" type="cond" truecount="4" falsecount="0"/>
         <line num="24" count="3" type="stmt"/>
-        <line num="27" count="1" type="stmt"/>
+        <line num="27" count="0" type="stmt"/>
         <line num="28" count="0" type="cond" truecount="0" falsecount="5"/>
         <line num="29" count="0" type="stmt"/>
         <line num="32" count="0" type="stmt"/>
@@ -410,7 +410,7 @@
         <line num="43" count="0" type="stmt"/>
         <line num="45" count="0" type="stmt"/>
         <line num="51" count="0" type="stmt"/>
-        <line num="54" count="2" type="stmt"/>
+        <line num="54" count="1" type="stmt"/>
         <line num="55" count="0" type="stmt"/>
         <line num="57" count="0" type="cond" truecount="0" falsecount="3"/>
         <line num="58" count="0" type="stmt"/>
@@ -458,7 +458,7 @@
         <line num="19" count="4" type="stmt"/>
         <line num="20" count="0" type="stmt"/>
         <line num="23" count="4" type="stmt"/>
-        <line num="24" count="2" type="stmt"/>
+        <line num="24" count="1" type="stmt"/>
         <line num="27" count="4" type="stmt"/>
         <line num="28" count="0" type="stmt"/>
         <line num="31" count="4" type="stmt"/>

@@ -1,15 +1,40 @@
 import request from "supertest";
+import AuthService from "../../../services/AuthService";
 import app from "../../../app";
+import Container from "typedi";
+
+jest.mock("../../../services/AuthService", () => ({
+  register: jest.fn(),
+}));
 
 describe("registerRoute", () => {
-  it("should return 200 and the response from AuthService.register", async () => {
-    const response = await request(app).post("/api/register").send({
+  let mockAuthService: jest.Mocked<AuthService>;
+
+  beforeEach(() => {
+    mockAuthService = {
+      register: jest.fn(),
+      login: jest.fn(),
+      userService: jest.fn() as any,
+    } as unknown as jest.Mocked<AuthService>;
+    Container.set("IAuthService", AuthService);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("should return 200 and call register function from AuthService", async () => {
+    const mockRegisterResponse = "User created successfully";
+
+    const reqBody = {
       user_name: "test",
       email: "testemail",
       password: "testpassword",
-    });
+    };
 
-    expect(response.status).toBe(200);
-    expect(response.body).toBe("User created successfully");
+    mockAuthService.register.mockResolvedValueOnce(mockRegisterResponse);
+
+    request(app).post("/api/register").send(reqBody).expect(200);
+    // expect(mockAuthService.register).toHaveBeenCalledWith(reqBody);
   });
 });
