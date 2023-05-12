@@ -6,19 +6,15 @@ on:
     branches: [dev]
 jobs:
   build:
-    runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: [18.x, 16.x]
-
+        node-version: [14.x, 16.x]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js version ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: npm install
-        run: npm ci
-      - name: tests
-        run: npm test
+      - run: npm install
+      - run: npm test
