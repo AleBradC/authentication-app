@@ -33,7 +33,5 @@ describe("UsersService", () => {
         email: "test@example.com",
       });
     });
-    // it("should getUserByUserName", async () => {});
-    // it("should postUser", async () => {});
   });
 });

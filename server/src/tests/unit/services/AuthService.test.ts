@@ -42,42 +42,5 @@ describe("AuthService", () => {
       });
       expect(result).toEqual(USER_VALIDATION.REQUIRED_INPUTS);
     });
-
-    // it("should return 'This email is already used' if email is already used", async () => {
-    //   jest.replaceProperty(
-    //     UsersService.prototype,
-    //     "getUserByEmail",
-    //     jest.fn().mockResolvedValue({
-    //       email: "test@example.com",
-    //       id: "e3e3",
-    //       user_name: "testUser",
-    //       owned_teams: [],
-    //       teams: [],
-    //     })
-    //   );
-
-    //   const result = await authService.register({
-    //     user_name: "testuser",
-    //     email: "test@example.com",
-    //     password: "testpassword",
-    //   });
-
-    //   expect(result).toEqual(USER_VALIDATION.EMAIL_USED);
-    // });
-
-    // it("should create a new user and return 'User has been created'", async () => {
-    //     jest.replaceProperty(
-    //       UsersService.prototype,
-    //       "postUser",
-    //       jest.fn().mockResolvedValueOnce({})
-    //     );
-    //     const result = await authService.register({
-    //       user_name: "testuser",
-    //       email: "test@example.com",
-    //       password: "testpassword",
-    //     });
-
-    //     expect(result).toBe("User has been created");
-    //   });
   });
 });

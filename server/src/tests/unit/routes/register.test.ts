@@ -35,6 +35,5 @@ describe("registerRoute", () => {
     mockAuthService.register.mockResolvedValueOnce(mockRegisterResponse);
 
     request(app).post("/api/register").send(reqBody).expect(200);
-    // expect(mockAuthService.register).toHaveBeenCalledWith(reqBody);
   });
 });
