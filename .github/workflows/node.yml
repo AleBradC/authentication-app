@@ -1,18 +1,24 @@
-name: Unit Tests
-
+name: AUTH APP BE CI
 on:
   push:
-    branches:
-      - dev
+    branches: [dev]
   pull_request:
     branches: [dev]
-
 jobs:
-  Jest:
+  build:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 16.x]
+
     steps:
       - uses: actions/checkout@v3
-      - name: Run Tests
-        run: |
-          npm install 
-          npm test
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: npm install
+        run: npm ci
+      - name: tests
+        run: npm test
