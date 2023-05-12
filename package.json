@@ -14,8 +14,5 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "typedi": "^0.10.0"
-  }
+  "license": "ISC"
 }
