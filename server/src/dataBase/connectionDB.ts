@@ -15,7 +15,9 @@ const connectDB = new DataSource({
   database: "authentication_app",
   password: undefined,
   entities: [User, Team],
-  synchronize: true,
+  migrations: ["src/migrations/**/*.ts"],
+  migrationsTableName: "custom_migration_table",
+  synchronize: false,
 });
 
 export default connectDB;
