@@ -1,6 +1,7 @@
+import Container from "typedi";
+import request from "supertest";
 import AuthService from "../../../services/AuthService";
 import app from "../../../app";
-import Container from "typedi";
 
 jest.mock("../../../services/AuthService", () => ({
   register: jest.fn(),
@@ -30,5 +31,9 @@ describe("registerRoute", () => {
       email: "testemail",
       password: "testpassword",
     };
+
+    mockAuthService.register.mockResolvedValue(mockRegisterResponse);
+
+    request(app).post("/register").send(reqBody).expect(200);
   });
 });
