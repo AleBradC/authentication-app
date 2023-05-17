@@ -5,6 +5,8 @@ WORKDIR /app
 
 COPY package*.json ./
 
+COPY package-lock.json ./
+
 COPY server/package*.json server/
 RUN npm run install-server --omit=dev
 
@@ -12,6 +14,6 @@ COPY server/ server/
 
 USER node
 
-CMD [ "npm", "start", "--prefix", "server" ]
+EXPOSE 8080
 
-EXPOSE 8000
+CMD [ "npm", "start", "--prefix", "server" ]

@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "./src/server.ts",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
+    "start": "ts-node src/server.ts",
     "watch": "nodemon --watch src/server.ts",
     "dev": "ts-node src/server.ts",
     "pm2": "pm2 start src/server.ts --interpreter=/usr/local/bin/node",

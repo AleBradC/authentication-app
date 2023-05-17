@@ -4,20 +4,22 @@ import config from "../../config";
 import Team from "./entities/Team";
 import User from "./entities/User";
 
-const host = config.host;
 const username = config.username;
+const port = config.db_port;
+const host = config.db_host;
+const password = config.db_password;
 
 const connectDB = new DataSource({
   type: "postgres",
   host: host,
-  port: 5433,
+  port: port,
   username: username,
   database: "authentication_app",
-  password: undefined,
+  password: password,
   entities: [User, Team],
   migrations: ["src/migrations/**/*.ts"],
   migrationsTableName: "custom_migration_table",
-  synchronize: false,
+  synchronize: true,
 });
 
 export default connectDB;
