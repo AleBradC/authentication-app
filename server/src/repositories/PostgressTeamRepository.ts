@@ -1,9 +1,9 @@
 import { Service } from "typedi";
 import { Repository } from "typeorm";
 
-import connectDB from "../dataBase/connectionDB";
-import Team from "../dataBase/entities/Team";
-import User from "../dataBase/entities/User";
+import connectDB from "../dataSource";
+import Team from "../models/Team";
+import User from "../models/User";
 
 import ITeam from "../interfaces/base/ITeam";
 import ITeamRepositoryLayer from "../interfaces/repository/ITeamRepositoryLayer";

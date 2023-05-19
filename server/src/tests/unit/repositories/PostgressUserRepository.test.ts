@@ -1,6 +1,6 @@
-import User from "../../../dataBase/entities/User";
+import User from "../../../models/User";
 import PostgressUserRepository from "../../../repositories/PostgressUserRepository";
-import connectionDB from "../../../dataBase/connectionDB";
+import connectionDB from "../../../dataSource";
 
 jest.mock("../../../dataBase/connectionDB");
 

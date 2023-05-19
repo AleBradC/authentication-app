@@ -1,8 +1,8 @@
 import { Service } from "typedi";
 import { Repository } from "typeorm";
 
-import connectDB from "../dataBase/connectionDB";
-import User from "../dataBase/entities/User";
+import connectDB from "../dataSource";
+import User from "../models/User";
 
 import UserDTO from "../interfaces/DTOs/UserDTO";
 import IUser from "../interfaces/base/IUser";
