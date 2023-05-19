@@ -18,8 +18,5 @@ services:
       - POSTGRES_USER=alexandraclaudiabrad
       - POSTGRES_PASSWORD=test
       - POSTGRES_DB=authentication_app
-    ports:
-      - 5432:5432
     volumes:
       - /tmp/postgresql_data/:/var/lib/postgresql/data
-      # - ./data/seed.sql:/docker-entrypoint-initdb.d/seed.sql
