@@ -1,21 +1,24 @@
-import express from "express";
+import express, { NextFunction } from "express";
 import { Request, Response } from "express";
 import { Container } from "typedi";
 
 import AuthService from "../services/AuthService";
-import { IAuthService } from "src/interfaces/services/IAuthService";
+import { IAuthService } from "../interfaces/services/IAuthService";
 
 const loginRoute = express.Router();
 
-loginRoute.post("/api/login", async (req: Request, res: Response) => {
-  try {
-    const authService = Container.get<IAuthService>(AuthService);
+loginRoute.post(
+  "/api/login",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const authService = Container.get<IAuthService>(AuthService);
+      const response = await authService.login(req.body);
 
-    const response = await authService.login(req.body);
-    return res.status(200).json(response);
-  } catch (error) {
-    throw error;
+      return res.status(200).json(response);
+    } catch (error) {
+      return next(error);
+    }
   }
-});
+);
 
 export default loginRoute;

@@ -6,11 +6,7 @@ import config from "../../config";
 import IUser from "../interfaces/base/IUser";
 import UsersService from "./UsersService";
 import { IAuthService, IUserLogin } from "../interfaces/services/IAuthService";
-import {
-  GENERAL_VALIDATION,
-  SUCCESS,
-  USER_VALIDATION,
-} from "../utils/constants/validations";
+import { SUCCESS, USER_VALIDATION } from "../utils/constants/validations";
 
 const jwt_secret = config.jwt_secret;
 @Service()
@@ -21,7 +17,7 @@ export default class AuthService implements IAuthService {
     const { user_name, email, password } = details;
 
     if (!user_name || !email || !password) {
-      return USER_VALIDATION.REQUIRED_INPUTS;
+      return USER_VALIDATION.EMPTY_INPUTS;
     }
 
     const existingUserByEmail = await this.userService.getUserByEmail(email);
@@ -55,14 +51,14 @@ export default class AuthService implements IAuthService {
     const { email, password } = details;
 
     if (!(email && password)) {
-      return USER_VALIDATION.REQUIRED_INPUTS;
+      return USER_VALIDATION.EMPTY_INPUTS;
     }
 
     const existingUserByEmail = await this.userService.getAllUsersDetails(
       email
     );
     if (!existingUserByEmail) {
-      return GENERAL_VALIDATION.USER_NOT_FOUND;
+      return USER_VALIDATION.USER_NOT_FOUND;
     }
 
     const isValid = await bcrypt.compare(

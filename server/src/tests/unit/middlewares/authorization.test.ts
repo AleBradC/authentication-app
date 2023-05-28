@@ -1,15 +1,15 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
-import authorization from "../../../middlewares/authorization";
+import authorizationMiddleware from "../../../middlewares/authorization";
 import config from "../../../../config";
-import { GENERAL_VALIDATION } from "../../../utils/constants/validations";
+import { AUTH } from "../../../utils/constants/validations";
 
 const jwt_secret = config.jwt_secret;
 
 jest.mock("jsonwebtoken");
 
-describe("authorization", () => {
+describe("authorizationMiddleware", () => {
   let mockRequest: Partial<Request>;
   let mockResponse: Partial<Response>;
   const nextFunction = jest.fn();
@@ -52,7 +52,7 @@ describe("authorization", () => {
 
       const decoded = jwt.verify(mockToken, jwt_secret!);
 
-      authorization(
+      authorizationMiddleware(
         mockRequest as Request,
         mockResponse as Response,
         nextFunction
@@ -74,14 +74,14 @@ describe("authorization", () => {
     mockResponse.status = jest.fn().mockReturnValue(mockResponse);
     mockResponse.send = jest.fn().mockReturnValue(mockResponse);
 
-    authorization(
+    authorizationMiddleware(
       mockRequest as Request,
       mockResponse as Response,
       nextFunction
     );
 
     expect(mockResponse.status).toBeCalledWith(401);
-    expect(mockResponse.send).toBeCalledWith(GENERAL_VALIDATION.NO_TOKEN);
+    expect(mockResponse.send).toBeCalledWith(AUTH.NO_TOKEN);
     expect(nextFunction).not.toHaveBeenCalled();
   });
 });

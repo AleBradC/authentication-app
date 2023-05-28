@@ -4,19 +4,20 @@ import cors from "cors";
 import helmet from "helmet";
 import bodyParser from "body-parser";
 import swaggerUi from "swagger-ui-express";
-import swaggerDocument from "./utils/swaggerDocument.json";
+import swaggerDocument from "./swaggerDocument.json";
 import { Container } from "typedi";
 
 import registerRoute from "./routes/register";
 import loginRoute from "./routes/login";
-import usersRoute from "./routes/users";
-import teamRoute from "./routes/teams";
+import usersRoute from "./routes/user";
+import teamRoute from "./routes/team";
 import { eventRoute } from "./routes/event";
 import AuthService from "./services/AuthService";
 import TeamService from "./services/TeamService";
 import UsersService from "./services/UsersService";
 import PostgressTeamRepository from "./repositories/PostgressTeamRepository";
 import PostgressUserRepository from "./repositories/PostgressUserRepository";
+import errorHandlerMiddleware from "./middlewares/errorHandler";
 
 const app: Application = express();
 Container.set("IAuthService", AuthService);
@@ -43,6 +44,9 @@ app.use(registerRoute);
 app.use(loginRoute);
 app.use(teamRoute);
 app.use(eventRoute);
+
+// Error middleware
+app.use(errorHandlerMiddleware);
 
 // Swagger
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));

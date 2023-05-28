@@ -23,90 +23,131 @@ export default class PostgressTeamRepository implements ITeamRepositoryLayer {
   }
 
   createTeam = async (details: ITeam) => {
-    const newTeam = this.repository.create(details);
-
-    return await this.repository.save(newTeam);
+    try {
+      const newTeam = this.repository.create(details);
+      return await this.repository.save(newTeam);
+    } catch (error) {
+      console.log("Error in createTeam:", error);
+      throw error;
+    }
   };
 
   findAllTeams = async (): Promise<TeamDTO[]> => {
-    return await this.repository.find({
-      relations: ["admin", "members"],
-    });
+    try {
+      return await this.repository.find({
+        relations: ["admin", "members"],
+      });
+    } catch (error) {
+      console.log("Error in findAllTeams:", error);
+      throw error;
+    }
   };
 
   findOneById = async (id: string): Promise<TeamDTO | null> => {
-    const team = await this.repository.findOne({
-      relations: ["admin", "members"],
-      where: { id },
-    });
+    try {
+      const team = await this.repository.findOne({
+        relations: ["admin", "members"],
+        where: { id },
+      });
 
-    if (!team) {
-      return null;
+      if (!team) {
+        return null;
+      }
+
+      return team;
+    } catch (error) {
+      console.log("Error in findOneById:", error);
+      throw error;
     }
-    return team;
   };
 
   findOneByName = async (name: string): Promise<TeamDTO | null> => {
-    const team = await this.repository.findOne({
-      relations: ["admin", "members"],
-      where: { name },
-    });
+    try {
+      const team = await this.repository.findOne({
+        relations: ["admin", "members"],
+        where: { name },
+      });
 
-    if (!team) {
-      return null;
+      if (!team) {
+        return null;
+      }
+
+      return team;
+    } catch (error) {
+      console.log("Error in findOneByName:", error);
+      throw error;
     }
-    return team;
   };
 
   updateTeam = async (id: string, name: string) => {
-    return await this.repository.update(
-      {
-        id: id,
-      },
-      {
-        name: name,
-      }
-    );
+    try {
+      return await this.repository.update(
+        {
+          id: id,
+        },
+        {
+          name: name,
+        }
+      );
+    } catch (error) {
+      console.log("Error in updateTeam:", error);
+      throw error;
+    }
   };
 
   addMember = async (teamId: string, userId: string) => {
-    const team = (await this.repository.findOne({
-      relations: {
-        members: true, // just on the many side
-      },
-      where: { id: teamId },
-    })) as TeamDTO;
+    try {
+      const team = (await this.repository.findOne({
+        relations: {
+          members: true, // just on the many side
+        },
+        where: { id: teamId },
+      })) as TeamDTO;
 
-    const user = (await this.user_repository.findOne({
-      where: { id: userId },
-    })) as UserDTO;
+      const user = (await this.user_repository.findOne({
+        where: { id: userId },
+      })) as UserDTO;
 
-    team.members.push(user);
+      team.members.push(user);
 
-    return await this.db_connection.manager.save(team);
+      return await this.db_connection.manager.save(team);
+    } catch (error) {
+      console.log("Error in addMember:", error);
+      throw error;
+    }
   };
 
   deleteTeam = async (id: string) => {
-    return await this.repository.delete(id);
+    try {
+      return await this.repository.delete(id);
+    } catch (error) {
+      console.log("Error in deleteTeam:", error);
+      throw error;
+    }
   };
 
   removeMember = async (teamId: string, userId: string) => {
-    const team = await this.repository.findOne({
-      relations: {
-        members: true, // just on the many side
-      },
-      where: { id: teamId },
-    });
+    try {
+      const team = await this.repository.findOne({
+        relations: {
+          members: true, // just on the many side
+        },
+        where: { id: teamId },
+      });
 
-    const user = await this.user_repository.findOne({
-      where: { id: userId },
-    });
+      const user = await this.user_repository.findOne({
+        where: { id: userId },
+      });
 
-    if (team && user) {
-      team.members = team.members.filter((member) => member.id !== user.id);
-      return await this.repository.save(team);
+      if (team && user) {
+        team.members = team.members.filter((member) => member.id !== user.id);
+        return await this.repository.save(team);
+      }
+
+      return null;
+    } catch (error) {
+      console.log("Error in removeMember:", error);
+      throw error;
     }
-
-    return null;
   };
 }
