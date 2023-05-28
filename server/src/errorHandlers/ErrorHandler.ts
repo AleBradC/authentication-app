@@ -1,11 +1,10 @@
-import { GENERAL_ERROR_MESSAGE } from "src/utils/constants/errorMessage";
-import { STATUS_CODE } from "src/utils/constants/statusCode";
+import { STATUS_CODE } from "../utils/constants/statusCode";
 
-// for custom errors, more specific errors (e.g. validation errors)
+// more specific errors (e.g. validation errors), in catch block
 class CustomError extends Error {
   public readonly statusCode: STATUS_CODE;
 
-  constructor(statusCode: STATUS_CODE, message: GENERAL_ERROR_MESSAGE) {
+  constructor(statusCode: STATUS_CODE, message: string) {
     super(message);
 
     Object.setPrototypeOf(this, CustomError.prototype);
@@ -13,3 +12,5 @@ class CustomError extends Error {
     this.statusCode = statusCode;
   }
 }
+
+export default CustomError;

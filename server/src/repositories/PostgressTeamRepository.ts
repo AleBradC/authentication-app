@@ -1,5 +1,5 @@
 import { Service } from "typedi";
-import { Repository } from "typeorm";
+import { DataSource, Repository } from "typeorm";
 
 import connectDB from "../dataSource";
 import Team from "../models/Team";
@@ -9,12 +9,13 @@ import ITeam from "../interfaces/base/ITeam";
 import ITeamRepositoryLayer from "../interfaces/repository/ITeamRepositoryLayer";
 import TeamDTO from "../interfaces/DTOs/TeamDTO";
 import UserDTO from "../interfaces/DTOs/UserDTO";
+import CustomError from "../errorHandlers/ErrorHandler";
 
 @Service()
 export default class PostgressTeamRepository implements ITeamRepositoryLayer {
   private repository: Repository<Team>;
   private user_repository: Repository<User>;
-  private db_connection;
+  private db_connection: DataSource;
 
   constructor() {
     this.repository = connectDB.getRepository(Team);
@@ -25,21 +26,26 @@ export default class PostgressTeamRepository implements ITeamRepositoryLayer {
   createTeam = async (details: ITeam) => {
     try {
       const newTeam = this.repository.create(details);
+
       return await this.repository.save(newTeam);
     } catch (error) {
-      console.log("Error in createTeam:", error);
-      throw error;
+      throw new CustomError(error.statusCode, error.message);
     }
   };
 
-  findAllTeams = async (): Promise<TeamDTO[]> => {
+  findAllTeams = async (): Promise<TeamDTO[] | null> => {
     try {
-      return await this.repository.find({
+      const teams = await this.repository.find({
         relations: ["admin", "members"],
       });
+
+      if (!teams) {
+        return null;
+      }
+
+      return teams;
     } catch (error) {
-      console.log("Error in findAllTeams:", error);
-      throw error;
+      throw new CustomError(error.statusCode, error.message);
     }
   };
 
@@ -56,8 +62,7 @@ export default class PostgressTeamRepository implements ITeamRepositoryLayer {
 
       return team;
     } catch (error) {
-      console.log("Error in findOneById:", error);
-      throw error;
+      throw new CustomError(error.statusCode, error.message);
     }
   };
 
@@ -74,8 +79,7 @@ export default class PostgressTeamRepository implements ITeamRepositoryLayer {
 
       return team;
     } catch (error) {
-      console.log("Error in findOneByName:", error);
-      throw error;
+      throw new CustomError(error.statusCode, error.message);
     }
   };
 
@@ -90,8 +94,7 @@ export default class PostgressTeamRepository implements ITeamRepositoryLayer {
         }
       );
     } catch (error) {
-      console.log("Error in updateTeam:", error);
-      throw error;
+      throw new CustomError(error.statusCode, error.message);
     }
   };
 
@@ -108,12 +111,14 @@ export default class PostgressTeamRepository implements ITeamRepositoryLayer {
         where: { id: userId },
       })) as UserDTO;
 
-      team.members.push(user);
+      if (!team || !user) {
+        return null;
+      }
 
+      team.members.push(user);
       return await this.db_connection.manager.save(team);
     } catch (error) {
-      console.log("Error in addMember:", error);
-      throw error;
+      throw new CustomError(error.statusCode, error.message);
     }
   };
 
@@ -121,8 +126,7 @@ export default class PostgressTeamRepository implements ITeamRepositoryLayer {
     try {
       return await this.repository.delete(id);
     } catch (error) {
-      console.log("Error in deleteTeam:", error);
-      throw error;
+      throw new CustomError(error.statusCode, error.message);
     }
   };
 
@@ -139,15 +143,14 @@ export default class PostgressTeamRepository implements ITeamRepositoryLayer {
         where: { id: userId },
       });
 
-      if (team && user) {
-        team.members = team.members.filter((member) => member.id !== user.id);
-        return await this.repository.save(team);
+      if (!team || !user) {
+        return null;
       }
 
-      return null;
+      team.members = team.members.filter((member) => member.id !== user.id);
+      return await this.repository.save(team);
     } catch (error) {
-      console.log("Error in removeMember:", error);
-      throw error;
+      throw new CustomError(error.statusCode, error.message);
     }
   };
 }

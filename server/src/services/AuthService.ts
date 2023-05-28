@@ -5,6 +5,7 @@ import config from "../../config";
 
 import IUser from "../interfaces/base/IUser";
 import UsersService from "./UsersService";
+import CustomError from "../errorHandlers/ErrorHandler";
 import { IAuthService, IUserLogin } from "../interfaces/services/IAuthService";
 import { SUCCESS, USER_VALIDATION } from "../utils/constants/validations";
 
@@ -14,64 +15,61 @@ export default class AuthService implements IAuthService {
   constructor(@Inject() private userService: UsersService) {}
 
   register = async (details: IUser): Promise<string | null> => {
-    const { user_name, email, password } = details;
+    try {
+      const { user_name, email, password } = details;
 
-    if (!user_name || !email || !password) {
-      return USER_VALIDATION.EMPTY_INPUTS;
+      const existingUserByEmail = await this.userService.getUserByEmail(email);
+      if (existingUserByEmail?.email === email) {
+        return USER_VALIDATION.EMAIL_USED;
+      }
+
+      const existingUserByUserName = await this.userService.getUserByUserName(
+        user_name
+      );
+      if (existingUserByUserName?.user_name) {
+        return USER_VALIDATION.USER_NAME_USED;
+      }
+
+      const salt = await bcrypt.genSalt();
+      const passwordHash = await bcrypt.hash(password, salt);
+
+      await this.userService.postUser({
+        user_name: user_name,
+        email: email,
+        password: passwordHash,
+      });
+
+      return SUCCESS.USER_CREATED;
+    } catch (error) {
+      throw new CustomError(error.statusCode, error.message);
     }
-
-    const existingUserByEmail = await this.userService.getUserByEmail(email);
-    if (existingUserByEmail?.email === email) {
-      return USER_VALIDATION.EMAIL_USED;
-    }
-
-    const existingUserByUserName = await this.userService.getUserByUserName(
-      user_name
-    );
-    if (
-      existingUserByUserName?.user_name.toLowerCase() ===
-      user_name.toLowerCase()
-    ) {
-      return USER_VALIDATION.USER_NAME_USED;
-    }
-
-    const salt = await bcrypt.genSalt();
-    const passwordHash = await bcrypt.hash(password, salt);
-
-    await this.userService.postUser({
-      user_name: user_name,
-      email: email,
-      password: passwordHash,
-    });
-
-    return SUCCESS.USER_CREATED;
   };
 
   login = async (details: IUserLogin): Promise<string | null> => {
-    const { email, password } = details;
+    try {
+      const { email, password } = details;
 
-    if (!(email && password)) {
-      return USER_VALIDATION.EMPTY_INPUTS;
+      const existingUserByEmail = await this.userService.getAllUsersDetails(
+        email
+      );
+      if (!existingUserByEmail) {
+        return USER_VALIDATION.USER_NOT_FOUND;
+      }
+
+      const isValid = await bcrypt.compare(
+        password,
+        existingUserByEmail.password
+      );
+      if (!isValid) {
+        return USER_VALIDATION.WRONG_PASSWARD_OR_EMAIL;
+      }
+
+      const accesToken = jwt.sign({ email: email }, jwt_secret!, {
+        expiresIn: "2h",
+      });
+      return accesToken;
+    } catch (error) {
+      throw new CustomError(error.statusCode, error.message);
     }
-
-    const existingUserByEmail = await this.userService.getAllUsersDetails(
-      email
-    );
-    if (!existingUserByEmail) {
-      return USER_VALIDATION.USER_NOT_FOUND;
-    }
-
-    const isValid = await bcrypt.compare(
-      password,
-      existingUserByEmail.password
-    );
-    if (!isValid) {
-      return USER_VALIDATION.WRONG_PASSWARD_OR_EMAIL;
-    }
-
-    const accesToken = jwt.sign({ email: email }, jwt_secret!, {
-      expiresIn: "2h",
-    });
-    return accesToken;
   };
 }

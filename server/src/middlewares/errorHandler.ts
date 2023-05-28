@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { GENERAL_ERROR_MESSAGE } from "../utils/constants/errorMessage";
 import { STATUS_CODE } from "../utils/constants/statusCode";
+import { ERROR_MESSAGE } from "../utils/constants/validations";
 
 // for routes errors
 const errorHandlerMiddleware = (
@@ -10,8 +10,7 @@ const errorHandlerMiddleware = (
   _next: NextFunction
 ) => {
   const statusCode = STATUS_CODE.INTERNAL_SERVER;
-  const errorMessage =
-    GENERAL_ERROR_MESSAGE.INTERNAL_SERVER_MESG || err.message;
+  const errorMessage = ERROR_MESSAGE.INTERNAL_SERVER_MESG || err.message;
 
   return res.status(statusCode).json({
     error: statusCode,

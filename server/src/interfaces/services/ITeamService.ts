@@ -3,7 +3,7 @@ import ITeam from "../base/ITeam";
 import IUser from "../base/IUser";
 export default interface ITeamService {
   postTeam: (details: ITeam) => void;
-  getAllTeams: () => Promise<TeamDTO[]>;
+  getAllTeams: () => Promise<TeamDTO[] | null>;
   getTeamById: (id: string) => Promise<TeamDTO | null>;
   getTeamByName: (name: string) => Promise<TeamDTO | null>;
   updateTeamName: (id: string, name: string) => void;

@@ -3,7 +3,7 @@ import TeamDTO from "../DTOs/TeamDTO";
 
 export default interface ITeamRepositoryLayer {
   createTeam: (details: ITeam) => void;
-  findAllTeams: () => Promise<TeamDTO[]>;
+  findAllTeams: () => Promise<TeamDTO[] | null>;
   findOneById: (id: string) => Promise<TeamDTO | null>;
   findOneByName: (name: string) => Promise<TeamDTO | null>;
   updateTeam: (id: string, name: string) => void;

@@ -3,6 +3,8 @@ import { Request, Response, NextFunction } from "express";
 import { Container } from "typedi";
 
 import UsersService from "../services/UsersService";
+import { STATUS_CODE } from "../utils/constants/statusCode";
+import { USER_VALIDATION } from "../utils/constants/validations";
 
 const usersRoute = express.Router();
 
@@ -12,9 +14,17 @@ usersRoute.get(
   "/api/users",
   async (_req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await userService.getAllUsers();
+      const users = await userService.getAllUsers();
 
-      return res.status(200).send(result);
+      if (!users) {
+        return res.status(STATUS_CODE.NOT_FOUND).json({
+          message: USER_VALIDATION.NO_USERS,
+        });
+      }
+
+      return res.status(STATUS_CODE.OK).json({
+        data: users,
+      });
     } catch (error) {
       return next(error);
     }
@@ -26,9 +36,17 @@ usersRoute.get(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      const result = await userService.getUserById(id);
+      const userById = await userService.getUserById(id);
 
-      return res.status(200).send(result);
+      if (!userById) {
+        return res.status(STATUS_CODE.NOT_FOUND).json({
+          message: USER_VALIDATION.USER_NOT_FOUND,
+        });
+      }
+
+      return res.status(STATUS_CODE.OK).json({
+        data: userById,
+      });
     } catch (error) {
       return next(error);
     }

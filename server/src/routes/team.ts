@@ -12,6 +12,7 @@ import {
   USER_VALIDATION,
   SUCCESS,
 } from "../utils/constants/validations";
+import { STATUS_CODE } from "../utils/constants/statusCode";
 import { eventEmitter } from "./event";
 
 const teamRoute = express.Router();
@@ -27,17 +28,23 @@ teamRoute.post(
       const { name, data } = req.body;
 
       if (!name) {
-        return res.status(400).json(TEAM_VALIDATION.NO_TEAM_NAME);
+        return res.status(STATUS_CODE.NOT_FOUND).json({
+          message: TEAM_VALIDATION.NO_TEAM_NAME,
+        });
       }
 
       const user = await userService.getUserByEmail(data.email);
       if (!user) {
-        return res.status(400).json(USER_VALIDATION.USER_NOT_FOUND);
+        return res.status(STATUS_CODE.NOT_FOUND).json({
+          message: USER_VALIDATION.USER_NOT_FOUND,
+        });
       }
 
       const existingTeam = await teamService.getTeamByName(name);
       if (existingTeam) {
-        return res.status(400).json(TEAM_VALIDATION.TEAM_NAME_USED);
+        return res.status(STATUS_CODE.BAD_REQUEST).json({
+          message: TEAM_VALIDATION.TEAM_NAME_USED,
+        });
       }
 
       const admin = {
@@ -48,7 +55,9 @@ teamRoute.post(
 
       await teamService.postTeam({ name: name, admin: admin });
 
-      return res.status(200).json(SUCCESS.TEAM_CREATED);
+      return res.status(STATUS_CODE.OK).json({
+        message: SUCCESS.TEAM_CREATED,
+      });
     } catch (error) {
       return next(error);
     }
@@ -62,7 +71,9 @@ teamRoute.get(
     try {
       const teams = await teamService.getAllTeams();
 
-      return res.status(200).send(teams);
+      return res.status(STATUS_CODE.OK).json({
+        data: teams,
+      });
     } catch (error) {
       return next(error);
     }
@@ -78,10 +89,14 @@ teamRoute.get(
 
       const team = await teamService.getTeamById(teamId);
       if (!team) {
-        return res.status(200).send(TEAM_VALIDATION.NO_TEAM);
+        return res.status(STATUS_CODE.NOT_FOUND).json({
+          message: TEAM_VALIDATION.NO_TEAM,
+        });
       }
 
-      return res.status(200).send(team);
+      return res.status(STATUS_CODE.OK).json({
+        data: team,
+      });
     } catch (error) {
       return next(error);
     }
@@ -100,11 +115,15 @@ teamRoute.put(
 
       const existingTeam = await teamService.getTeamById(teamId);
       if (existingTeam?.name === name) {
-        return res.status(400).json(TEAM_VALIDATION.TEAM_NAME_USED);
+        return res.status(STATUS_CODE.BAD_REQUEST).json({
+          message: TEAM_VALIDATION.TEAM_NAME_USED,
+        });
       }
 
       await teamService.updateTeamName(teamId, name);
-      return res.status(200).json(SUCCESS.TEAM_UPDATED);
+      return res.status(STATUS_CODE.OK).json({
+        message: SUCCESS.TEAM_UPDATED,
+      });
     } catch (error) {
       return next(error);
     }
@@ -125,7 +144,9 @@ teamRoute.put(
       // don't add the user if it's admin
       const teamAdminId = existingTeam?.admin.id.toString();
       if (teamAdminId === memberId) {
-        return res.status(400).json(TEAM_VALIDATION.IS_ADMIN);
+        return res.status(STATUS_CODE.BAD_REQUEST).json({
+          message: TEAM_VALIDATION.IS_ADMIN,
+        });
       }
 
       // check if the user is already a member
@@ -133,15 +154,19 @@ teamRoute.put(
         member.id.toString()
       );
       if (existingMembers?.includes(memberId)) {
-        return res.status(400).json(TEAM_VALIDATION.ALREADY_MEMBER);
+        return res.status(STATUS_CODE.BAD_REQUEST).json({
+          message: TEAM_VALIDATION.ALREADY_MEMBER,
+        });
       }
 
-      const data = "User was added";
+      const data = SUCCESS.USER_ADDED;
 
       await teamService.putMemberInTeam(teamId, memberId);
       eventEmitter.emit("message", data);
 
-      return res.status(200).json(SUCCESS.USER_ADDED);
+      return res.status(STATUS_CODE.OK).json({
+        message: SUCCESS.USER_ADDED,
+      });
     } catch (error) {
       return next(error);
     }
@@ -159,10 +184,14 @@ teamRoute.delete(
 
       const team = await teamService.deleteTeam(teamId);
       if (!team) {
-        return res.status(200).json(TEAM_VALIDATION.NO_TEAM);
+        return res.status(STATUS_CODE.NOT_FOUND).json({
+          message: TEAM_VALIDATION.NO_TEAM,
+        });
       }
 
-      return res.status(200).json(SUCCESS.TEAM_DELETED);
+      return res.status(STATUS_CODE.OK).json({
+        message: SUCCESS.TEAM_DELETED,
+      });
     } catch (error) {
       return next(error);
     }
@@ -183,7 +212,9 @@ teamRoute.delete(
       // don't delete the current user / admin
       const teamAdminId = existingTeam?.admin.id.toString();
       if (teamAdminId === memberId) {
-        return res.status(400).json(TEAM_VALIDATION.ADMIN_NO_REMOVE);
+        return res.status(STATUS_CODE.BAD_REQUEST).json({
+          message: TEAM_VALIDATION.ADMIN_NO_REMOVE,
+        });
       }
 
       // check if user is in the team
@@ -191,11 +222,15 @@ teamRoute.delete(
         member.id.toString()
       );
       if (!existingMembers?.includes(memberId)) {
-        return res.status(400).json(USER_VALIDATION.USER_NOT_FOUND);
+        return res.status(STATUS_CODE.BAD_REQUEST).json({
+          message: USER_VALIDATION.USER_NOT_FOUND,
+        });
       }
 
       await teamService.deleteMemberFronTeam(teamId, memberId);
-      return res.status(200).json(SUCCESS.USER_REMOVED);
+      return res.status(STATUS_CODE.OK).json({
+        message: SUCCESS.USER_REMOVED,
+      });
     } catch (error) {
       return next(error);
     }

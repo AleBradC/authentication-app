@@ -4,6 +4,8 @@ import { Container } from "typedi";
 import TeamService from "../services/TeamService";
 import UsersService from "../services/UsersService";
 import { AUTH } from "../utils/constants/validations";
+import { STATUS_CODE } from "../utils/constants/statusCode";
+import CustomError from "../errorHandlers/ErrorHandler";
 
 const teamService = Container.get(TeamService);
 const userService = Container.get(UsersService);
@@ -21,13 +23,15 @@ const verifyRoleMiddleware = async (
     const admin = team?.admin;
     const user = await userService.getUserByEmail(data.email);
 
-    if (admin?.id === user?.id) {
-      next();
+    if (admin?.id !== user?.id) {
+      res.status(STATUS_CODE.UNAUTHORIZED).json({
+        message: AUTH.NO_AUTHORIZED,
+      });
     }
 
-    res.status(401).json(AUTH.NO_AUTHORIZED);
-  } catch (err) {
-    console.log(err);
+    next();
+  } catch (error) {
+    throw new CustomError(error.statusCode, error.message);
   }
 };
 
