@@ -21,10 +21,11 @@ loginRoute.post(
           message: USER_VALIDATION.EMPTY_INPUTS,
         });
       }
+
       const response = await authService.login(req.body);
 
       return res.status(STATUS_CODE.OK).json({
-        token: response,
+        access_token: response,
       });
     } catch (error) {
       return next(error);

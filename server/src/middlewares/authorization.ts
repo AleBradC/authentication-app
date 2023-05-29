@@ -14,25 +14,26 @@ const authorizationMiddleware = (
   next: NextFunction
 ) => {
   try {
-    const token = req.headers["authorization"] as string;
+    const authHeader = req.headers["authorization"]?.split(" ")[1] as string;
 
-    if (!token) {
+    if (!authHeader) {
       res.status(STATUS_CODE.UNAUTHORIZED).json({
         message: AUTH.NO_TOKEN,
       });
-
-      return;
     }
 
-    const decoded = jwt.verify(token, jwt_secret!);
-    req.body.data = decoded;
-    next();
+    jwt.verify(authHeader, jwt_secret!, (error, decoded) => {
+      if (error) {
+        res.status(STATUS_CODE.UNAUTHORIZED).json({
+          message: AUTH.INVALID_TOKEN,
+        });
+      }
+
+      req.body.data = decoded;
+      next();
+    });
   } catch (error) {
-    if (error instanceof CustomError) {
-      throw new CustomError(error.statusCode, error.message);
-    } else {
-      throw new CustomError(STATUS_CODE.UNAUTHORIZED, AUTH.INVALID_TOKEN);
-    }
+    throw new CustomError(error.statusCode, error.message);
   }
 };
 

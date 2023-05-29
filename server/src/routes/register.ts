@@ -23,7 +23,7 @@ registerRoute.post(
 
       const response = await authService.register(req.body);
 
-      return res.status(STATUS_CODE.OK).json({
+      return res.status(STATUS_CODE.CREATED).json({
         message: response,
       });
     } catch (error) {

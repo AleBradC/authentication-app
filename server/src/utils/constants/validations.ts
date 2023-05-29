@@ -1,5 +1,5 @@
 export enum AUTH {
-  NO_TOKEN = "A token is required",
+  NO_TOKEN = "No token provided",
   NO_AUTHORIZED = "Sorry, you are not authorized !",
   INVALID_TOKEN = "Invalid token",
 }

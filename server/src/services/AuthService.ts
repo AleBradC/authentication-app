@@ -64,9 +64,13 @@ export default class AuthService implements IAuthService {
         return USER_VALIDATION.WRONG_PASSWARD_OR_EMAIL;
       }
 
-      const accesToken = jwt.sign({ email: email }, jwt_secret!, {
-        expiresIn: "2h",
+      const payload = {
+        email: email,
+      };
+      const accesToken = jwt.sign(payload, jwt_secret!, {
+        expiresIn: "5min",
       });
+
       return accesToken;
     } catch (error) {
       throw new CustomError(error.statusCode, error.message);
