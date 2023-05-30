@@ -2,26 +2,39 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import config from "../../config";
 
-import { GENERAL_VALIDATION } from "../utils/constants/validations";
+import { AUTH } from "../utils/constants/validations";
+import { STATUS_CODE } from "../utils/constants/statusCode";
+import CustomError from "../errorHandlers/ErrorHandler";
 
 const jwt_secret = config.jwt_secret;
 
-const authorization = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.headers["authorization"] as string;
+const authorizationMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const authHeader = req.headers["authorization"]?.split(" ")[1] as string;
 
-  if (!token) {
-    res.status(401)?.send(GENERAL_VALIDATION.NO_TOKEN);
-    return;
-  } else {
-    try {
-      const decoded = jwt.verify(token, jwt_secret!);
-      req.body.data = decoded;
-
-      next();
-    } catch (err) {
-      console.log(err);
+    if (!authHeader) {
+      return res.status(STATUS_CODE.UNAUTHORIZED).json({
+        message: AUTH.NO_TOKEN,
+      });
     }
+
+    jwt.verify(authHeader, jwt_secret!, (error, decoded) => {
+      if (error) {
+        return res.status(STATUS_CODE.UNAUTHORIZED).json({
+          message: AUTH.INVALID_TOKEN,
+        });
+      }
+
+      req.body.data = decoded;
+      next();
+    });
+  } catch (error) {
+    throw new CustomError(error.statusCode, error.message);
   }
 };
 
-export default authorization;
+export default authorizationMiddleware;
