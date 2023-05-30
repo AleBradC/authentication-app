@@ -17,14 +17,14 @@ const authorizationMiddleware = (
     const authHeader = req.headers["authorization"]?.split(" ")[1] as string;
 
     if (!authHeader) {
-      res.status(STATUS_CODE.UNAUTHORIZED).json({
+      return res.status(STATUS_CODE.UNAUTHORIZED).json({
         message: AUTH.NO_TOKEN,
       });
     }
 
     jwt.verify(authHeader, jwt_secret!, (error, decoded) => {
       if (error) {
-        res.status(STATUS_CODE.UNAUTHORIZED).json({
+        return res.status(STATUS_CODE.UNAUTHORIZED).json({
           message: AUTH.INVALID_TOKEN,
         });
       }

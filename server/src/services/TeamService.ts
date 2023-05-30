@@ -1,16 +1,19 @@
 import { Service, Container } from "typedi";
 
+import Team from "../models/Team";
 import PostgressTeamRepository from "../repositories/PostgressTeamRepository";
 import ITeamService from "../interfaces/services/ITeamService";
 import ITeam from "../interfaces/base/ITeam";
 import TeamDTO from "../interfaces/DTOs/TeamDTO";
 import CustomError from "../errorHandlers/ErrorHandler";
+import { DeleteResult, UpdateResult } from "typeorm";
+import IUser from "src/interfaces/base/IUser";
 
 @Service()
 export default class TeamService implements ITeamService {
   private repository = Container.get(PostgressTeamRepository);
 
-  postTeam = async (details: ITeam) => {
+  postTeam = async (details: ITeam): Promise<Team> => {
     try {
       return await this.repository.createTeam({
         name: details.name,
@@ -45,7 +48,7 @@ export default class TeamService implements ITeamService {
     }
   };
 
-  updateTeamName = async (id: string, name: string) => {
+  updateTeamName = async (id: string, name: string): Promise<UpdateResult> => {
     try {
       return await this.repository.updateTeam(id, name);
     } catch (error) {
@@ -53,7 +56,10 @@ export default class TeamService implements ITeamService {
     }
   };
 
-  putMemberInTeam = async (teamId: string, userId: any) => {
+  putMemberInTeam = async (
+    teamId: string,
+    userId: string
+  ): Promise<Team | null> => {
     try {
       return await this.repository.addMember(teamId, userId);
     } catch (error) {
@@ -61,7 +67,7 @@ export default class TeamService implements ITeamService {
     }
   };
 
-  deleteTeam = async (id: string) => {
+  deleteTeam = async (id: string): Promise<DeleteResult> => {
     try {
       return await this.repository.deleteTeam(id);
     } catch (error) {
@@ -69,7 +75,10 @@ export default class TeamService implements ITeamService {
     }
   };
 
-  deleteMemberFronTeam = async (teamId: string, userId: string) => {
+  deleteMemberFronTeam = async (
+    teamId: string,
+    userId: string
+  ): Promise<Team | null> => {
     try {
       return await this.repository.removeMember(teamId, userId);
     } catch (error) {

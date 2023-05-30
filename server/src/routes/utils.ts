@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-export const sendEvent = (_req: Request, res: Response, data: any) => {
+export const sendEvent = (_req: Request, res: Response, data: string) => {
   try {
     res.setHeader("Cache-Control", "no-cache");
     res.setHeader("Content-Type", "text/event-stream");

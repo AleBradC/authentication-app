@@ -2,7 +2,7 @@ import User from "../../../models/User";
 import PostgressUserRepository from "../../../repositories/PostgressUserRepository";
 import connectionDB from "../../../dataSource";
 
-jest.mock("../../../dataBase/connectionDB");
+jest.mock("../../../dataSource.ts");
 
 describe("PostgressUserRepository", () => {
   let repository: PostgressUserRepository;

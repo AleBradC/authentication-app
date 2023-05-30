@@ -1,5 +1,5 @@
 import { Service } from "typedi";
-import { DataSource, Repository } from "typeorm";
+import { DataSource, DeleteResult, Repository, UpdateResult } from "typeorm";
 
 import connectDB from "../dataSource";
 import Team from "../models/Team";
@@ -23,7 +23,7 @@ export default class PostgressTeamRepository implements ITeamRepositoryLayer {
     this.db_connection = connectDB;
   }
 
-  createTeam = async (details: ITeam) => {
+  createTeam = async (details: ITeam): Promise<Team> => {
     try {
       const newTeam = this.repository.create(details);
 
@@ -83,7 +83,7 @@ export default class PostgressTeamRepository implements ITeamRepositoryLayer {
     }
   };
 
-  updateTeam = async (id: string, name: string) => {
+  updateTeam = async (id: string, name: string): Promise<UpdateResult> => {
     try {
       return await this.repository.update(
         {
@@ -98,18 +98,18 @@ export default class PostgressTeamRepository implements ITeamRepositoryLayer {
     }
   };
 
-  addMember = async (teamId: string, userId: string) => {
+  addMember = async (teamId: string, userId: string): Promise<Team | null> => {
     try {
-      const team = (await this.repository.findOne({
+      const team = await this.repository.findOne({
         relations: {
           members: true, // just on the many side
         },
         where: { id: teamId },
-      })) as TeamDTO;
+      });
 
-      const user = (await this.user_repository.findOne({
+      const user = await this.user_repository.findOne({
         where: { id: userId },
-      })) as UserDTO;
+      });
 
       if (!team || !user) {
         return null;
@@ -122,7 +122,7 @@ export default class PostgressTeamRepository implements ITeamRepositoryLayer {
     }
   };
 
-  deleteTeam = async (id: string) => {
+  deleteTeam = async (id: string): Promise<DeleteResult> => {
     try {
       return await this.repository.delete(id);
     } catch (error) {
@@ -130,7 +130,10 @@ export default class PostgressTeamRepository implements ITeamRepositoryLayer {
     }
   };
 
-  removeMember = async (teamId: string, userId: string) => {
+  removeMember = async (
+    teamId: string,
+    userId: string
+  ): Promise<Team | null> => {
     try {
       const team = await this.repository.findOne({
         relations: {
