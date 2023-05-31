@@ -71,9 +71,7 @@ teamRoute.get(
     try {
       const teams = await teamService.getAllTeams();
 
-      return res.status(STATUS_CODE.OK).json({
-        data: teams,
-      });
+      return res.status(STATUS_CODE.OK).json(teams);
     } catch (error) {
       return next(error);
     }
@@ -94,9 +92,7 @@ teamRoute.get(
         });
       }
 
-      return res.status(STATUS_CODE.OK).json({
-        data: team,
-      });
+      return res.status(STATUS_CODE.OK).json(team);
     } catch (error) {
       return next(error);
     }

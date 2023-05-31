@@ -22,9 +22,7 @@ usersRoute.get(
         });
       }
 
-      return res.status(STATUS_CODE.OK).json({
-        data: users,
-      });
+      return res.status(STATUS_CODE.OK).json(users);
     } catch (error) {
       return next(error);
     }
@@ -44,9 +42,7 @@ usersRoute.get(
         });
       }
 
-      return res.status(STATUS_CODE.OK).json({
-        data: userById,
-      });
+      return res.status(STATUS_CODE.OK).json(userById);
     } catch (error) {
       return next(error);
     }

@@ -8,12 +8,8 @@
   "host": "localhost:8080",
   "tags": [
     {
-      "name": "Users",
-      "description": "Get all users"
-    },
-    {
       "name": "User",
-      "description": "Get user by id"
+      "description": "API for users"
     },
     {
       "name": "Register",
@@ -24,32 +20,42 @@
       "description": "Login user"
     },
     {
-      "name": "Teams",
-      "description": "API for users in the system"
+      "name": "Team",
+      "description": "API for teams"
     }
   ],
   "schemes": ["http"],
   "consumes": ["application/json"],
   "produces": ["application/json"],
   "paths": {
-    "/users": {
+    "/api/users": {
       "get": {
-        "tags": ["Users"],
-        "summary": "Get all users in system",
+        "tags": ["User"],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Users"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
             }
           }
         }
       }
     },
-    "/users/:id": {
+    "/api/users/:id": {
       "get": {
         "tags": ["User"],
-        "summary": "Get all user by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/UserId"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -60,15 +66,13 @@
         }
       }
     },
-    "/register": {
+    "/api/register": {
       "post": {
         "tags": ["Register"],
-        "description": "Create new user",
         "parameters": [
           {
             "name": "user",
             "in": "body",
-            "description": "User that we want to create",
             "schema": {
               "$ref": "#/definitions/Register"
             }
@@ -79,21 +83,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Token"
+              "$ref": "#/definitions/Message"
             }
           }
         }
       }
     },
-    "/login": {
+    "/api/login": {
       "post": {
         "tags": ["Login"],
-        "description": "Login user",
         "parameters": [
           {
             "name": "user",
             "in": "body",
-            "description": "User that we to log",
             "schema": {
               "$ref": "#/definitions/Login"
             }
@@ -109,256 +111,296 @@
           }
         }
       }
+    },
+    "/api/teams": {
+      "get": {
+        "tags": ["Team"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Team"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/teams/:teamId": {
+      "get": {
+        "tags": ["Team"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Team"
+            }
+          }
+        }
+      }
+    },
+    "/api/team": {
+      "post": {
+        "tags": ["Team"],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/TeamName"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Message"
+            }
+          }
+        }
+      }
+    },
+    "/api/team/:teamId": {
+      "put": {
+        "tags": ["Team"],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/ModifyTeam"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Message"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Team"],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/ModifyTeam"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Message"
+            }
+          }
+        }
+      }
+    },
+    "/api/team/:teamId/member/:memberId": {
+      "put": {
+        "tags": ["Team"],
+        "parameters": [
+          {
+            "name": "member",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/AddedMember"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Message"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Team"],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/AddedMember"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Message"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
-    "users": {
-      "properties": {
-        "id": {
-          "type": "integer",
-          "uniqueItems": true
-        },
-        "user_name": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "owned_teams": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "integer",
-                "uniqueItems": true
-              },
-              "name": {
-                "type": "string"
-              },
-              "members": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer",
-                      "uniqueItems": true
-                    },
-                    "user_name": {
-                      "type": "string"
-                    },
-                    "email": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "teams": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "integer",
-                "uniqueItems": true
-              },
-              "name": {
-                "type": "string"
-              },
-              "admin": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer",
-                      "uniqueItems": true
-                    },
-                    "user_name": {
-                      "type": "string"
-                    },
-                    "email": {
-                      "type": "string"
-                    }
-                  }
-                }
-              },
-              "members": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer",
-                      "uniqueItems": true
-                    },
-                    "user_name": {
-                      "type": "string"
-                    },
-                    "email": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "user": {
-      "properties": {
-        "id": {
-          "type": "integer",
-          "uniqueItems": true
-        },
-        "user_name": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "owned_teams": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "integer",
-                "uniqueItems": true
-              },
-              "name": {
-                "type": "string"
-              },
-              "members": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer",
-                      "uniqueItems": true
-                    },
-                    "user_name": {
-                      "type": "string"
-                    },
-                    "email": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "teams": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "integer",
-                "uniqueItems": true
-              },
-              "name": {
-                "type": "string"
-              },
-              "admin": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer",
-                      "uniqueItems": true
-                    },
-                    "user_name": {
-                      "type": "string"
-                    },
-                    "email": {
-                      "type": "string"
-                    }
-                  }
-                }
-              },
-              "members": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer",
-                      "uniqueItems": true
-                    },
-                    "user_name": {
-                      "type": "string"
-                    },
-                    "email": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "register": {
-      "required": ["user_name", "email", "passward"],
-      "properties": {
-        "user_name": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "passward": {
-          "type": "string"
-        }
-      }
-    },
-    "login": {
-      "required": ["email", "passward"],
-      "properties": {
-        "email": {
-          "type": "string"
-        },
-        "passward": {
-          "type": "string"
-        }
-      }
-    },
-    "token": {
-      "properties": {
-        "token": {
-          "type": "string"
-        }
-      }
-    },
-    "Users": {
-      "type": "array",
-      "$ref": "#/definitions/users"
-    },
     "User": {
-      "type": "array",
-      "$ref": "#/definitions/user"
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "user_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "owned_teams": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OwnedTeam"
+          }
+        },
+        "teams": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Team"
+          }
+        }
+      }
     },
     "Register": {
-      "type": "string",
-      "$ref": "#/definitions/register"
+      "required": ["user_name", "email", "password"],
+      "properties": {
+        "user_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
     },
     "Login": {
-      "type": "string",
-      "$ref": "#/definitions/login"
+      "required": ["email", "password"],
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
     },
     "Token": {
-      "type": "string",
-      "$ref": "#/definitions/token"
+      "properties": {
+        "access_token": {
+          "type": "string"
+        }
+      }
+    },
+    "Message": {
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "Team": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "admin": {
+          "$ref": "#/definitions/Member"
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Member"
+          }
+        }
+      }
+    },
+    "OwnedTeam": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Member"
+          }
+        }
+      }
+    },
+    "Member": {
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "user_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "TeamName": {
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "ModifyTeam": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "AddedMember": {
+      "properties": {
+        "teamId": {
+          "type": "string"
+        },
+        "memberId": {
+          "type": "string"
+        }
+      }
+    },
+    "UserId": {
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
     }
   }
 }
