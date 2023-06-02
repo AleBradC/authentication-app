@@ -1,35 +1,40 @@
-import AuthService from "../../../services/AuthService";
 import app from "../../../app";
-import Container from "typedi";
-
-jest.mock("../../../services/AuthService", () => ({
-  register: jest.fn(),
-}));
+import { Container } from "typedi";
+import UsersService from "../../../services/UsersService";
+import AuthService from "../../../services/AuthService";
+import { SUCCESS } from "../../../utils/constants/validations";
 
 describe("registerRoute", () => {
-  let mockAuthService: jest.Mocked<AuthService>;
+  let mockAuthService: AuthService;
+  let mockUsersService: UsersService;
 
   beforeEach(() => {
-    mockAuthService = {
-      register: jest.fn(),
-      userService: jest.fn() as any,
-    } as unknown as jest.Mocked<AuthService>;
-    Container.set("IAuthService", AuthService);
+    mockUsersService = {
+      postUser: jest.fn(),
+    } as unknown as UsersService;
+    Container.set(UsersService, mockUsersService);
+
+    mockAuthService = new AuthService(mockUsersService);
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it("should return 200 and call register function from AuthService", async () => {
-    const mockRegisterResponse = "User created successfully";
-
+  it("should return 201 and call register function from AuthService", async () => {
     const reqBody = {
       user_name: "test",
       email: "testemail",
       password: "testpassword",
     };
 
-    expect(mockAuthService.register).toHaveBeenCalled();
+    jest
+      .spyOn(mockAuthService, "register")
+      .mockResolvedValue("SUCCESS.USER_CREATED");
+
+    const response = await mockAuthService.register(reqBody);
+
+    expect(mockAuthService.register).toHaveBeenCalledWith(reqBody);
+    expect(response).toBe("SUCCESS.USER_CREATED");
   });
 });
