@@ -12,7 +12,6 @@ describe("registerRoute", () => {
   beforeEach(() => {
     mockAuthService = {
       register: jest.fn(),
-      login: jest.fn(),
       userService: jest.fn() as any,
     } as unknown as jest.Mocked<AuthService>;
     Container.set("IAuthService", AuthService);
@@ -30,5 +29,7 @@ describe("registerRoute", () => {
       email: "testemail",
       password: "testpassword",
     };
+
+    expect(mockAuthService.register).toHaveBeenCalled();
   });
 });

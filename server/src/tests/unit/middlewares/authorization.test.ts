@@ -19,59 +19,15 @@ describe("authorizationMiddleware", () => {
       body: {},
     };
     mockResponse = {
-      status: jest.fn().mockReturnThis(), // Mock the status() method
-      json: jest.fn(), // Mock the json() method
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
     };
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it("should verify the token and call the next function if the token is provided and is valid", async () => {
-    mockRequest = {
-      headers: {
-        authorization: "abc123",
-      },
-      body: {
-        data: {},
-      },
+  it("should return error if there are no headers", async () => {
+    const message = {
+      message: "No token provided",
     };
-
-    const mockToken = "abc123";
-    const mockDecodedToken = {
-      email: "test@example.com",
-    };
-
-    if (mockRequest.headers?.authorization) {
-      mockRequest.headers.authorization = mockToken;
-
-      // Mock jwt.verify to return the decoded token
-      (jwt.verify as jest.Mock).mockReturnValue(mockDecodedToken);
-
-      const decoded = jwt.verify(mockToken, jwt_secret!);
-
-      mockResponse.status = jest.fn().mockReturnThis(); // Mock the status() method
-
-      authorizationMiddleware(
-        mockRequest as Request,
-        mockResponse as Response,
-        nextFunction
-      );
-
-      expect(jwt.verify).toHaveBeenCalledWith(mockToken, jwt_secret!);
-    }
-  });
-
-  it("should return 401 & A token is required message, if the user has no token in the header", async () => {
-    mockRequest = {
-      headers: {
-        authorization: "",
-      },
-    };
-
-    mockResponse.status = jest.fn().mockReturnValue(mockResponse);
-    mockResponse.send = jest.fn().mockReturnValue(mockResponse);
 
     authorizationMiddleware(
       mockRequest as Request,
@@ -79,6 +35,43 @@ describe("authorizationMiddleware", () => {
       nextFunction
     );
 
+    expect(mockResponse.status).toHaveBeenCalledWith(401);
+    expect(mockResponse.json).toHaveBeenCalledWith(message);
     expect(nextFunction).not.toHaveBeenCalled();
+  });
+
+  it("should verify the token and call the next function if the token is provided and is valid", async () => {
+    const mockToken = "abc123";
+    const mockDecodedToken = {
+      email: "testemail@gmail.com",
+      iat: 1685545825,
+      exp: 1685546125,
+    };
+
+    mockRequest.headers = {
+      authorization: `Bearer ${mockToken}`,
+    };
+
+    (jwt.verify as jest.Mock).mockImplementationOnce(
+      (token, secret, callback) => {
+        callback(null, mockDecodedToken);
+      }
+    );
+
+    authorizationMiddleware(
+      mockRequest as Request,
+      mockResponse as Response,
+      nextFunction
+    );
+
+    expect(jwt.verify).toHaveBeenCalledWith(
+      mockToken,
+      jwt_secret,
+      expect.any(Function)
+    );
+    expect(mockRequest.body.data).toEqual(mockDecodedToken);
+    expect(nextFunction).toHaveBeenCalled();
+    expect(mockResponse.status).not.toHaveBeenCalled();
+    expect(mockResponse.json).not.toHaveBeenCalled();
   });
 });

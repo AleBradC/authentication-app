@@ -7,16 +7,12 @@ Authentication app
 - Node.js
 - Express.js
 - TypeScript
-- TypeORM
+- TypeORM - for singleton services
 - PostgresSQL
 - TypeDI - for dependency injection
 - PM2
 - Docker
 - Jest
-
-# Status
-
-- in progress...
 
 # Description
 
@@ -33,6 +29,10 @@ When an admin adds a new member in the team, the client will be notified.
 
 # Testing
 
-- Integration tests: can run tests against a local DB with npm run test-local
+<!-- - Integration tests: can run tests against a local DB with npm run test-local
 - Docker compose up - will start the webserver and a dockerized Postgres DB (Postgres DB container must run on a non-default port to not collide with local Postgres instance)
-- easy configuration options for different use cases - run local, test local, test with docker, docker-compose
+- Easy configuration options for different use cases - run local, test local, test with docker, docker-compose -->
+
+# Documentation
+
+- http://localhost:8080/api-docs

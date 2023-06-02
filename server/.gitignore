@@ -4,6 +4,6 @@ eslintrc
 .env
 /.env
 
-.coverage
+coverage
 
 .DS_Store
