@@ -1,8 +1,10 @@
+import request from "supertest";
 import app from "../../../app";
 import { Container } from "typedi";
 import UsersService from "../../../services/UsersService";
 import AuthService from "../../../services/AuthService";
-import { SUCCESS } from "../../../utils/constants/validations";
+import { SUCCESS, USER_VALIDATION } from "../../../utils/constants/validations";
+import { STATUS_CODE } from "../../../utils/constants/statusCode";
 
 describe("registerRoute", () => {
   let mockAuthService: AuthService;
@@ -11,6 +13,8 @@ describe("registerRoute", () => {
   beforeEach(() => {
     mockUsersService = {
       postUser: jest.fn(),
+      getUserByEmail: jest.fn(),
+      getUserByUserName: jest.fn(),
     } as unknown as UsersService;
     Container.set(UsersService, mockUsersService);
 
@@ -19,6 +23,20 @@ describe("registerRoute", () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  it("should return 400 and error message in case email is missing", async () => {
+    const reqBody = {
+      user_name: "test",
+      password: "testpassword",
+    };
+
+    const response = await request(app)
+      .post("/api/register")
+      .send(reqBody)
+      .expect(STATUS_CODE.BAD_REQUEST);
+
+    expect(response.body.message).toEqual(USER_VALIDATION.EMPTY_INPUTS);
   });
 
   it("should return 201 and call register function from AuthService", async () => {
@@ -30,11 +48,13 @@ describe("registerRoute", () => {
 
     jest
       .spyOn(mockAuthService, "register")
-      .mockResolvedValue("SUCCESS.USER_CREATED");
+      .mockResolvedValue(SUCCESS.USER_CREATED);
 
-    const response = await mockAuthService.register(reqBody);
+    const response = await request(app)
+      .post("/api/register")
+      .send(reqBody)
+      .expect(STATUS_CODE.CREATED);
 
-    expect(mockAuthService.register).toHaveBeenCalledWith(reqBody);
-    expect(response).toBe("SUCCESS.USER_CREATED");
+    expect(response.body.message).toEqual(SUCCESS.USER_CREATED);
   });
 });

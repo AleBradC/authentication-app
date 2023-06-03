@@ -29,7 +29,6 @@ const authorizationMiddleware = (
         });
       }
 
-      req.body = {};
       req.body.data = decoded;
       next();
     });

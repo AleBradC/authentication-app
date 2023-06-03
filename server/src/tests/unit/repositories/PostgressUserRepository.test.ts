@@ -8,6 +8,7 @@ describe("PostgressUserRepository", () => {
   let repository: PostgressUserRepository;
 
   beforeEach(() => {
+    // mock DB methods
     (connectDB.getRepository as jest.Mock).mockReturnValue({
       create: jest.fn().mockReturnValue({}),
       save: jest.fn().mockReturnValue({}),
@@ -62,11 +63,11 @@ describe("PostgressUserRepository", () => {
       const mockUsers = [
         { id: 1, user_name: "user1" },
         { id: 2, user_name: "user2" },
-      ];
+      ] as unknown as User[];
 
       jest
         .spyOn(connectDB.getRepository(User), "find")
-        .mockResolvedValue(mockUsers as unknown as User[]);
+        .mockResolvedValue(mockUsers);
 
       const result = await repository.findAllUsers();
 

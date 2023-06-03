@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import CustomError from "../errorHandlers/ErrorHandler";
 
 export const sendEvent = (_req: Request, res: Response, data: string) => {
   try {
@@ -9,6 +10,6 @@ export const sendEvent = (_req: Request, res: Response, data: string) => {
 
     res.write(`data: ${JSON.stringify(data)}\n\n`);
   } catch (error) {
-    console.log(error);
+    throw new CustomError(error.statusCode, error.message);
   }
 };

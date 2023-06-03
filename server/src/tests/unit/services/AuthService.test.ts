@@ -27,7 +27,7 @@ const userLogin = {
 } as User;
 
 describe("AuthService", () => {
-  let authService: AuthService;
+  let mockAuthService: AuthService;
   let mockUsersService: UsersService;
 
   beforeEach(() => {
@@ -39,7 +39,7 @@ describe("AuthService", () => {
     } as unknown as UsersService;
     Container.set(UsersService, mockUsersService);
 
-    authService = new AuthService(mockUsersService);
+    mockAuthService = new AuthService(mockUsersService);
   });
 
   afterEach(() => {
@@ -64,7 +64,7 @@ describe("AuthService", () => {
         .spyOn(mockUsersService, "postUser")
         .mockResolvedValue(Promise.resolve({} as User));
 
-      const result = await authService.register(userDetails);
+      const result = await mockAuthService.register(userDetails);
 
       expect(mockUsersService.getUserByEmail).toHaveBeenCalledWith(
         userDetails.email
@@ -79,7 +79,7 @@ describe("AuthService", () => {
         email: userDetails.email,
         password: passwordHash,
       });
-      expect(result).toBe(SUCCESS.USER_CREATED);
+      expect(result).toEqual(SUCCESS.USER_CREATED);
     });
 
     it("should return USER_VALIDATION.EMAIL_USED if the email is already used", async () => {
@@ -89,12 +89,12 @@ describe("AuthService", () => {
         .spyOn(mockUsersService, "getUserByEmail")
         .mockResolvedValue(existingUserByEmail);
 
-      const result = await authService.register(userDetails);
+      const result = await mockAuthService.register(userDetails);
 
       expect(mockUsersService.getUserByEmail).toHaveBeenCalledWith(
         userDetails.email
       );
-      expect(result).toBe(USER_VALIDATION.EMAIL_USED);
+      expect(result).toEqual(USER_VALIDATION.EMAIL_USED);
     });
 
     it("should return USER_VALIDATION.USER_NAME_USED if the username is already used", async () => {
@@ -110,7 +110,7 @@ describe("AuthService", () => {
         .spyOn(mockUsersService, "getUserByUserName")
         .mockResolvedValue(existingUserByUserName);
 
-      const result = await authService.register(userDetails);
+      const result = await mockAuthService.register(userDetails);
 
       expect(mockUsersService.getUserByEmail).toHaveBeenCalledWith(
         userDetails.email
@@ -118,7 +118,7 @@ describe("AuthService", () => {
       expect(mockUsersService.getUserByUserName).toHaveBeenCalledWith(
         userDetails.user_name
       );
-      expect(result).toBe(USER_VALIDATION.USER_NAME_USED);
+      expect(result).toEqual(USER_VALIDATION.USER_NAME_USED);
     });
 
     it("should throw a CustomError if an error occurs during registration", async () => {
@@ -126,7 +126,7 @@ describe("AuthService", () => {
         .spyOn(mockUsersService, "getUserByEmail")
         .mockRejectedValue(new Error("Error"));
 
-      await expect(authService.register(userDetails)).rejects.toThrow(
+      await expect(mockAuthService.register(userDetails)).rejects.toThrow(
         CustomError
       );
     });
@@ -147,7 +147,7 @@ describe("AuthService", () => {
       jest.spyOn(bcrypt, "compare").mockResolvedValue(isValid as never);
       jest.spyOn(jwt, "sign").mockReturnValue(accessToken as never);
 
-      const result = await authService.login(userLogin);
+      const result = await mockAuthService.login(userLogin);
 
       expect(mockUsersService.getAllUsersDetails).toHaveBeenCalledWith(
         userLogin.email
@@ -163,7 +163,7 @@ describe("AuthService", () => {
           expiresIn: "5min",
         }
       );
-      expect(result).toBe(accessToken);
+      expect(result).toEqual(accessToken);
     });
 
     it("should return USER_VALIDATION.USER_NOT_FOUND if no user is found with the email", async () => {
@@ -173,12 +173,12 @@ describe("AuthService", () => {
         .spyOn(mockUsersService, "getAllUsersDetails")
         .mockResolvedValue(existingUserByEmail);
 
-      const result = await authService.login(userLogin);
+      const result = await mockAuthService.login(userLogin);
 
       expect(mockUsersService.getAllUsersDetails).toHaveBeenCalledWith(
         userLogin.email
       );
-      expect(result).toBe(USER_VALIDATION.USER_NOT_FOUND);
+      expect(result).toEqual(USER_VALIDATION.USER_NOT_FOUND);
     });
 
     it("should return USER_VALIDATION.WRONG_PASSWARD_OR_EMAIL if the password is incorrect", async () => {
@@ -193,7 +193,7 @@ describe("AuthService", () => {
         .mockResolvedValue(existingUserByEmail);
       jest.spyOn(bcrypt, "compare").mockResolvedValue(isValid as never);
 
-      const result = await authService.login(userLogin);
+      const result = await mockAuthService.login(userLogin);
 
       expect(mockUsersService.getAllUsersDetails).toHaveBeenCalledWith(
         userLogin.email
@@ -202,7 +202,7 @@ describe("AuthService", () => {
         userLogin.password,
         existingUserByEmail.password
       );
-      expect(result).toBe(USER_VALIDATION.WRONG_PASSWARD_OR_EMAIL);
+      expect(result).toEqual(USER_VALIDATION.WRONG_PASSWARD_OR_EMAIL);
     });
 
     it("should throw a CustomError if an error occurs during login", async () => {
@@ -210,7 +210,9 @@ describe("AuthService", () => {
         .spyOn(mockUsersService, "getAllUsersDetails")
         .mockRejectedValue(new Error("Error"));
 
-      await expect(authService.login(userLogin)).rejects.toThrow(CustomError);
+      await expect(mockAuthService.login(userLogin)).rejects.toThrow(
+        CustomError
+      );
     });
   });
 });

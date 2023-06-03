@@ -1,0 +1,22 @@
+version: "3.6"
+
+services:
+  server:
+    build: .
+    container_name: server_auth_app
+    command: sh -c './wait-for postgres-local:5432 -t 55 -- npm run dev'
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres-local
+
+  postgres-local:
+    image: postgres:14.1-alpine
+    container_name: postgres-local
+    restart: always
+    environment:
+      - POSTGRES_USER=alexandraclaudiabrad
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_DB=authentication_app
+    volumes:
+      - /tmp/postgresql_data/:/var/lib/postgresql/data
