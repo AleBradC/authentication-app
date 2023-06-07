@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 
 import authorizationMiddleware from "../../../middlewares/authorization";
 import config from "../../../../config";
+import { AUTH } from "../../../utils/constants/validations";
 
 const jwt_secret = config.jwt_secret;
 
@@ -25,10 +26,6 @@ describe("authorizationMiddleware", () => {
   });
 
   it("should return error if there are no headers", async () => {
-    const message = {
-      message: "No token provided",
-    };
-
     authorizationMiddleware(
       mockRequest as Request,
       mockResponse as Response,
@@ -36,7 +33,7 @@ describe("authorizationMiddleware", () => {
     );
 
     expect(mockResponse.status).toHaveBeenCalledWith(401);
-    expect(mockResponse.json).toHaveBeenCalledWith(message);
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: AUTH.NO_TOKEN });
     expect(nextFunction).not.toHaveBeenCalled();
   });
 

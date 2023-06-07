@@ -1,11 +1,15 @@
 import request from "supertest";
+import bcrypt from "bcrypt";
 import { Container } from "typedi";
 import app from "../../app";
 import AuthService from "../../services/AuthService";
 import UsersService from "../../services/UsersService";
+import User from "../../models/User";
 import { SUCCESS, USER_VALIDATION } from "../../utils/constants/validations";
 import { STATUS_CODE } from "../../utils/constants/statusCode";
-import UserDTO from "src/interfaces/DTOs/UserDTO";
+
+jest.mock("bcrypt");
+jest.mock("jsonwebtoken");
 
 const reqBody = {
   user_name: "test_user",
@@ -22,21 +26,23 @@ describe("Registration Functionality", () => {
       postUser: jest.fn(),
       getUserByEmail: jest.fn(),
       getUserByUserName: jest.fn(),
+      getUserById: jest.fn(),
+      getAllUsersDetails: jest.fn(),
+      getAllUsers: jest.fn(),
     } as unknown as UsersService;
-    Container.set(UsersService, mockUsersService);
 
-    mockAuthService = new AuthService(mockUsersService);
     mockUsersService = new UsersService();
+    mockAuthService = new AuthService(mockUsersService);
 
-    Container.set(AuthService, mockAuthService);
     Container.set(UsersService, mockUsersService);
+    Container.set(AuthService, mockAuthService);
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it("should return 400 if any required field is missing and return a error message", async () => {
+  it("should return 400 and error message in case inputs are empty", async () => {
     const response = await request(app)
       .post("/api/register")
       .send({})
@@ -45,45 +51,53 @@ describe("Registration Functionality", () => {
     expect(response.body.message).toEqual(USER_VALIDATION.EMPTY_INPUTS);
   });
 
-  it("should return 400 if email is already used", async () => {
-    const existingEmail = {
-      email: reqBody.email,
-    } as unknown as UserDTO;
+  it("should return USER_VALIDATION.EMAIL_USED if email is already used", async () => {
+    const existingUserByEmail = { email: reqBody.email } as User;
 
-    const response = await request(app)
-      .post("/api/register")
-      .send(reqBody)
-      .expect(STATUS_CODE.BAD_REQUEST);
+    jest
+      .spyOn(mockAuthService, "register")
+      .mockResolvedValue(USER_VALIDATION.EMAIL_USED);
 
     jest
       .spyOn(mockUsersService, "getUserByEmail")
-      .mockResolvedValue(existingEmail);
+      .mockResolvedValue(existingUserByEmail);
+
+    const response = await request(app).post("/api/register").send(reqBody);
 
     expect(response.body.message).toEqual(USER_VALIDATION.EMAIL_USED);
   });
 
-  // it("should return 400 if username is already used", async () => {
-  //   jest.spyOn(usersService, "getUserByEmail").mockResolvedValue(null);
-  //   jest
-  //     .spyOn(usersService, "getUserByUserName")
-  //     .mockResolvedValue({ user_name: "existing_user" });
+  it("should return USER_VALIDATION.USER_NAME_USED if user name is already used", async () => {
+    const existingUserByUserName = { user_name: reqBody.user_name } as User;
 
-  //   const response = await request(app)
-  //     .post("/api/register")
-  //     .send({
-  //       user_name: "existing_user",
-  //       email: "test_email",
-  //       password: "test_password",
-  //     })
-  //     .expect(STATUS_CODE.BAD_REQUEST);
+    jest
+      .spyOn(mockAuthService, "register")
+      .mockResolvedValue(USER_VALIDATION.USER_NAME_USED);
 
-  //   expect(response.body.message).toEqual(USER_VALIDATION.USER_NAME_USED);
-  // });
+    jest.spyOn(mockUsersService, "getUserByEmail").mockResolvedValue(null);
+
+    jest
+      .spyOn(mockUsersService, "getUserByUserName")
+      .mockResolvedValue(existingUserByUserName);
+
+    const response = await request(app).post("/api/register").send(reqBody);
+
+    expect(response.body.message).toEqual(USER_VALIDATION.USER_NAME_USED);
+  });
 
   it("should return 201 if registration is successful and success message", async () => {
+    const passwordHash = "hashedPassword";
+
     jest.spyOn(mockUsersService, "getUserByEmail").mockResolvedValue(null);
     jest.spyOn(mockUsersService, "getUserByUserName").mockResolvedValue(null);
-    // jest.spyOn(usersService, "postUser").mockResolvedValue(undefined);
+    jest.spyOn(bcrypt, "genSalt").mockResolvedValue("salt" as never);
+    jest.spyOn(bcrypt, "hash").mockResolvedValue(passwordHash as never);
+
+    jest
+      .spyOn(mockUsersService, "postUser")
+      .mockResolvedValue(Promise.resolve({} as User));
+
+    await mockAuthService.register(reqBody);
 
     const response = await request(app)
       .post("/api/register")

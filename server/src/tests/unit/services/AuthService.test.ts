@@ -48,16 +48,10 @@ describe("AuthService", () => {
 
   describe("register", () => {
     it("should register a new user and return the success message", async () => {
-      const existingUserByEmail = null;
-      const existingUserByUserName = null;
       const passwordHash = "hashedPassword";
 
-      jest
-        .spyOn(mockUsersService, "getUserByEmail")
-        .mockResolvedValue(existingUserByEmail);
-      jest
-        .spyOn(mockUsersService, "getUserByUserName")
-        .mockResolvedValue(existingUserByUserName);
+      jest.spyOn(mockUsersService, "getUserByEmail").mockResolvedValue(null);
+      jest.spyOn(mockUsersService, "getUserByUserName").mockResolvedValue(null);
       jest.spyOn(bcrypt, "genSalt").mockResolvedValue("salt" as never);
       jest.spyOn(bcrypt, "hash").mockResolvedValue(passwordHash as never);
       jest

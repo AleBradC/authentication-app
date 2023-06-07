@@ -15,7 +15,11 @@ describe("registerRoute", () => {
       postUser: jest.fn(),
       getUserByEmail: jest.fn(),
       getUserByUserName: jest.fn(),
+      getUserById: jest.fn(),
+      getAllUsersDetails: jest.fn(),
+      getAllUsers: jest.fn(),
     } as unknown as UsersService;
+
     Container.set(UsersService, mockUsersService);
 
     mockAuthService = new AuthService(mockUsersService);
@@ -25,7 +29,7 @@ describe("registerRoute", () => {
     jest.clearAllMocks();
   });
 
-  it("should return 400 and error message in case email is missing", async () => {
+  it("should return 400 and error message in case email (or any other field) is missing", async () => {
     const reqBody = {
       user_name: "test",
       password: "testpassword",

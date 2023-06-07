@@ -27,8 +27,18 @@
     "transform": {
       "^.+\\.(ts|tsx)$": "ts-jest"
     },
+    "collectCoverage": true,
     "coveragePathIgnorePatterns": [
       "/node_modules/"
+    ],
+    "collectCoverageFrom": [
+      "**/*.{ts,tsx}",
+      "!**/node_modules/**",
+      "!**/path/to/ignored/files/**"
+    ],
+    "coverageReporters": [
+      "lcov",
+      "text"
     ]
   },
   "dependencies": {
