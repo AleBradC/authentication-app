@@ -10,4 +10,8 @@ export default {
   db_port: Number(process.env.DB_PORT || ""),
   db_host: process.env.DB_HOST || "",
   db_password: process.env.DB_PASSWORD || "",
+
+  test_db_port: Number(process.env.DB_PORT || ""),
+  test_db_host: process.env.DB_HOST || "",
+  test_db_password: process.env.DB_PASSWORD || "",
 };

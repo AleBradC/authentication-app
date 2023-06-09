@@ -4,6 +4,46 @@ import PostgressUserRepository from "../../../repositories/PostgressUserReposito
 import IUserRepositoryLayer from "../../../interfaces/repository/IUserRepositoryLayer";
 import User from "src/models/User";
 
+const userDetailsRequest = {
+  user_name: "test",
+  email: "test@example.com",
+} as User;
+
+const mockAllUserDetails = {
+  user_name: "test",
+  email: "test@example.com",
+  password: "password",
+};
+
+const mockUserResult = {
+  id: "1",
+  user_name: "test",
+  email: "test@example.com",
+  owned_teams: ["team"],
+  teams: ["team"],
+} as unknown as User;
+
+const mockUsersResult = [
+  {
+    id: "1",
+    user_name: "test1",
+    email: "test1@example.com",
+    owned_teams: ["team"],
+    teams: ["team"],
+  },
+  {
+    id: "2",
+    user_name: "test2",
+    email: "test2@example.com",
+    owned_teams: ["team"],
+    teams: ["team"],
+  },
+] as unknown as User[];
+
+const mockUserIdRequest = "123";
+
+const errorMessage = "Error";
+
 describe("UsersService", () => {
   let usersService: UsersService;
   let mockUserRepository: IUserRepositoryLayer;
@@ -27,75 +67,39 @@ describe("UsersService", () => {
     jest.clearAllMocks();
   });
 
-  // varables
-  const userDetails = {
-    user_name: "test",
-    email: "test@example.com",
-  } as User;
-
-  const user = {
-    id: "1",
-    user_name: "test",
-    email: "test@example.com",
-  } as User;
-
-  const users = [
-    {
-      id: "1",
-      user_name: "test1",
-      email: "test1@example.com",
-    },
-    {
-      id: "2",
-      user_name: "test2",
-      email: "test2@example.com",
-    },
-  ] as User[];
-
-  const createdUser = {
-    id: "1",
-    user_name: userDetails.user_name,
-    email: userDetails.email,
-  } as User;
-
-  describe("postUser", () => {
+  describe("postUser method", () => {
     it("should create a new user and return the created user", async () => {
-      jest
-        .spyOn(mockUserRepository, "createUser")
-        .mockResolvedValue(createdUser);
+      await usersService.postUser(userDetailsRequest);
 
-      const result = await usersService.postUser(userDetails);
-
-      expect(mockUserRepository.createUser).toHaveBeenCalledWith(userDetails);
-      expect(result).toEqual(createdUser);
+      expect(mockUserRepository.createUser).toHaveBeenCalledWith(
+        userDetailsRequest
+      );
     });
 
     it("should throw an error if an error occurs during user creation", async () => {
-      const errorMessage = "Failed to create user.";
-
       jest
         .spyOn(mockUserRepository, "createUser")
         .mockRejectedValue(new Error(errorMessage));
 
-      await expect(usersService.postUser(userDetails)).rejects.toThrowError(
-        errorMessage
-      );
+      await expect(
+        usersService.postUser(userDetailsRequest)
+      ).rejects.toThrowError(errorMessage);
     });
   });
 
-  describe("getAllUsers", () => {
+  describe("getAllUsers method", () => {
     it("should return all users", async () => {
-      jest.spyOn(mockUserRepository, "findAllUsers").mockResolvedValue(users);
+      jest
+        .spyOn(mockUserRepository, "findAllUsers")
+        .mockResolvedValue(mockUsersResult);
 
       const result = await usersService.getAllUsers();
 
       expect(mockUserRepository.findAllUsers).toHaveBeenCalled();
-      expect(result).toEqual(users);
+      expect(result).toEqual(mockUsersResult);
     });
 
     it("should throw an error if an error occurs while getting all users", async () => {
-      const errorMessage = "Failed to get users.";
-
       jest
         .spyOn(mockUserRepository, "findAllUsers")
         .mockRejectedValue(new Error(errorMessage));
@@ -106,113 +110,109 @@ describe("UsersService", () => {
     });
   });
 
-  describe("getUserByEmail", () => {
+  describe("getUserByEmail method", () => {
     it("should return the user with the specified email", async () => {
-      const email = "test@example.com";
+      jest
+        .spyOn(mockUserRepository, "findOneByEmail")
+        .mockResolvedValue(mockUserResult);
 
-      jest.spyOn(mockUserRepository, "findOneByEmail").mockResolvedValue(user);
+      const result = await usersService.getUserByEmail(
+        userDetailsRequest.email
+      );
 
-      const result = await usersService.getUserByEmail(email);
-
-      expect(mockUserRepository.findOneByEmail).toHaveBeenCalledWith(email);
-      expect(result).toEqual(user);
+      expect(mockUserRepository.findOneByEmail).toHaveBeenCalledWith(
+        userDetailsRequest.email
+      );
+      expect(result).toEqual(mockUserResult);
     });
 
     it("should throw an error if an error occurs while getting the user by email", async () => {
-      const email = "test@example.com";
-      const errorMessage = "Failed to get user by email.";
-
       jest
         .spyOn(mockUserRepository, "findOneByEmail")
         .mockRejectedValue(new Error(errorMessage));
 
-      await expect(usersService.getUserByEmail(email)).rejects.toThrowError(
-        errorMessage
-      );
+      await expect(
+        usersService.getUserByEmail(userDetailsRequest.email)
+      ).rejects.toThrowError(errorMessage);
     });
   });
 
-  describe("getUserByUserName", () => {
+  describe("getUserByUserName method", () => {
     it("should return the user with the specified user_name", async () => {
-      const user_name = "test";
-
       jest
         .spyOn(mockUserRepository, "findOneByUserName")
-        .mockResolvedValue(user);
+        .mockResolvedValue(mockUserResult);
 
-      const result = await usersService.getUserByUserName(user_name);
+      const result = await usersService.getUserByUserName(
+        userDetailsRequest.user_name
+      );
 
       expect(mockUserRepository.findOneByUserName).toHaveBeenCalledWith(
-        user_name
+        userDetailsRequest.user_name
       );
-      expect(result).toEqual(user);
+      expect(result).toEqual(mockUserResult);
     });
 
     it("should throw an error if an error occurs while getting the user by user_name", async () => {
-      const user_name = "test";
-      const errorMessage = "Failed to get user by user_name.";
-
       jest
         .spyOn(mockUserRepository, "findOneByUserName")
         .mockRejectedValue(new Error(errorMessage));
 
       await expect(
-        usersService.getUserByUserName(user_name)
+        usersService.getUserByUserName(userDetailsRequest.user_name)
       ).rejects.toThrowError(errorMessage);
     });
   });
 
-  describe("getUserById", () => {
+  describe("getUserById method", () => {
     it("should return the user with the specified id", async () => {
-      const id = "1";
+      jest
+        .spyOn(mockUserRepository, "findOneById")
+        .mockResolvedValue(mockUserResult);
 
-      jest.spyOn(mockUserRepository, "findOneById").mockResolvedValue(user);
+      const result = await usersService.getUserById(mockUserIdRequest);
 
-      const result = await usersService.getUserById(id);
-
-      expect(mockUserRepository.findOneById).toHaveBeenCalledWith(id);
-      expect(result).toEqual(user);
+      expect(mockUserRepository.findOneById).toHaveBeenCalledWith(
+        mockUserIdRequest
+      );
+      expect(result).toEqual(mockUserResult);
     });
 
     it("should throw an error if an error occurs while getting the user by id", async () => {
-      const id = "1";
-      const errorMessage = "Failed to get user by id.";
-
       jest
         .spyOn(mockUserRepository, "findOneById")
         .mockRejectedValue(new Error(errorMessage));
 
-      await expect(usersService.getUserById(id)).rejects.toThrowError(
-        errorMessage
-      );
+      await expect(
+        usersService.getUserById(mockUserIdRequest)
+      ).rejects.toThrowError(errorMessage);
     });
   });
 
-  describe("getAllUsersDetails", () => {
+  describe("getAllUsersDetails method", () => {
     it("should return all user details for the specified email", async () => {
-      const email = "test@example.com";
-
       jest
         .spyOn(mockUserRepository, "findAllUserDetails")
-        .mockResolvedValue(userDetails);
+        .mockResolvedValue(mockAllUserDetails);
 
-      const result = await usersService.getAllUsersDetails(email);
+      const result = await usersService.getAllUsersDetails(
+        userDetailsRequest.email
+      );
 
-      expect(mockUserRepository.findAllUserDetails).toHaveBeenCalledWith(email);
-      expect(result).toEqual(userDetails);
+      expect(mockUserRepository.findAllUserDetails).toHaveBeenCalledWith(
+        userDetailsRequest.email
+      );
+      expect(result).toEqual(mockAllUserDetails);
     });
 
     it("should throw an error if an error occurs while getting all user details", async () => {
-      const email = "test@example.com";
-      const errorMessage = "Failed to get all user details.";
-
       jest
         .spyOn(mockUserRepository, "findAllUserDetails")
         .mockRejectedValue(new Error(errorMessage));
 
-      await expect(usersService.getAllUsersDetails(email)).rejects.toThrowError(
-        errorMessage
-      );
+      await expect(
+        usersService.getAllUsersDetails(userDetailsRequest.email)
+      ).rejects.toThrowError(errorMessage);
     });
   });
 });

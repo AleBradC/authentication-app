@@ -11,6 +11,7 @@ describe("registerRoute", () => {
   let mockUsersService: UsersService;
 
   beforeEach(() => {
+    // default
     mockUsersService = {
       postUser: jest.fn(),
       getUserByEmail: jest.fn(),
@@ -30,21 +31,21 @@ describe("registerRoute", () => {
   });
 
   it("should return 400 and error message in case email (or any other field) is missing", async () => {
-    const reqBody = {
+    const requestBodyNoEmail = {
       user_name: "test",
       password: "testpassword",
     };
 
     const response = await request(app)
       .post("/api/register")
-      .send(reqBody)
+      .send(requestBodyNoEmail)
       .expect(STATUS_CODE.BAD_REQUEST);
 
     expect(response.body.message).toEqual(USER_VALIDATION.EMPTY_INPUTS);
   });
 
   it("should return 201 and call register function from AuthService", async () => {
-    const reqBody = {
+    const requestBody = {
       user_name: "test",
       email: "testemail",
       password: "testpassword",
@@ -56,7 +57,7 @@ describe("registerRoute", () => {
 
     const response = await request(app)
       .post("/api/register")
-      .send(reqBody)
+      .send(requestBody)
       .expect(STATUS_CODE.CREATED);
 
     expect(response.body.message).toEqual(SUCCESS.USER_CREATED);

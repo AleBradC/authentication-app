@@ -5,6 +5,7 @@ import IUsersService from "../interfaces/services/IUsersService";
 import IUser from "../interfaces/base/IUser";
 import UserDTO from "../interfaces/DTOs/UserDTO";
 import IUserRepositoryLayer from "../interfaces/repository/IUserRepositoryLayer";
+import User from "../models/User";
 import CustomError from "../errorHandlers/ErrorHandler";
 @Service()
 export default class UsersService implements IUsersService {
@@ -14,7 +15,7 @@ export default class UsersService implements IUsersService {
     this.repository = Container.get(PostgressUserRepository);
   }
 
-  postUser = async (details: IUser) => {
+  postUser = async (details: IUser): Promise<User> => {
     try {
       return await this.repository.createUser(details);
     } catch (error) {

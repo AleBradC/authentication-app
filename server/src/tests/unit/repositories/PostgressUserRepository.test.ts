@@ -1,11 +1,36 @@
 import User from "../../../models/User";
 import PostgressUserRepository from "../../../repositories/PostgressUserRepository";
 import connectDB from "../../../dataSource";
+import IUser from "../../../interfaces/base/IUser";
+
+const userDetailsRequest = {
+  user_name: "testuser",
+  email: "test@example.com",
+  password: "testpassword",
+};
+
+const mockUserIdRequest = "123";
+
+const mockUserResult = {
+  id: "123",
+  user_name: "testuser",
+  email: "test@example.com",
+  owned_teams: ["team"],
+  teams: ["team"],
+} as unknown as User;
+
+const mockAllUserDetailsResult = {
+  user_name: "testuser",
+  email: "test@example.com",
+  password: "testpassword",
+} as IUser;
+
+const mockError = new Error("Error");
 
 jest.mock("../../../dataSource");
 
 describe("PostgressUserRepository", () => {
-  let repository: PostgressUserRepository;
+  let mockUserRepository: PostgressUserRepository;
 
   beforeEach(() => {
     // mock DB methods
@@ -16,88 +41,90 @@ describe("PostgressUserRepository", () => {
       find: jest.fn().mockReturnValue([]),
     });
 
-    repository = new PostgressUserRepository();
+    mockUserRepository = new PostgressUserRepository();
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  describe("createUser", () => {
+  describe("createUser method", () => {
     it("should create a new user", async () => {
-      const userDetails = {
-        user_name: "testuser",
-        email: "test@example.com",
-        password: "testpassword",
-      };
-
-      await repository.createUser(userDetails);
+      await mockUserRepository.createUser(userDetailsRequest);
 
       expect(connectDB.getRepository(User).create).toHaveBeenCalledWith(
-        userDetails
+        userDetailsRequest
       );
       expect(connectDB.getRepository(User).save).toHaveBeenCalled();
     });
 
     it("should throw an error if an error occurs during user creation", async () => {
-      const userDetails = {
-        user_name: "testuser",
-        email: "test@example.com",
-        password: "testpassword",
-      };
-
-      const mockError = new Error("Error creating user");
-
       jest
         .spyOn(connectDB.getRepository(User), "save")
         .mockRejectedValue(mockError);
 
-      await expect(repository.createUser(userDetails)).rejects.toThrow(
+      await expect(
+        mockUserRepository.createUser(userDetailsRequest)
+      ).rejects.toThrow(mockError);
+    });
+  });
+
+  describe("findAllUsers method", () => {
+    it("should return all users", async () => {
+      const mockUsersResult = [
+        {
+          id: 1,
+          user_name: "user1",
+          email: "test@example.com",
+          owned_teams: ["team"],
+          teams: ["team"],
+        },
+        {
+          id: 2,
+          user_name: "user2",
+          email: "test2@example.com",
+          owned_teams: ["team2"],
+          teams: ["team2"],
+        },
+      ] as unknown as User[];
+
+      jest
+        .spyOn(connectDB.getRepository(User), "find")
+        .mockResolvedValue(mockUsersResult);
+
+      const result = await mockUserRepository.findAllUsers();
+
+      expect(connectDB.getRepository(User).find).toHaveBeenCalledWith({
+        relations: [
+          "owned_teams",
+          "owned_teams.members",
+          "teams",
+          "teams.admin",
+          "teams.members",
+        ],
+      });
+      expect(result).toEqual(mockUsersResult);
+    });
+
+    it("should throw an error if an error occurs while fetching users", async () => {
+      jest
+        .spyOn(connectDB.getRepository(User), "find")
+        .mockRejectedValue(mockError);
+
+      await expect(mockUserRepository.findAllUsers()).rejects.toThrow(
         mockError
       );
     });
   });
 
-  describe("findAllUsers", () => {
-    it("should return all users", async () => {
-      const mockUsers = [
-        { id: 1, user_name: "user1" },
-        { id: 2, user_name: "user2" },
-      ] as unknown as User[];
-
-      jest
-        .spyOn(connectDB.getRepository(User), "find")
-        .mockResolvedValue(mockUsers);
-
-      const result = await repository.findAllUsers();
-
-      expect(connectDB.getRepository(User).find).toHaveBeenCalled();
-      expect(result).toEqual(mockUsers);
-    });
-
-    it("should throw an error if an error occurs while fetching users", async () => {
-      const mockError = new Error("Error fetching users");
-
-      jest
-        .spyOn(connectDB.getRepository(User), "find")
-        .mockRejectedValue(mockError);
-
-      await expect(repository.findAllUsers()).rejects.toThrow(mockError);
-    });
-  });
-
-  describe("findOneById", () => {
+  describe("findOneById method", () => {
     it("should return a user by ID", async () => {
-      const userId = "123";
-      const mockUser = { id: userId, user_name: "testuser" } as User;
-
       jest
         .spyOn(connectDB.getRepository(User), "findOne")
-        .mockResolvedValue(mockUser);
+        .mockResolvedValue(mockUserResult);
 
-      const result = await repository.findOneById(userId);
+      const result = await mockUserRepository.findOneById(mockUserIdRequest);
 
-      expect(result).toEqual(mockUser);
       expect(connectDB.getRepository(User).findOne).toHaveBeenCalledWith({
         relations: [
           "owned_teams",
@@ -106,44 +133,32 @@ describe("PostgressUserRepository", () => {
           "teams.admin",
           "teams.members",
         ],
-        where: { id: userId },
+        where: { id: mockUserIdRequest },
       });
+      expect(result).toEqual(mockUserResult);
     });
 
     it("should throw an error if an error occurs while fetching a user by ID", async () => {
-      const userId = "123";
-      const mockError = new Error("Error fetching user by ID");
-
       jest
         .spyOn(connectDB.getRepository(User), "findOne")
         .mockRejectedValue(mockError);
 
-      await expect(repository.findOneById(userId)).rejects.toThrow(mockError);
-      expect(connectDB.getRepository(User).findOne).toHaveBeenCalledWith({
-        relations: [
-          "owned_teams",
-          "owned_teams.members",
-          "teams",
-          "teams.admin",
-          "teams.members",
-        ],
-        where: { id: userId },
-      });
+      await expect(
+        mockUserRepository.findOneById(mockUserIdRequest)
+      ).rejects.toThrow(mockError);
     });
   });
 
-  describe("findOneByEmail", () => {
+  describe("findOneByEmail method", () => {
     it("should return a user by email", async () => {
-      const email = "test@example.com";
-      const mockUser = { id: "123", user_name: "testuser" } as User;
-
       jest
         .spyOn(connectDB.getRepository(User), "findOne")
-        .mockResolvedValue(mockUser);
+        .mockResolvedValue(mockUserResult);
 
-      const result = await repository.findOneByEmail(email);
+      const result = await mockUserRepository.findOneByEmail(
+        userDetailsRequest.email
+      );
 
-      expect(result).toEqual(mockUser);
       expect(connectDB.getRepository(User).findOne).toHaveBeenCalledWith({
         relations: [
           "owned_teams",
@@ -152,34 +167,32 @@ describe("PostgressUserRepository", () => {
           "teams.admin",
           "teams.members",
         ],
-        where: { email: email },
+        where: { email: userDetailsRequest.email },
       });
+      expect(result).toEqual(mockUserResult);
     });
 
     it("should throw an error if an error occurs while fetching a user by email", async () => {
-      const email = "test@example.com";
-      const mockError = new Error("Error fetching user by email");
-
       jest
         .spyOn(connectDB.getRepository(User), "findOne")
         .mockRejectedValue(mockError);
 
-      await expect(repository.findOneByEmail(email)).rejects.toThrow(mockError);
+      await expect(
+        mockUserRepository.findOneByEmail(userDetailsRequest.email)
+      ).rejects.toThrow(mockError);
     });
   });
 
   describe("findOneByUserName", () => {
     it("should return a user by username", async () => {
-      const userName = "testuser";
-      const mockUser = { id: "123", user_name: userName } as User;
-
       jest
         .spyOn(connectDB.getRepository(User), "findOne")
-        .mockResolvedValue(mockUser);
+        .mockResolvedValue(mockUserResult);
 
-      const result = await repository.findOneByUserName(userName);
+      const result = await mockUserRepository.findOneByUserName(
+        userDetailsRequest.user_name
+      );
 
-      expect(result).toEqual(mockUser);
       expect(connectDB.getRepository(User).findOne).toHaveBeenCalledWith({
         relations: [
           "owned_teams",
@@ -188,59 +201,49 @@ describe("PostgressUserRepository", () => {
           "teams.admin",
           "teams.members",
         ],
-        where: { user_name: userName },
+        where: { user_name: userDetailsRequest.user_name },
       });
+      expect(result).toEqual(mockUserResult);
     });
 
     it("should throw an error if an error occurs while fetching a user by username", async () => {
-      const userName = "testuser";
-      const mockError = new Error("Error fetching user by username");
-
       (connectDB.getRepository(User).findOne as jest.Mock).mockRejectedValue(
         mockError
       );
 
-      await expect(repository.findOneByUserName(userName)).rejects.toThrow(
-        mockError
-      );
+      await expect(
+        mockUserRepository.findOneByUserName(userDetailsRequest.user_name)
+      ).rejects.toThrow(mockError);
     });
   });
 
   describe("findAllUserDetails", () => {
     it("should return all user details by email", async () => {
-      const user_name = "test@example.com";
-      const mockUserDetails = {
-        password: "testpassword",
-        user_name: "username",
-        email: "email@test",
-      } as User;
-
       jest
         .spyOn(connectDB.getRepository(User), "findOne")
-        .mockResolvedValue(mockUserDetails);
+        .mockResolvedValue(mockAllUserDetailsResult as User);
 
-      const result = await repository.findAllUserDetails(user_name);
+      const result = await mockUserRepository.findAllUserDetails(
+        userDetailsRequest.email
+      );
 
-      expect(result).toEqual(mockUserDetails);
       expect(connectDB.getRepository(User).findOne).toHaveBeenCalledWith({
         select: {
           password: true,
         },
-        where: { email: user_name },
+        where: { email: userDetailsRequest.email },
       });
+      expect(result).toEqual(mockAllUserDetailsResult as User);
     });
 
     it("should throw an error if an error occurs while fetching all user details", async () => {
-      const user_name = "test@example.com";
-      const mockError = new Error("Error fetching all user details");
-
       jest
         .spyOn(connectDB.getRepository(User), "findOne")
         .mockRejectedValue(mockError);
 
-      await expect(repository.findAllUserDetails(user_name)).rejects.toThrow(
-        mockError
-      );
+      await expect(
+        mockUserRepository.findAllUserDetails(mockAllUserDetailsResult.email)
+      ).rejects.toThrow(mockError);
     });
   });
 });
