@@ -20,11 +20,10 @@ registerRoute.post(
           message: USER_VALIDATION.EMPTY_INPUTS,
         });
       }
-
       const response = await authService.register(req.body);
 
-      return res.status(STATUS_CODE.CREATED).json({
-        message: response,
+      return res.status(response.statusCode).json({
+        message: response.message,
       });
     } catch (error) {
       return next(error);

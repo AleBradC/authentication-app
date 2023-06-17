@@ -3,10 +3,11 @@ import jwt from "jsonwebtoken";
 import { Container } from "typedi";
 
 import User from "../../../models/User";
-import AuthService from "../../../services/AuthService";
+import AuthService, { RegisterResponse } from "../../../services/AuthService";
 import UsersService from "../../../services/UsersService";
 import CustomError from "../../../errorHandlers/ErrorHandler";
 import { USER_VALIDATION, SUCCESS } from "../../../utils/constants/validations";
+import { STATUS_CODE } from "../../../utils/constants/statusCode";
 import config from "../../../../config";
 
 const jwt_secret: string = config.jwt_secret as string;
@@ -14,7 +15,6 @@ const jwt_secret: string = config.jwt_secret as string;
 jest.mock("bcrypt");
 jest.mock("jsonwebtoken");
 
-// variables
 const mockUserDetails = {
   user_name: "test",
   email: "test@example.com",
@@ -45,10 +45,12 @@ describe("AuthService", () => {
 
   beforeEach(() => {
     mockUsersService = {
+      postUser: jest.fn(),
       getUserByEmail: jest.fn(),
       getUserByUserName: jest.fn(),
-      postUser: jest.fn(),
+      getUserById: jest.fn(),
       getAllUsersDetails: jest.fn(),
+      getAllUsers: jest.fn(),
     } as unknown as UsersService;
     Container.set(UsersService, mockUsersService);
 
@@ -65,12 +67,17 @@ describe("AuthService", () => {
         .spyOn(mockUsersService, "getUserByEmail")
         .mockResolvedValue(mockUserResult);
 
-      const result = await mockAuthService.register(mockUserDetails);
+      const result = (await mockAuthService.register(
+        mockUserDetails
+      )) as RegisterResponse;
 
       expect(mockUsersService.getUserByEmail).toHaveBeenCalledWith(
         mockUserDetails.email
       );
-      expect(result).toEqual(USER_VALIDATION.EMAIL_USED);
+      expect(result).toEqual({
+        statusCode: STATUS_CODE.BAD_REQUEST,
+        message: USER_VALIDATION.EMAIL_USED,
+      });
     });
 
     it("should return USER_VALIDATION.USER_NAME_USED if the username is already used", async () => {
@@ -81,7 +88,9 @@ describe("AuthService", () => {
         .spyOn(mockUsersService, "getUserByUserName")
         .mockResolvedValue(mockUserResult);
 
-      const result = await mockAuthService.register(mockUserDetails);
+      const result = (await mockAuthService.register(
+        mockUserDetails
+      )) as RegisterResponse;
 
       expect(mockUsersService.getUserByEmail).toHaveBeenCalledWith(
         mockUserDetails.email
@@ -89,7 +98,10 @@ describe("AuthService", () => {
       expect(mockUsersService.getUserByUserName).toHaveBeenCalledWith(
         mockUserDetails.user_name
       );
-      expect(result).toEqual(USER_VALIDATION.USER_NAME_USED);
+      expect(result).toEqual({
+        statusCode: STATUS_CODE.BAD_REQUEST,
+        message: USER_VALIDATION.USER_NAME_USED,
+      });
     });
 
     it("should register a new user and return the success message", async () => {
@@ -123,7 +135,10 @@ describe("AuthService", () => {
         email: mockUserDetails.email,
         password: passwordHash,
       });
-      expect(result).toEqual(SUCCESS.USER_CREATED);
+      expect(result).toEqual({
+        statusCode: STATUS_CODE.CREATED,
+        message: SUCCESS.USER_CREATED,
+      });
     });
 
     it("should throw a CustomError if an error occurs during registration", async () => {

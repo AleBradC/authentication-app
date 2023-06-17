@@ -3,6 +3,8 @@ import PostgressUserRepository from "../../../repositories/PostgressUserReposito
 import connectDB from "../../../dataSource";
 import IUser from "../../../interfaces/base/IUser";
 
+jest.mock("../../../dataSource");
+
 const userDetailsRequest = {
   user_name: "testuser",
   email: "test@example.com",
@@ -27,8 +29,6 @@ const mockAllUserDetailsResult = {
 
 const mockError = new Error("Error");
 
-jest.mock("../../../dataSource");
-
 describe("PostgressUserRepository", () => {
   let mockUserRepository: PostgressUserRepository;
 
@@ -36,7 +36,7 @@ describe("PostgressUserRepository", () => {
     // mock DB methods
     (connectDB.getRepository as jest.Mock).mockReturnValue({
       create: jest.fn().mockReturnValue({}),
-      save: jest.fn().mockReturnValue({}),
+      insert: jest.fn().mockReturnValue({}),
       findOne: jest.fn().mockReturnValue({}),
       find: jest.fn().mockReturnValue([]),
     });
@@ -55,12 +55,12 @@ describe("PostgressUserRepository", () => {
       expect(connectDB.getRepository(User).create).toHaveBeenCalledWith(
         userDetailsRequest
       );
-      expect(connectDB.getRepository(User).save).toHaveBeenCalled();
+      expect(connectDB.getRepository(User).insert).toHaveBeenCalled();
     });
 
     it("should throw an error if an error occurs during user creation", async () => {
       jest
-        .spyOn(connectDB.getRepository(User), "save")
+        .spyOn(connectDB.getRepository(User), "insert")
         .mockRejectedValue(mockError);
 
       await expect(

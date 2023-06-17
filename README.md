@@ -23,6 +23,13 @@ When an admin adds a new member in the team, the client will be notified.
 
 # Getting Started
 
+1. Docker local
+
+- Docker compose up - will start the webserver and a dockerized Postgres DB & the Server
+- Run: docker-compose -f docker-compose.local.yml up --build
+
+2. Without docker
+
 - clone the project
 - npm i
 - npm run dev or npm run watch
@@ -37,12 +44,7 @@ When an admin adds a new member in the team, the client will be notified.
 
 2. Integration tests
 
-- run integration tests against a separate DB using Docker compose
-- docker-compose.test.yml
-
-3. Docker local
-
-- Docker compose up - will start the webserver and a dockerized Postgres DB & the Server
+- Run integration tests against a separate DB using Docker compose
 - Run: docker-compose -f docker-compose.local.yml up --build
 
 # Documentation

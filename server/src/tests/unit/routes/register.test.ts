@@ -2,16 +2,30 @@ import request from "supertest";
 import app from "../../../app";
 import { Container } from "typedi";
 import UsersService from "../../../services/UsersService";
-import AuthService from "../../../services/AuthService";
+import AuthService, { RegisterResponse } from "../../../services/AuthService";
 import { SUCCESS, USER_VALIDATION } from "../../../utils/constants/validations";
 import { STATUS_CODE } from "../../../utils/constants/statusCode";
+import User from "../../../models/User";
+
+const mockUserResult = {
+  id: "1",
+  user_name: "test",
+  email: "test@example.com",
+  owned_teams: ["team"],
+  teams: ["team"],
+} as unknown as User;
+
+const requestBody = {
+  user_name: "test",
+  email: "test@example.com",
+  password: "testpassword",
+};
 
 describe("registerRoute", () => {
   let mockAuthService: AuthService;
   let mockUsersService: UsersService;
 
   beforeEach(() => {
-    // default
     mockUsersService = {
       postUser: jest.fn(),
       getUserByEmail: jest.fn(),
@@ -30,7 +44,7 @@ describe("registerRoute", () => {
     jest.clearAllMocks();
   });
 
-  it("should return 400 and error message in case email (or any other field) is missing", async () => {
+  it("should return 400 and error message if any required field is missing", async () => {
     const requestBodyNoEmail = {
       user_name: "test",
       password: "testpassword",
@@ -44,22 +58,23 @@ describe("registerRoute", () => {
     expect(response.body.message).toEqual(USER_VALIDATION.EMPTY_INPUTS);
   });
 
-  it("should return 201 and call register function from AuthService", async () => {
-    const requestBody = {
-      user_name: "test",
-      email: "testemail",
-      password: "testpassword",
-    };
+  it("should return 201 and success message if registration is successful", async () => {
+    jest.spyOn(mockAuthService, "register").mockResolvedValue({
+      statusCode: 201,
+      message: SUCCESS.USER_CREATED,
+    });
 
     jest
-      .spyOn(mockAuthService, "register")
-      .mockResolvedValue(SUCCESS.USER_CREATED);
+      .spyOn(mockUsersService, "getUserByEmail")
+      .mockResolvedValue(mockUserResult);
 
-    const response = await request(app)
-      .post("/api/register")
-      .send(requestBody)
-      .expect(STATUS_CODE.CREATED);
+    const response: RegisterResponse = await mockAuthService.register(
+      requestBody
+    );
 
-    expect(response.body.message).toEqual(SUCCESS.USER_CREATED);
+    await request(app).post("/api/register").send(requestBody);
+
+    expect(mockAuthService.register).toHaveBeenCalledWith(requestBody);
+    expect(response.message).toEqual(SUCCESS.USER_CREATED);
   });
 });

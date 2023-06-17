@@ -8,38 +8,60 @@ import UsersService from "./UsersService";
 import CustomError from "../errorHandlers/ErrorHandler";
 import { IAuthService, IUserLogin } from "../interfaces/services/IAuthService";
 import { SUCCESS, USER_VALIDATION } from "../utils/constants/validations";
+import { STATUS_CODE } from "../utils/constants/statusCode";
 
 const jwt_secret = config.jwt_secret;
+
+export interface RegisterResponse {
+  statusCode: number;
+  message: string;
+}
 @Service()
 export default class AuthService implements IAuthService {
   constructor(@Inject() private userService: UsersService) {}
 
-  register = async (details: IUser): Promise<string | null> => {
+  register = async (details: IUser): Promise<string | null | any> => {
     try {
       const { user_name, email, password } = details;
 
       const existingUserByEmail = await this.userService.getUserByEmail(email);
       if (existingUserByEmail?.email === email) {
-        return USER_VALIDATION.EMAIL_USED;
+        return {
+          statusCode: STATUS_CODE.BAD_REQUEST,
+          message: USER_VALIDATION.EMAIL_USED,
+        } as RegisterResponse;
       }
 
       const existingUserByUserName = await this.userService.getUserByUserName(
         user_name
       );
       if (existingUserByUserName?.user_name) {
-        return USER_VALIDATION.USER_NAME_USED;
+        return {
+          statusCode: STATUS_CODE.BAD_REQUEST,
+          message: USER_VALIDATION.USER_NAME_USED,
+        } as RegisterResponse;
       }
 
       const salt = await bcrypt.genSalt();
       const passwordHash = await bcrypt.hash(password, salt);
 
-      await this.userService.postUser({
+      const response = await this.userService.postUser({
         user_name: user_name,
         email: email,
         password: passwordHash,
       });
 
-      return SUCCESS.USER_CREATED;
+      if (!response) {
+        return {
+          statusCode: STATUS_CODE.BAD_REQUEST,
+          message: USER_VALIDATION.CANT_POST_USER,
+        } as RegisterResponse;
+      }
+
+      return {
+        statusCode: STATUS_CODE.CREATED,
+        message: SUCCESS.USER_CREATED,
+      } as RegisterResponse;
     } catch (error) {
       throw new CustomError(error.statusCode, error.message);
     }

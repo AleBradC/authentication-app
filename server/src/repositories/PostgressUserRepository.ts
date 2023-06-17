@@ -17,11 +17,15 @@ export default class PostgressUserRepository implements IUserRepositoryLayer {
     this.repository = connectDB.getRepository(User);
   }
 
-  createUser = async (details: IUser): Promise<User> => {
+  createUser = async (details: IUser): Promise<User | any> => {
     try {
       const newUser = this.repository.create(details);
+      const savedUser = await this.repository.insert(newUser);
 
-      return await this.repository.save(newUser);
+      if (!savedUser) {
+        return null;
+      }
+      return savedUser;
     } catch (error) {
       throw new CustomError(error.statusCode, error.message);
     }

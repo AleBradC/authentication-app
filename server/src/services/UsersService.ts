@@ -15,9 +15,11 @@ export default class UsersService implements IUsersService {
     this.repository = Container.get(PostgressUserRepository);
   }
 
-  postUser = async (details: IUser): Promise<User> => {
+  postUser = async (details: IUser): Promise<User | null> => {
     try {
-      return await this.repository.createUser(details);
+      const newUser = await this.repository.createUser(details);
+
+      return newUser;
     } catch (error) {
       throw new CustomError(error.statusCode, error.message);
     }
