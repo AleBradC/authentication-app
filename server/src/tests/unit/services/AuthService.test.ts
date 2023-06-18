@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { Container } from "typedi";
 
 import User from "../../../models/User";
-import AuthService, { RegisterResponse } from "../../../services/AuthService";
+import AuthService from "../../../services/AuthService";
 import UsersService from "../../../services/UsersService";
 import CustomError from "../../../errorHandlers/ErrorHandler";
 import { USER_VALIDATION, SUCCESS } from "../../../utils/constants/validations";
@@ -67,9 +67,7 @@ describe("AuthService", () => {
         .spyOn(mockUsersService, "getUserByEmail")
         .mockResolvedValue(mockUserResult);
 
-      const result = (await mockAuthService.register(
-        mockUserDetails
-      )) as RegisterResponse;
+      const result = await mockAuthService.register(mockUserDetails);
 
       expect(mockUsersService.getUserByEmail).toHaveBeenCalledWith(
         mockUserDetails.email
@@ -88,9 +86,7 @@ describe("AuthService", () => {
         .spyOn(mockUsersService, "getUserByUserName")
         .mockResolvedValue(mockUserResult);
 
-      const result = (await mockAuthService.register(
-        mockUserDetails
-      )) as RegisterResponse;
+      const result = await mockAuthService.register(mockUserDetails);
 
       expect(mockUsersService.getUserByEmail).toHaveBeenCalledWith(
         mockUserDetails.email
@@ -163,7 +159,10 @@ describe("AuthService", () => {
       expect(mockUsersService.getAllUsersDetails).toHaveBeenCalledWith(
         mockUserLoginDetails.email
       );
-      expect(result).toEqual(USER_VALIDATION.USER_NOT_FOUND);
+      expect(result).toEqual({
+        statusCode: STATUS_CODE.BAD_REQUEST,
+        message: USER_VALIDATION.USER_NOT_FOUND,
+      });
     });
 
     it("should return a JWT token if the login details are valid", async () => {
@@ -212,7 +211,10 @@ describe("AuthService", () => {
         mockUserLoginDetails.password,
         mockUserDetails.password
       );
-      expect(result).toEqual(USER_VALIDATION.WRONG_PASSWARD_OR_EMAIL);
+      expect(result).toEqual({
+        statusCode: STATUS_CODE.BAD_REQUEST,
+        message: USER_VALIDATION.WRONG_PASSWARD_OR_EMAIL,
+      });
     });
 
     it("should throw a CustomError if an error occurs during login", async () => {

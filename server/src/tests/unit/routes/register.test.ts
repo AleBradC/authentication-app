@@ -2,7 +2,7 @@ import request from "supertest";
 import app from "../../../app";
 import { Container } from "typedi";
 import UsersService from "../../../services/UsersService";
-import AuthService, { RegisterResponse } from "../../../services/AuthService";
+import AuthService from "../../../services/AuthService";
 import { SUCCESS, USER_VALIDATION } from "../../../utils/constants/validations";
 import { STATUS_CODE } from "../../../utils/constants/statusCode";
 import User from "../../../models/User";
@@ -60,21 +60,21 @@ describe("registerRoute", () => {
 
   it("should return 201 and success message if registration is successful", async () => {
     jest.spyOn(mockAuthService, "register").mockResolvedValue({
-      statusCode: 201,
+      statusCode: STATUS_CODE.CREATED,
       message: SUCCESS.USER_CREATED,
     });
 
-    jest
-      .spyOn(mockUsersService, "getUserByEmail")
-      .mockResolvedValue(mockUserResult);
+    jest.spyOn(mockUsersService, "getUserByEmail").mockResolvedValue(null);
+    jest.spyOn(mockUsersService, "getUserByUserName").mockResolvedValue(null);
 
-    const response: RegisterResponse = await mockAuthService.register(
-      requestBody
-    );
+    const response = await mockAuthService.register(requestBody);
 
     await request(app).post("/api/register").send(requestBody);
 
     expect(mockAuthService.register).toHaveBeenCalledWith(requestBody);
-    expect(response.message).toEqual(SUCCESS.USER_CREATED);
+    expect(response).toEqual({
+      statusCode: STATUS_CODE.CREATED,
+      message: SUCCESS.USER_CREATED,
+    });
   });
 });

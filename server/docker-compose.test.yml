@@ -1,20 +1,22 @@
 version: "3.6"
 
 services:
-  server:
+  server-test:
     build: .
-    command: sh -c './wait-for postgres-test:5432 -t 55 -- npm run dev'
+    container_name: server_auth_app_test
+    command: sh -c './wait-for postgresql-test:5432 -t 55 -- npm run dev'
     ports:
       - 8080:8080
     depends_on:
-      - postgres-test
+      - postgresql-test
 
-  postgres-test:
+  postgresql-test:
     image: postgres:14.1-alpine
-    container_name: postgres-test
+    container_name: postgresql-test
+    restart: always
     environment:
       - POSTGRES_USER=alexandraclaudiabrad
       - POSTGRES_PASSWORD=test
-      - POSTGRES_DB=test
+      - POSTGRES_DB=authentication_app_test
     volumes:
       - /tmp/postgresql_data/:/var/lib/postgresql/data

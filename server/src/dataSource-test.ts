@@ -10,11 +10,11 @@ const testConnectDB = new DataSource({
   port: config.test_db_port,
   username: config.username,
   password: config.test_db_password,
-  database: "authentication_app_test", // Use a different database name for tests
+  database: "authentication_app_test",
   entities: [User, Team],
   migrations: ["src/migrations/**/*.ts"],
   migrationsTableName: "custom_migration_table",
-  synchronize: true, // You might want to set this to `false` for production-like behavior in tests
+  synchronize: true,
   logging: false,
 });
 
