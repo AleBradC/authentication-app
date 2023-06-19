@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import config from "../../config";
+import dbConfig from "../../config/index";
 
 import { AUTH } from "../utils/constants/validations";
 import { STATUS_CODE } from "../utils/constants/statusCode";
 import CustomError from "../errorHandlers/ErrorHandler";
 
-const jwt_secret = config.jwt_secret;
+const jwt_secret = dbConfig.jwt_secret;
 
 const authorizationMiddleware = (
   req: Request,

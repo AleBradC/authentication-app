@@ -8,9 +8,9 @@ import UsersService from "../../../services/UsersService";
 import CustomError from "../../../errorHandlers/ErrorHandler";
 import { USER_VALIDATION, SUCCESS } from "../../../utils/constants/validations";
 import { STATUS_CODE } from "../../../utils/constants/statusCode";
-import config from "../../../../config";
+import dbConfig from "../../../../config/index";
 
-const jwt_secret: string = config.jwt_secret as string;
+const jwt_secret: string = dbConfig.jwt_secret as string;
 
 jest.mock("bcrypt");
 jest.mock("jsonwebtoken");

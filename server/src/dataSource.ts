@@ -1,16 +1,15 @@
 import { DataSource } from "typeorm";
-import config from "../config";
-
+import dbConfig from "../config/index";
 import Team from "./models/Team";
 import User from "./models/User";
 
 const connectDB = new DataSource({
   type: "postgres",
-  host: config.db_host,
-  port: config.db_port,
-  username: config.username,
-  password: config.db_password,
-  database: "authentication_app",
+  host: dbConfig.db_host,
+  port: dbConfig.db_port,
+  username: dbConfig.db_username,
+  password: dbConfig.db_password,
+  database: dbConfig.db_name,
   entities: [User, Team],
   migrations: ["src/migrations/**/*.ts"],
   migrationsTableName: "custom_migration_table",

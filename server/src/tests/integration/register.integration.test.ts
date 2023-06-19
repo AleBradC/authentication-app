@@ -2,14 +2,13 @@ import request from "supertest";
 import bcrypt from "bcrypt";
 import { Container } from "typedi";
 import app from "../../app";
-import connectDB from "../../dataSource";
+import testConnectDB from "../../dataSource";
 import AuthService from "../../services/AuthService";
 import UsersService from "../../services/UsersService";
 import User from "../../models/User";
 import PostgressUserRepository from "../../repositories/PostgressUserRepository";
 import { SUCCESS, USER_VALIDATION } from "../../utils/constants/validations";
 import { STATUS_CODE } from "../../utils/constants/statusCode";
-import { IAuthResponse } from "../../interfaces/services/IAuthResponse";
 
 jest.mock("bcrypt");
 jest.mock("jsonwebtoken");
@@ -36,7 +35,7 @@ describe("Registration Functionality", () => {
 
   beforeEach(() => {
     // mock DB methods
-    (connectDB.getRepository as jest.Mock).mockReturnValue({
+    (testConnectDB.getRepository as jest.Mock).mockReturnValue({
       create: jest.fn().mockReturnValue({}),
       insert: jest.fn().mockReturnValue({}),
       findOne: jest.fn().mockReturnValue({}),
@@ -100,7 +99,7 @@ describe("Registration Functionality", () => {
       .mockResolvedValue(existingUser);
 
     jest
-      .spyOn(connectDB.getRepository(User), "findOne")
+      .spyOn(testConnectDB.getRepository(User), "findOne")
       .mockResolvedValue(existingUser);
 
     await request(app).post("/api/register").send(requestBody);
@@ -143,7 +142,7 @@ describe("Registration Functionality", () => {
       .mockResolvedValue(existingUser);
 
     jest
-      .spyOn(connectDB.getRepository(User), "findOne")
+      .spyOn(testConnectDB.getRepository(User), "findOne")
       .mockResolvedValue(existingUser);
 
     await request(app).post("/api/register").send(requestBody);
@@ -195,7 +194,7 @@ describe("Registration Functionality", () => {
 
     // connect db spy
     jest
-      .spyOn(connectDB.getRepository(User), "findOne")
+      .spyOn(testConnectDB.getRepository(User), "findOne")
       .mockResolvedValue(null);
 
     // register call
@@ -218,8 +217,8 @@ describe("Registration Functionality", () => {
     await mockUserRepository.findOneByUserName(requestBody.user_name);
     await mockUserRepository.createUser(requestBody);
 
-    // connectDB calls
-    await connectDB.getRepository(User).findOne({
+    // testConnectDB calls
+    await testConnectDB.getRepository(User).findOne({
       relations: [
         "owned_teams",
         "owned_teams.members",
@@ -229,8 +228,8 @@ describe("Registration Functionality", () => {
       ],
       where: { email: requestBody.email },
     });
-    await connectDB.getRepository(User).create(requestBody);
-    await connectDB.getRepository(User).insert(requestBody);
+    await testConnectDB.getRepository(User).create(requestBody);
+    await testConnectDB.getRepository(User).insert(requestBody);
 
     // auth service expect
     expect(mockAuthService.register).toHaveBeenCalledWith(requestBody);
@@ -264,7 +263,7 @@ describe("Registration Functionality", () => {
     expect(mockUserRepository.createUser).toHaveBeenCalledWith(requestBody);
 
     // connectDb expect
-    expect(connectDB.getRepository(User).findOne).toHaveBeenCalledWith({
+    expect(testConnectDB.getRepository(User).findOne).toHaveBeenCalledWith({
       relations: [
         "owned_teams",
         "owned_teams.members",
@@ -274,9 +273,9 @@ describe("Registration Functionality", () => {
       ],
       where: { email: requestBody.email },
     });
-    expect(connectDB.getRepository(User).create).toHaveBeenCalledWith(
+    expect(testConnectDB.getRepository(User).create).toHaveBeenCalledWith(
       requestBody
     );
-    expect(connectDB.getRepository(User).insert).toHaveBeenCalled();
+    expect(testConnectDB.getRepository(User).insert).toHaveBeenCalled();
   });
 });

@@ -2,11 +2,11 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
 import authorizationMiddleware from "../../../middlewares/authorization";
-import config from "../../../../config";
+import dbConfig from "../../../../config/index";
 import { AUTH } from "../../../utils/constants/validations";
 import { STATUS_CODE } from "../../../utils/constants/statusCode";
 
-const jwt_secret = config.jwt_secret;
+const jwt_secret = dbConfig.jwt_secret;
 
 jest.mock("jsonwebtoken");
 

@@ -1,7 +1,7 @@
 import { Service, Inject, Container } from "typedi";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import config from "../../config";
+import dbConfig from "../../config/index";
 
 import IUser from "../interfaces/base/IUser";
 import UsersService from "./UsersService";
@@ -11,7 +11,7 @@ import { SUCCESS, USER_VALIDATION } from "../utils/constants/validations";
 import { STATUS_CODE } from "../utils/constants/statusCode";
 import { IAuthResponse } from "../interfaces/services/IAuthResponse";
 
-const jwt_secret = config.jwt_secret;
+const jwt_secret = dbConfig.jwt_secret;
 
 @Service()
 export default class AuthService implements IAuthService {
