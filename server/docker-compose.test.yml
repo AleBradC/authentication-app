@@ -3,8 +3,9 @@ version: "3.6"
 services:
   server-test:
     build: .
+    env_file: .env
     container_name: server_auth_app_test
-    command: sh -c './wait-for postgresql-test:5432 -t 55 -- npm run dev'
+    command: sh -c './wait-for postgresql-test:5432 -t 55 -- npm run test:integration'
     ports:
       - 8080:8080
     depends_on:
@@ -19,4 +20,4 @@ services:
       - POSTGRES_PASSWORD=test
       - POSTGRES_DB=authentication_app_test
     volumes:
-      - /tmp/postgresql_data/:/var/lib/postgresql/data
+      - /tmp/postgresql_data_test/:/var/lib/postgresql/data

@@ -1,5 +1,5 @@
 import User from "../../../models/User";
-import PostgressUserRepository from "../../../repositories/PostgressUserRepository";
+import PostgresUserRepository from "../../../repositories/PostgresUserRepository";
 import connectDB from "../../../dataSource";
 import IUser from "../../../interfaces/base/IUser";
 
@@ -29,8 +29,8 @@ const mockAllUserDetailsResult = {
 
 const mockError = new Error("Error");
 
-describe("PostgressUserRepository", () => {
-  let mockUserRepository: PostgressUserRepository;
+describe("PostgresUserRepository", () => {
+  let mockUserRepository: PostgresUserRepository;
 
   beforeEach(() => {
     // mock DB methods
@@ -41,7 +41,7 @@ describe("PostgressUserRepository", () => {
       find: jest.fn().mockReturnValue([]),
     });
 
-    mockUserRepository = new PostgressUserRepository();
+    mockUserRepository = new PostgresUserRepository();
   });
 
   afterEach(() => {

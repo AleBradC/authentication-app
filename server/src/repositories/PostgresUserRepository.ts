@@ -10,7 +10,7 @@ import IUser from "../interfaces/base/IUser";
 import IUserRepositoryLayer from "../interfaces/repository/IUserRepositoryLayer";
 
 @Service()
-export default class PostgressUserRepository implements IUserRepositoryLayer {
+export default class PostgresUserRepository implements IUserRepositoryLayer {
   private repository: Repository<User>;
 
   constructor() {

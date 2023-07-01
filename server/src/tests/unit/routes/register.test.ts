@@ -5,15 +5,6 @@ import UsersService from "../../../services/UsersService";
 import AuthService from "../../../services/AuthService";
 import { SUCCESS, USER_VALIDATION } from "../../../utils/constants/validations";
 import { STATUS_CODE } from "../../../utils/constants/statusCode";
-import User from "../../../models/User";
-
-const mockUserResult = {
-  id: "1",
-  user_name: "test",
-  email: "test@example.com",
-  owned_teams: ["team"],
-  teams: ["team"],
-} as unknown as User;
 
 const requestBody = {
   user_name: "test",

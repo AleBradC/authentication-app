@@ -1,6 +1,6 @@
 import { Container } from "typedi";
 import UsersService from "../../../services/UsersService";
-import PostgressUserRepository from "../../../repositories/PostgressUserRepository";
+import PostgresUserRepository from "../../../repositories/PostgresUserRepository";
 import IUserRepositoryLayer from "../../../interfaces/repository/IUserRepositoryLayer";
 import User from "src/models/User";
 
@@ -58,7 +58,7 @@ describe("UsersService", () => {
       findAllUserDetails: jest.fn(),
     } as unknown as IUserRepositoryLayer;
 
-    Container.set(PostgressUserRepository, mockUserRepository);
+    Container.set(PostgresUserRepository, mockUserRepository);
 
     usersService = new UsersService();
   });
