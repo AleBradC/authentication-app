@@ -66,13 +66,12 @@ describe("Routes Integration Tests", () => {
   it("should call AuthService.register and register a new user", async () => {
     const authServiceResponse = await authService.register(user);
 
-    const dataBase = await postresUserRepo.findAllUsers();
-
-    console.log(dataBase);
+    const expectedResult = await postresUserRepo.findAllUsers();
 
     expect(authServiceResponse).toEqual({
       statusCode: STATUS_CODE.CREATED,
       message: SUCCESS.USER_CREATED,
     });
+    expect(expectedResult?.length).toEqual(1);
   });
 });

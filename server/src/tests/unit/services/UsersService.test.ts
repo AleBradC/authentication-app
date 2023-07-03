@@ -45,7 +45,7 @@ const mockUserIdRequest = "123";
 const errorMessage = "Error";
 
 describe("UsersService", () => {
-  let usersService: UsersService;
+  let mockUsersService: UsersService;
   let mockUserRepository: IUserRepositoryLayer;
 
   beforeEach(() => {
@@ -60,7 +60,7 @@ describe("UsersService", () => {
 
     Container.set(PostgresUserRepository, mockUserRepository);
 
-    usersService = new UsersService();
+    mockUsersService = new UsersService();
   });
 
   afterEach(() => {
@@ -69,7 +69,7 @@ describe("UsersService", () => {
 
   describe("postUser method", () => {
     it("should create a new user and return the created user", async () => {
-      await usersService.postUser(userDetailsRequest);
+      await mockUsersService.postUser(userDetailsRequest);
 
       expect(mockUserRepository.createUser).toHaveBeenCalledWith(
         userDetailsRequest
@@ -82,7 +82,7 @@ describe("UsersService", () => {
         .mockRejectedValue(new Error(errorMessage));
 
       await expect(
-        usersService.postUser(userDetailsRequest)
+        mockUsersService.postUser(userDetailsRequest)
       ).rejects.toThrowError(errorMessage);
     });
   });
@@ -93,7 +93,7 @@ describe("UsersService", () => {
         .spyOn(mockUserRepository, "findAllUsers")
         .mockResolvedValue(mockUsersResult);
 
-      const result = await usersService.getAllUsers();
+      const result = await mockUsersService.getAllUsers();
 
       expect(mockUserRepository.findAllUsers).toHaveBeenCalled();
       expect(result).toEqual(mockUsersResult);
@@ -104,7 +104,7 @@ describe("UsersService", () => {
         .spyOn(mockUserRepository, "findAllUsers")
         .mockRejectedValue(new Error(errorMessage));
 
-      await expect(usersService.getAllUsers()).rejects.toThrowError(
+      await expect(mockUsersService.getAllUsers()).rejects.toThrowError(
         errorMessage
       );
     });
@@ -116,7 +116,7 @@ describe("UsersService", () => {
         .spyOn(mockUserRepository, "findOneByEmail")
         .mockResolvedValue(mockUserResult);
 
-      const result = await usersService.getUserByEmail(
+      const result = await mockUsersService.getUserByEmail(
         userDetailsRequest.email
       );
 
@@ -132,7 +132,7 @@ describe("UsersService", () => {
         .mockRejectedValue(new Error(errorMessage));
 
       await expect(
-        usersService.getUserByEmail(userDetailsRequest.email)
+        mockUsersService.getUserByEmail(userDetailsRequest.email)
       ).rejects.toThrowError(errorMessage);
     });
   });
@@ -143,7 +143,7 @@ describe("UsersService", () => {
         .spyOn(mockUserRepository, "findOneByUserName")
         .mockResolvedValue(mockUserResult);
 
-      const result = await usersService.getUserByUserName(
+      const result = await mockUsersService.getUserByUserName(
         userDetailsRequest.user_name
       );
 
@@ -159,7 +159,7 @@ describe("UsersService", () => {
         .mockRejectedValue(new Error(errorMessage));
 
       await expect(
-        usersService.getUserByUserName(userDetailsRequest.user_name)
+        mockUsersService.getUserByUserName(userDetailsRequest.user_name)
       ).rejects.toThrowError(errorMessage);
     });
   });
@@ -170,7 +170,7 @@ describe("UsersService", () => {
         .spyOn(mockUserRepository, "findOneById")
         .mockResolvedValue(mockUserResult);
 
-      const result = await usersService.getUserById(mockUserIdRequest);
+      const result = await mockUsersService.getUserById(mockUserIdRequest);
 
       expect(mockUserRepository.findOneById).toHaveBeenCalledWith(
         mockUserIdRequest
@@ -184,7 +184,7 @@ describe("UsersService", () => {
         .mockRejectedValue(new Error(errorMessage));
 
       await expect(
-        usersService.getUserById(mockUserIdRequest)
+        mockUsersService.getUserById(mockUserIdRequest)
       ).rejects.toThrowError(errorMessage);
     });
   });
@@ -195,7 +195,7 @@ describe("UsersService", () => {
         .spyOn(mockUserRepository, "findAllUserDetails")
         .mockResolvedValue(mockAllUserDetails);
 
-      const result = await usersService.getAllUsersDetails(
+      const result = await mockUsersService.getAllUsersDetails(
         userDetailsRequest.email
       );
 
@@ -211,7 +211,7 @@ describe("UsersService", () => {
         .mockRejectedValue(new Error(errorMessage));
 
       await expect(
-        usersService.getAllUsersDetails(userDetailsRequest.email)
+        mockUsersService.getAllUsersDetails(userDetailsRequest.email)
       ).rejects.toThrowError(errorMessage);
     });
   });
