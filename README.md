@@ -8,11 +8,12 @@ Authentication app
 - Express.js
 - TypeScript
 - TypeORM - for singleton services
-- PostgresSQL
+- PostgreSQL
 - TypeDI - for dependency injection
 - PM2
 - Docker
 - Jest
+- Supertest
 
 # Description
 
@@ -22,6 +23,13 @@ When an admin adds a new member in the team, the client will be notified.
 
 # Getting Started
 
+1. Docker local
+
+- Docker compose up - will start the webserver and a dockerized Postgres DB & the Server
+- Run: docker-compose -f docker-compose.local.yml up --build
+
+2. Without docker
+
 - clone the project
 - npm i
 - npm run dev or npm run watch
@@ -29,12 +37,18 @@ When an admin adds a new member in the team, the client will be notified.
 
 # Testing
 
-docker-compose -f docker-compose.local.yaml up --build
+1. For unit tests:
 
-<!-- - Integration tests: can run tests against a local DB with npm run test-local
-- Docker compose up - will start the webserver and a dockerized Postgres DB (Postgres DB container must run on a non-default port to not collide with local Postgres instance)
-- Easy configuration options for different use cases - run local, test local, test with docker, docker-compose -->
+- cd server
+- npm run test or npm run test:watch
+
+2. Integration tests
+
+- Run integration tests against a separate DB using Docker compose
+- Run: docker-compose -f docker-compose.local.yml up --build
 
 # Documentation
 
 - http://localhost:8080/api-docs
+
+# Postman collection

@@ -6,6 +6,12 @@ import AuthService from "../../../services/AuthService";
 import { SUCCESS, USER_VALIDATION } from "../../../utils/constants/validations";
 import { STATUS_CODE } from "../../../utils/constants/statusCode";
 
+const requestBody = {
+  user_name: "test",
+  email: "test@example.com",
+  password: "testpassword",
+};
+
 describe("registerRoute", () => {
   let mockAuthService: AuthService;
   let mockUsersService: UsersService;
@@ -29,36 +35,37 @@ describe("registerRoute", () => {
     jest.clearAllMocks();
   });
 
-  it("should return 400 and error message in case email (or any other field) is missing", async () => {
-    const reqBody = {
+  it("should return 400 and error message if any required field is missing", async () => {
+    const requestBodyNoEmail = {
       user_name: "test",
       password: "testpassword",
     };
 
     const response = await request(app)
       .post("/api/register")
-      .send(reqBody)
+      .send(requestBodyNoEmail)
       .expect(STATUS_CODE.BAD_REQUEST);
 
     expect(response.body.message).toEqual(USER_VALIDATION.EMPTY_INPUTS);
   });
 
-  it("should return 201 and call register function from AuthService", async () => {
-    const reqBody = {
-      user_name: "test",
-      email: "testemail",
-      password: "testpassword",
-    };
+  it("should return 201 and success message if registration is successful", async () => {
+    jest.spyOn(mockAuthService, "register").mockResolvedValue({
+      statusCode: STATUS_CODE.CREATED,
+      message: SUCCESS.USER_CREATED,
+    });
 
-    jest
-      .spyOn(mockAuthService, "register")
-      .mockResolvedValue(SUCCESS.USER_CREATED);
+    jest.spyOn(mockUsersService, "getUserByEmail").mockResolvedValue(null);
+    jest.spyOn(mockUsersService, "getUserByUserName").mockResolvedValue(null);
 
-    const response = await request(app)
-      .post("/api/register")
-      .send(reqBody)
-      .expect(STATUS_CODE.CREATED);
+    const response = await mockAuthService.register(requestBody);
 
-    expect(response.body.message).toEqual(SUCCESS.USER_CREATED);
+    await request(app).post("/api/register").send(requestBody);
+
+    expect(mockAuthService.register).toHaveBeenCalledWith(requestBody);
+    expect(response).toEqual({
+      statusCode: STATUS_CODE.CREATED,
+      message: SUCCESS.USER_CREATED,
+    });
   });
 });

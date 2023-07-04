@@ -1,4 +1,5 @@
 import IUser from "../base/IUser";
+import { IAuthResponse } from "./IAuthResponse";
 
 export interface IUserLogin {
   email: string;
@@ -6,6 +7,6 @@ export interface IUserLogin {
 }
 
 export interface IAuthService {
-  register: (data: IUser) => Promise<string | null>;
-  login: (data: IUserLogin) => Promise<string | null>;
+  register: (data: IUser) => Promise<IAuthResponse | null>;
+  login: (data: IUserLogin) => Promise<IAuthResponse | string | null>;
 }

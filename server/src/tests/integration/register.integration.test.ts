@@ -1,109 +1,77 @@
+import http from "http";
 import request from "supertest";
-import bcrypt from "bcrypt";
-import { Container } from "typedi";
+import dbConfig from "../../../config/index";
 import app from "../../app";
+import connectDB from "../../dataSource";
 import AuthService from "../../services/AuthService";
 import UsersService from "../../services/UsersService";
-import User from "../../models/User";
-import { SUCCESS, USER_VALIDATION } from "../../utils/constants/validations";
+import PostgresUserRepository from "../../repositories/PostgresUserRepository";
 import { STATUS_CODE } from "../../utils/constants/statusCode";
+import { SUCCESS } from "../../utils/constants/validations";
 
-jest.mock("bcrypt");
-jest.mock("jsonwebtoken");
+let server;
 
-const reqBody = {
-  user_name: "test_user",
-  email: "test_email",
-  password: "test_password",
+const user = {
+  user_name: "test",
+  email: "test@example.com",
+  password: "testpassword",
 };
 
-describe("Registration Functionality", () => {
-  let mockAuthService: AuthService;
-  let mockUsersService: UsersService;
+async function clearTables() {
+  const entities = connectDB.entityMetadatas;
 
-  beforeEach(() => {
-    mockUsersService = {
-      postUser: jest.fn(),
-      getUserByEmail: jest.fn(),
-      getUserByUserName: jest.fn(),
-      getUserById: jest.fn(),
-      getAllUsersDetails: jest.fn(),
-      getAllUsers: jest.fn(),
-    } as unknown as UsersService;
-
-    mockUsersService = new UsersService();
-    mockAuthService = new AuthService(mockUsersService);
-
-    Container.set(UsersService, mockUsersService);
-    Container.set(AuthService, mockAuthService);
+  const truncatePromises = entities.map(async (entity) => {
+    await connectDB.query(`TRUNCATE ${entity.tableName} CASCADE`);
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
+  await Promise.all(truncatePromises);
+}
+
+describe("Routes Integration Tests", () => {
+  let authService: AuthService;
+  let usersService: UsersService;
+  let postresUserRepo: PostgresUserRepository;
+
+  beforeAll(async () => {
+    server = http.createServer(app);
+    server.listen(dbConfig.port);
+
+    await connectDB.initialize();
+
+    // Create instances of services and repositories
+    usersService = new UsersService();
+    authService = new AuthService(usersService);
+    postresUserRepo = new PostgresUserRepository();
   });
 
-  it("should return 400 and error message in case inputs are empty", async () => {
-    const response = await request(app)
+  afterAll(async () => {
+    server.close();
+
+    await connectDB.destroy();
+  });
+
+  afterEach(async () => {
+    await clearTables();
+  });
+
+  it("should register a new user and return STATUS_CODE.CREATED and SUCCESS.USER_CREATED", async () => {
+    const { body, status } = await request(app)
       .post("/api/register")
-      .send({})
-      .expect(STATUS_CODE.BAD_REQUEST);
+      .send(user);
 
-    expect(response.body.message).toEqual(USER_VALIDATION.EMPTY_INPUTS);
+    expect(status).toBe(STATUS_CODE.CREATED);
+    expect(body).toEqual({ message: SUCCESS.USER_CREATED });
   });
 
-  it("should return USER_VALIDATION.EMAIL_USED if email is already used", async () => {
-    const existingUserByEmail = { email: reqBody.email } as User;
+  it("should call AuthService.register and register a new user", async () => {
+    const authServiceResponse = await authService.register(user);
 
-    jest
-      .spyOn(mockAuthService, "register")
-      .mockResolvedValue(USER_VALIDATION.EMAIL_USED);
+    const expectedResult = await postresUserRepo.findAllUsers();
 
-    jest
-      .spyOn(mockUsersService, "getUserByEmail")
-      .mockResolvedValue(existingUserByEmail);
-
-    const response = await request(app).post("/api/register").send(reqBody);
-
-    expect(response.body.message).toEqual(USER_VALIDATION.EMAIL_USED);
-  });
-
-  it("should return USER_VALIDATION.USER_NAME_USED if user name is already used", async () => {
-    const existingUserByUserName = { user_name: reqBody.user_name } as User;
-
-    jest
-      .spyOn(mockAuthService, "register")
-      .mockResolvedValue(USER_VALIDATION.USER_NAME_USED);
-
-    jest.spyOn(mockUsersService, "getUserByEmail").mockResolvedValue(null);
-
-    jest
-      .spyOn(mockUsersService, "getUserByUserName")
-      .mockResolvedValue(existingUserByUserName);
-
-    const response = await request(app).post("/api/register").send(reqBody);
-
-    expect(response.body.message).toEqual(USER_VALIDATION.USER_NAME_USED);
-  });
-
-  it("should return 201 if registration is successful and success message", async () => {
-    const passwordHash = "hashedPassword";
-
-    jest.spyOn(mockUsersService, "getUserByEmail").mockResolvedValue(null);
-    jest.spyOn(mockUsersService, "getUserByUserName").mockResolvedValue(null);
-    jest.spyOn(bcrypt, "genSalt").mockResolvedValue("salt" as never);
-    jest.spyOn(bcrypt, "hash").mockResolvedValue(passwordHash as never);
-
-    jest
-      .spyOn(mockUsersService, "postUser")
-      .mockResolvedValue(Promise.resolve({} as User));
-
-    await mockAuthService.register(reqBody);
-
-    const response = await request(app)
-      .post("/api/register")
-      .send(reqBody)
-      .expect(STATUS_CODE.CREATED);
-
-    expect(response.body.message).toEqual(SUCCESS.USER_CREATED);
+    expect(authServiceResponse).toEqual({
+      statusCode: STATUS_CODE.CREATED,
+      message: SUCCESS.USER_CREATED,
+    });
+    expect(expectedResult?.length).toEqual(1);
   });
 });

@@ -10,18 +10,22 @@ import IUser from "../interfaces/base/IUser";
 import IUserRepositoryLayer from "../interfaces/repository/IUserRepositoryLayer";
 
 @Service()
-export default class PostgressUserRepository implements IUserRepositoryLayer {
+export default class PostgresUserRepository implements IUserRepositoryLayer {
   private repository: Repository<User>;
 
   constructor() {
     this.repository = connectDB.getRepository(User);
   }
 
-  createUser = async (details: IUser): Promise<User> => {
+  createUser = async (details: IUser): Promise<User | any> => {
     try {
       const newUser = this.repository.create(details);
+      const savedUser = await this.repository.insert(newUser);
 
-      return await this.repository.save(newUser);
+      if (!savedUser) {
+        return null;
+      }
+      return savedUser;
     } catch (error) {
       throw new CustomError(error.statusCode, error.message);
     }

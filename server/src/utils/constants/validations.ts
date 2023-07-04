@@ -11,6 +11,7 @@ export enum USER_VALIDATION {
   WRONG_PASSWARD_OR_EMAIL = "Wrong passward or email",
   EMPTY_INPUTS = "All inputs are required",
   NO_USERS = "There are no users",
+  CANT_POST_USER = "Sorry, something came up",
 }
 
 export enum TEAM_VALIDATION {

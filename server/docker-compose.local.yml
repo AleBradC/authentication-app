@@ -4,15 +4,17 @@ services:
   server:
     build: .
     container_name: server_auth_app
-    command: sh -c './wait-for postgres-local:5432 -t 55 -- npm run dev'
+    command: sh -c './wait-for postgresql-local:5432 -t 55 -- npm run dev'
     ports:
       - 8080:8080
     depends_on:
-      - postgres-local
+      - postgresql-local
 
-  postgres-local:
+  postgresql-local:
     image: postgres:14.1-alpine
-    container_name: postgres-local
+    container_name: postgresql-local
+    ports:
+      - 5432:5432
     restart: always
     environment:
       - POSTGRES_USER=alexandraclaudiabrad

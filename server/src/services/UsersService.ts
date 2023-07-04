@@ -1,22 +1,25 @@
 import { Service, Container } from "typedi";
 
-import PostgressUserRepository from "../repositories/PostgressUserRepository";
+import PostgresUserRepository from "../repositories/PostgresUserRepository";
 import IUsersService from "../interfaces/services/IUsersService";
 import IUser from "../interfaces/base/IUser";
 import UserDTO from "../interfaces/DTOs/UserDTO";
 import IUserRepositoryLayer from "../interfaces/repository/IUserRepositoryLayer";
+import User from "../models/User";
 import CustomError from "../errorHandlers/ErrorHandler";
 @Service()
 export default class UsersService implements IUsersService {
   private repository: IUserRepositoryLayer;
 
   constructor() {
-    this.repository = Container.get(PostgressUserRepository);
+    this.repository = Container.get(PostgresUserRepository);
   }
 
-  postUser = async (details: IUser) => {
+  postUser = async (details: IUser): Promise<User | null> => {
     try {
-      return await this.repository.createUser(details);
+      const newUser = await this.repository.createUser(details);
+
+      return newUser;
     } catch (error) {
       throw new CustomError(error.statusCode, error.message);
     }

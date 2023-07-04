@@ -5,6 +5,7 @@ import { Container } from "typedi";
 import AuthService from "../services/AuthService";
 import { USER_VALIDATION } from "../utils/constants/validations";
 import { STATUS_CODE } from "../utils/constants/statusCode";
+import { IAuthResponse } from "../interfaces/services/IAuthResponse";
 
 const registerRoute = express.Router();
 
@@ -20,11 +21,10 @@ registerRoute.post(
           message: USER_VALIDATION.EMPTY_INPUTS,
         });
       }
+      const response = (await authService.register(req.body)) as IAuthResponse;
 
-      const response = await authService.register(req.body);
-
-      return res.status(STATUS_CODE.CREATED).json({
-        message: response,
+      return res.status(response.statusCode).json({
+        message: response.message,
       });
     } catch (error) {
       return next(error);

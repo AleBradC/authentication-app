@@ -1,7 +1,7 @@
 import http from "http";
-import config from "../config";
 import app from "./app";
 import connectDB from "./dataSource";
+import dbConfig from "../config/index";
 
 const server = http.createServer(app);
 
@@ -9,16 +9,18 @@ const server = http.createServer(app);
 connectDB
   .initialize()
   .then(() => {
-    console.log("1. Connection to Postgres database has been initialized!");
+    console.log(
+      `1. Connection to Postgresql database has been initialized on host ${dbConfig.db_host}:${dbConfig.db_port}`
+    );
 
     // Start the server
-    server.listen(config.port, () => {
-      console.log(`2. Listening on server ${config.port}`);
+    server.listen(dbConfig.port, () => {
+      console.log(`2. Listening on server ${dbConfig.port}`);
     });
   })
   .catch((error) => {
     console.error(
-      `3. Error during Postgres initialization on host ${config.db_host}:${config.db_port}!`,
+      `3. Error during Postgres initialization on host ${dbConfig.db_host}:${dbConfig.db_port}!`,
       error
     );
   });
