@@ -5,13 +5,13 @@
   "main": "./src/server.ts",
   "type": "commonjs",
   "scripts": {
+    "dev": "docker-compose -f docker-compose.local.yml up --build",
     "start": "ts-node src/server.ts",
-    "watch": "nodemon --watch src/server.ts",
-    "dev": "ts-node src/server.ts",
     "pm2": "pm2 start src/server.ts --interpreter=/usr/local/bin/node",
-    "test": "jest --detectOpenHandles",
-    "test:watch": "jest --coverage --watch --detectOpenHandles --watchAll --no-cache",
+    "test:unit": "jest 'src/tests/unit' --coverage --watch --detectOpenHandles --watchAll --no-cache",
     "test:integration": "jest 'src/tests/integration' --detectOpenHandles",
+    "docker-up": "docker-compose up -d",
+    "docker-down": "docker-compose down",
     "typeorm": "typeorm-ts-node-commonjs",
     "generate": "typeorm migration:create src/migrations/PostRefactoring"
   },
