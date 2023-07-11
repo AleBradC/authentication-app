@@ -16,5 +16,4 @@ COPY . /app
 # Others 
 RUN chmod 777 ./wait-for
 
-# Expose port 3000 for the Express server
 EXPOSE 8080
