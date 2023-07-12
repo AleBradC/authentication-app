@@ -1,0 +1,367 @@
+{
+	"info": {
+		"_postman_id": "fbd066d9-1781-412a-a5bd-1cda01b16f1f",
+		"name": "auth-app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Teams",
+			"item": [
+				{
+					"name": "createTeam",
+					"_postman_id": "83134bf4-f356-479f-b11e-aba898098dd5",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"name\": \"Cat team\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{local}}/api/team"
+					},
+					"response": []
+				},
+				{
+					"name": "get all teams",
+					"_postman_id": "cf0cdd53-70ad-47a3-962e-a3660c1e9ca4",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{local}}/api/teams"
+					},
+					"response": []
+				},
+				{
+					"name": "get team",
+					"_postman_id": "a2b9340b-7314-4755-bd20-cc54a630948d",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"TEAM KITU\",\n    \"admin\": \"KITU\",\n    \"members\": [\"Zelda\", \"Kitu\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{local}}/api/teams/2"
+					},
+					"response": []
+				},
+				{
+					"name": "update team name",
+					"_postman_id": "de50003d-c06b-450c-b164-5b84ea5e6882",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Cats team\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{local}}/api/team/2"
+					},
+					"response": []
+				},
+				{
+					"name": "add member",
+					"_postman_id": "104d9e3d-9e60-4dfd-8104-a65db76710f6",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{local}}/api/team/2/member/1"
+					},
+					"response": []
+				},
+				{
+					"name": "delete member from team",
+					"_postman_id": "6e1bb8f6-f0c2-4fc9-8c6b-2a1a0da563db",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/api/team/2/member/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"team",
+								"2",
+								"member",
+								"1"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"type": "text",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete team",
+					"_postman_id": "352df2d0-47b5-4095-b883-32ac85e15a44",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{local}}/api/teams/2"
+					},
+					"response": []
+				}
+			],
+			"_postman_id": "89f2bfc3-597f-49f6-8a79-2b7ade0571d6"
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "register",
+					"_postman_id": "ed84cc29-52fd-4044-9117-edde2de2cbe7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_name\": \"Alexx\",\n    \"email\": \"alexxx@gmail.com\",\n    \"password\": \"P@rola03\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{local}}/api/register"
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f33f1589-5e75-4743-b0c7-dae680f62536",
+								"exec": [
+									"const response = pm.response.json()",
+									"",
+									"pm.environment.set('access_token', response.access_token)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7cafa7d3-d80d-4423-a59d-6852427fe983",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "b55d76d9-9841-43a3-b630-9459db8b4a60",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"alexxx@gmail.com\",\n    \"password\": \"P@rola03\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{local}}/api/login"
+					},
+					"response": []
+				},
+				{
+					"name": "get users",
+					"_postman_id": "11e76676-efb6-4b89-b5e9-12f6f5c84842",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{local}}/api/users"
+					},
+					"response": []
+				},
+				{
+					"name": "get user",
+					"_postman_id": "4ce8f902-7be2-4aa8-8f6e-ac93d50d01f2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{local}}/api/users/1"
+					},
+					"response": []
+				}
+			],
+			"_postman_id": "0ce6e934-7f1a-42fd-a445-ab7978392f7f"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "c79cfdb5-6415-4d3e-bcbb-d1f9af701b02",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "19d17eee-18b3-479d-b180-17a27bfe1cee",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "636e3763-424e-4017-858e-9b1b5073dcf9",
+			"key": "local",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}
