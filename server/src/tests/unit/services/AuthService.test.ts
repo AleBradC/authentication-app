@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { Container } from "typedi";
 
@@ -12,7 +12,7 @@ import dbConfig from "../../../../config/index";
 
 const jwt_secret: string = dbConfig.jwt_secret as string;
 
-jest.mock("bcrypt");
+jest.mock("bcryptjs");
 jest.mock("jsonwebtoken");
 
 const mockUserDetails = {

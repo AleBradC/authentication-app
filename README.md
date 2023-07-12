@@ -23,29 +23,28 @@ When an admin adds a new member in the team, the client will be notified.
 
 # Getting Started
 
-1. Docker local
+Setup:
 
-- Docker compose up - will start the webserver and a dockerized Postgres DB & the Server
-- Run: docker-compose -f docker-compose.local.yml up --build
-
-2. Without docker
-
+- install docker for desktop
 - clone the project
 - npm i
-- npm run dev or npm run watch
-- npm run pm2 - to run the project with pm2
+- cd server & cd client and run npm i
+
+Run the application:
+
+- npm run dev -> to run in a docker container (Docker compose up - will start the Server and Postgres DB, both of them are dockerized)
 
 # Testing
 
-1. For unit tests:
+1. Unit tests:
 
 - cd server
-- npm run test or npm run test:watch
+- npm run test:unit
 
-2. Integration tests
+2. Integration tests (against a separate DB using Docker compose)
 
-- Run integration tests against a separate DB using Docker compose
-- Run: docker-compose -f docker-compose.local.yml up --build
+- cd server
+- npm run test:integration
 
 # Documentation
 
