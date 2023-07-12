@@ -1,5 +1,5 @@
 import { Service, Inject, Container } from "typedi";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dbConfig from "../../config/index";
 

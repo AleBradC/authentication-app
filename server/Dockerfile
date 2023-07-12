@@ -11,10 +11,9 @@ RUN npm install
 RUN apt-get -q update && apt-get -qy install netcat
 
 # Copy the rest of the application code to the container
-COPY . .
+COPY . /app
 
 # Others 
 RUN chmod 777 ./wait-for
 
-# Expose port 3000 for the Express server
 EXPOSE 8080

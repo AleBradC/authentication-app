@@ -5,13 +5,13 @@
   "main": "./src/server.ts",
   "type": "commonjs",
   "scripts": {
-    "start": "ts-node src/server.ts",
-    "watch": "nodemon --watch src/server.ts",
-    "dev": "ts-node src/server.ts",
+    "dev": "docker-compose -f docker-compose.local.yml up --build",
+    "start": "nodemon --exec ts-node src/server.ts",
     "pm2": "pm2 start src/server.ts --interpreter=/usr/local/bin/node",
-    "test": "jest --detectOpenHandles",
-    "test:watch": "jest --coverage --watch --detectOpenHandles --watchAll --no-cache",
+    "test:unit": "jest 'src/tests/unit' --coverage --detectOpenHandles --no-cache",
     "test:integration": "jest 'src/tests/integration' --detectOpenHandles",
+    "docker-up": "docker-compose up -d",
+    "docker-down": "docker-compose down",
     "typeorm": "typeorm-ts-node-commonjs",
     "generate": "typeorm migration:create src/migrations/PostRefactoring"
   },
@@ -43,12 +43,10 @@
     ]
   },
   "dependencies": {
-    "@types/bcryptjs": "^2.4.2",
     "@types/body-parser": "^1.19.2",
     "@types/cors": "^2.8.13",
     "@types/helmet": "^4.0.0",
     "@types/jsonwebtoken": "^9.0.1",
-    "bcrypt": "^5.1.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "class-validator": "^0.14.0",
@@ -65,7 +63,7 @@
     "typeorm": "^0.3.12"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.0",
+    "@types/bcryptjs": "^2.4.2",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.1",
     "@types/node": "^18.15.5",
@@ -79,7 +77,7 @@
     "eslint-plugin-n": "^15.6.1",
     "eslint-plugin-promise": "^6.1.1",
     "jest": "^29.5.0",
-    "nodemon": "^2.0.21",
+    "nodemon": "^2.0.22",
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
