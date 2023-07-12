@@ -1,7 +1,7 @@
 import { Service, Container } from "typedi";
 
 import Team from "../models/Team";
-import PostgressTeamRepository from "../repositories/PostgressTeamRepository";
+import PostgresTeamRepository from "../repositories/PostgresTeamRepository";
 import ITeamService from "../interfaces/services/ITeamService";
 import ITeam from "../interfaces/base/ITeam";
 import TeamDTO from "../interfaces/DTOs/TeamDTO";
@@ -11,7 +11,7 @@ import IUser from "src/interfaces/base/IUser";
 
 @Service()
 export default class TeamService implements ITeamService {
-  private repository = Container.get(PostgressTeamRepository);
+  private repository = Container.get(PostgresTeamRepository);
 
   postTeam = async (details: ITeam): Promise<Team> => {
     try {
