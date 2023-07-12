@@ -1,32 +1,47 @@
 import { useEffect, useState } from "react";
+// import { Routes, Route } from "react-router-dom";
+
+import LoginPage from "./pages/Login";
+import RegisterPage from "./pages/Register";
+import TeamPage from "./pages/Team";
 
 function App() {
-  const [notification, setNotification] = useState("");
+  // const [notification, setNotification] = useState("");
 
-  useEffect(() => {
-    const source = new EventSource("http://localhost:8080/api/stream");
+  // useEffect(() => {
+  //   const source = new EventSource("http://localhost:8080/api/stream");
 
-    source.onopen = () => {
-      console.log("connection to stream has been opened");
-    };
+  //   source.onopen = () => {
+  //     console.log("connection to stream has been opened");
+  //   };
 
-    source.onerror = (error) => {
-      console.log("An error has occurred while receiving stream", error);
-    };
+  //   source.onerror = (error) => {
+  //     console.log("An error has occurred while receiving stream", error);
+  //   };
 
-    source.onmessage = (stream) => {
-      console.log("received stream", stream);
+  //   source.onmessage = (stream) => {
+  //     console.log("received stream", stream);
 
-      setNotification(stream.data);
-    };
+  //     setNotification(stream.data);
+  //   };
 
-    // Clean up event listeners on component unmount
-    return () => {
-      source.close();
-    };
-  });
+  //   // Clean up event listeners on component unmount
+  //   return () => {
+  //     source.close();
+  //   };
+  // });
 
-  return <div className="App">{notification}</div>;
+  return (
+    <div className="App">
+      <LoginPage />
+      {/* <Routes>
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/team" element={<TeamPage />} />
+      </Routes> */}
+      {/* {notification} */}
+    </div>
+  );
 }
 
 export default App;
