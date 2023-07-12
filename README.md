@@ -64,5 +64,3 @@ Run the application:
 # Documentation
 
 - http://localhost:8080/api-docs
-
-# Postman collection
