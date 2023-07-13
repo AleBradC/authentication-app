@@ -15,7 +15,7 @@ import { eventRoute } from "./routes/event";
 import AuthService from "./services/AuthService";
 import TeamService from "./services/TeamService";
 import UsersService from "./services/UsersService";
-import PostgressTeamRepository from "./repositories/PostgressTeamRepository";
+import PostgresTeamRepository from "./repositories/PostgresTeamRepository";
 import PostgresUserRepository from "./repositories/PostgresUserRepository";
 import errorHandlerMiddleware from "./middlewares/errorHandler";
 
@@ -23,7 +23,7 @@ const app: Application = express();
 Container.set("IAuthService", AuthService);
 Container.set("IUsersService", UsersService);
 Container.set("ITeamService", TeamService);
-Container.set("ITeamRepositoryLayer", PostgressTeamRepository);
+Container.set("ITeamRepositoryLayer", PostgresTeamRepository);
 Container.set("IUserRepositoryLayer", PostgresUserRepository);
 
 // Parser

@@ -12,7 +12,7 @@ import UserDTO from "../interfaces/DTOs/UserDTO";
 import CustomError from "../errorHandlers/ErrorHandler";
 
 @Service()
-export default class PostgressTeamRepository implements ITeamRepositoryLayer {
+export default class PostgresTeamRepository implements ITeamRepositoryLayer {
   private repository: Repository<Team>;
   private user_repository: Repository<User>;
   private db_connection: DataSource;
