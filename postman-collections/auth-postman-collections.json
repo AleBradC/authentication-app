@@ -229,7 +229,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"user_name\": \"Alexx\",\n    \"email\": \"alexxx@gmail.com\",\n    \"password\": \"P@rola03\"\n}",
+							"raw": "{\n    \"user_name\": \"Asadsalexx\",\n    \"email\": \"sdsadas@gmail.com\",\n    \"password\": \"Psadsadsa@rola03\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -358,7 +358,7 @@
 	],
 	"variable": [
 		{
-			"id": "6a7a0815-f6de-4c12-bf78-70da1d1caa03",
+			"id": "c152d4e1-9b9e-4289-a468-7ba4bb8ce0b1",
 			"key": "local",
 			"value": "http://localhost:8080",
 			"type": "string"
