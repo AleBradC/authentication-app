@@ -19,7 +19,7 @@ services:
     container_name: postgresql-test
     restart: always
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_USER=${USERNAME}
       - POSTGRES_PASSWORD={POSTGRES_PASSWORD}
       - POSTGRES_DB=authentication_app_test
     volumes:
