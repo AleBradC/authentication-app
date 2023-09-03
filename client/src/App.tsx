@@ -1,4 +1,9 @@
 import { useEffect, useState } from "react";
+// import { Routes, Route } from "react-router-dom";
+
+// import LoginPage from "./pages/Login";
+// import RegisterPage from "./pages/Register";
+// import TeamPage from "./pages/Team";
 
 function App() {
   const [notification, setNotification] = useState("");
