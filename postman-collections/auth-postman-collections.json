@@ -326,7 +326,7 @@
 								}
 							}
 						},
-						"url": "{{local}}/api/users/1"
+						"url": "{{local}}/api/users/4"
 					},
 					"response": []
 				}
@@ -358,7 +358,7 @@
 	],
 	"variable": [
 		{
-			"id": "b6855353-fdc5-4ef6-9314-17641cbd7253",
+			"id": "6a7a0815-f6de-4c12-bf78-70da1d1caa03",
 			"key": "local",
 			"value": "http://localhost:8080",
 			"type": "string"
