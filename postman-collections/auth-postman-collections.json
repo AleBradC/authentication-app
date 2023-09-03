@@ -275,7 +275,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"user_name\": \"Asadsalexx\",\n    \"email\": \"sdsadas@gmail.com\",\n}",
+							"raw": "{\n    \"user_name\": \"Asadsalexx\",\n    \"email\": \"sdsadas@gmail.com\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -358,7 +358,7 @@
 	],
 	"variable": [
 		{
-			"id": "0317bb1d-1575-42c5-a7d4-62a632e9bbd4",
+			"id": "9fdbbab6-a846-42aa-8ed8-c85519f35abd",
 			"key": "local",
 			"value": "http://localhost:8080",
 			"type": "string"
