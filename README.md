@@ -33,21 +33,28 @@ When an admin adds a new member in the team, the client will be notified.
 
 Setup:
 
-1. Backend:
-
 - install postgresql
 - install docker for desktop
 - clone the project
-- cd server & npm i
-- add .env file with the following details: NODE_ENV=development, PORT=8080, DB_PORT=5432, DB_PASSWORD=your_password, USERNAME=your_postgresql_password, LOCAL_DB_HOST=postgresql-local and also add TEST_DB_HOST=postgresql-test (will be useful for integration tests), ACCESS_TOKEN_SECRET (generate a random secret key)
+- npm install -> will install all the client & server dependencies
 
-2. Frontend:
+1. Backend:
+
+<!-- 1. Backend:
+
+- install postgresql
+- install docker for desktop
+- clone the project -->
+<!-- - cd server & npm i
+- add .env file with the following details: NODE_ENV=development, PORT=8080, DB_PORT=5432, DB_PASSWORD=your_password, USERNAME=your_postgresql_password, LOCAL_DB_HOST=postgresql-local and also add TEST_DB_HOST=postgresql-test (will be useful for integration tests), ACCESS_TOKEN_SECRET (generate a random secret key) -->
+
+<!-- 2. Frontend:
 
 - cd client and run npm i
 
 Run the application:
 
-- npm run dev -> to run the application in a docker container, docker compose up - will start the Server and Postgresql database
+- npm run dev -> to run the application in a docker container, docker compose up - will start the Server and Postgresql database -->
 
 # Testing
 

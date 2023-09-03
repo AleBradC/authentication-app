@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "install": "cd server && npm install && cd ../client && npm install",
+    "start:docker": "docker-compose -f docker-compose.local.yml up --build",
     "start": "npm run server & npm run client",
     "server": "npm run watch --prefix server",
     "client": "npm start --prefix client",
-    "watch": "npm run server & npm run client",
     "test": "npm run test:unit --prefix server"
   },
   "keywords": [],
