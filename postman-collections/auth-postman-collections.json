@@ -10,7 +10,7 @@
 			"item": [
 				{
 					"name": "createTeam",
-					"_postman_id": "83134bf4-f356-479f-b11e-aba898098dd5",
+					"id": "83134bf4-f356-479f-b11e-aba898098dd5",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -38,7 +38,7 @@
 				},
 				{
 					"name": "get all teams",
-					"_postman_id": "cf0cdd53-70ad-47a3-962e-a3660c1e9ca4",
+					"id": "cf0cdd53-70ad-47a3-962e-a3660c1e9ca4",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -60,7 +60,7 @@
 				},
 				{
 					"name": "get team",
-					"_postman_id": "a2b9340b-7314-4755-bd20-cc54a630948d",
+					"id": "a2b9340b-7314-4755-bd20-cc54a630948d",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -82,7 +82,7 @@
 				},
 				{
 					"name": "update team name",
-					"_postman_id": "de50003d-c06b-450c-b164-5b84ea5e6882",
+					"id": "de50003d-c06b-450c-b164-5b84ea5e6882",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -110,7 +110,7 @@
 				},
 				{
 					"name": "add member",
-					"_postman_id": "104d9e3d-9e60-4dfd-8104-a65db76710f6",
+					"id": "104d9e3d-9e60-4dfd-8104-a65db76710f6",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -138,7 +138,7 @@
 				},
 				{
 					"name": "delete member from team",
-					"_postman_id": "6e1bb8f6-f0c2-4fc9-8c6b-2a1a0da563db",
+					"id": "6e1bb8f6-f0c2-4fc9-8c6b-2a1a0da563db",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -186,7 +186,7 @@
 				},
 				{
 					"name": "delete team",
-					"_postman_id": "352df2d0-47b5-4095-b883-32ac85e15a44",
+					"id": "352df2d0-47b5-4095-b883-32ac85e15a44",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -213,14 +213,14 @@
 					"response": []
 				}
 			],
-			"_postman_id": "89f2bfc3-597f-49f6-8a79-2b7ade0571d6"
+			"id": "89f2bfc3-597f-49f6-8a79-2b7ade0571d6"
 		},
 		{
 			"name": "Users",
 			"item": [
 				{
 					"name": "register",
-					"_postman_id": "ed84cc29-52fd-4044-9117-edde2de2cbe7",
+					"id": "ed84cc29-52fd-4044-9117-edde2de2cbe7",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -266,7 +266,7 @@
 							}
 						}
 					],
-					"_postman_id": "b55d76d9-9841-43a3-b630-9459db8b4a60",
+					"id": "b55d76d9-9841-43a3-b630-9459db8b4a60",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -288,7 +288,7 @@
 				},
 				{
 					"name": "get users",
-					"_postman_id": "11e76676-efb6-4b89-b5e9-12f6f5c84842",
+					"id": "11e76676-efb6-4b89-b5e9-12f6f5c84842",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -310,7 +310,7 @@
 				},
 				{
 					"name": "get user",
-					"_postman_id": "4ce8f902-7be2-4aa8-8f6e-ac93d50d01f2",
+					"id": "4ce8f902-7be2-4aa8-8f6e-ac93d50d01f2",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -331,7 +331,7 @@
 					"response": []
 				}
 			],
-			"_postman_id": "0ce6e934-7f1a-42fd-a445-ab7978392f7f"
+			"id": "0ce6e934-7f1a-42fd-a445-ab7978392f7f"
 		}
 	],
 	"event": [
@@ -358,7 +358,7 @@
 	],
 	"variable": [
 		{
-			"id": "6aec0f41-4aea-428e-af66-3d1c88450d6f",
+			"id": "b6855353-fdc5-4ef6-9314-17641cbd7253",
 			"key": "local",
 			"value": "http://localhost:8080",
 			"type": "string"
