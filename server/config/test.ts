@@ -7,8 +7,8 @@ export default {
 
   // DATA BASE
   db_port: Number(process.env.DB_PORT),
-  db_host: process.env.TEST_DB_HOST,
-  db_password: process.env.DB_PASSWORD,
-  db_username: process.env.USERNAME,
-  db_name: "authentication_app_test",
+  db_host: "postgresql-test",
+  db_password: "postgres",
+  db_username: "postgres",
+  db_name: "postgres",
 };

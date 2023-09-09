@@ -31,29 +31,25 @@ When an admin adds a new member in the team, the client will be notified.
 
 ## Getting Started
 
-A. Run the application locally, without Docker:
+Follow these steps to get started with the project:
+Without installing Postgresql
 
 1. Clone the project
 2. Run `npm install`, to install all the server & client dependencies
-3. Install postgresql and a tool for DB management like Postico 2
+3. `cd server`
 4. Create an `.env` file in the server directory and add the following:
 
    ```env
     PORT=8080
     DB_PORT=5432
 
-    LOCAL_DB_HOST=localhost
-
     ACCESS_TOKEN_SECRET = <your_secret_token>
-
-    USERNAME = <your_postgresql_username>
-    DB_PASSWORD = <your_db_password>
    ```
 
-5. Make sure DB is setup and is running
-6. To start the application run `npm run watch`, this will start both server and client
+   All the password, db name or username are already added in the files because the application will be running inside a docker container and there is no need to install any tool locally
 
-B. Run the application in a docker container
+5. run `start:docker` to run the server & data base in a docker container
+6. `cd client` & run `npm run start` to start the client (in progress)
 
 # Testing
 

@@ -6,10 +6,7 @@
   "scripts": {
     "install": "cd server && npm install && cd ../client && npm install",
     "install-server": "npm install --prefix server",
-    "install-client": "npm install --prefix client",
-    "server": "npm run watch --prefix server",
-    "client": "npm start --prefix client",
-    "watch": "npm run server & npm run client"
+    "install-client": "npm install --prefix client"
   },
   "keywords": [],
   "author": "",
