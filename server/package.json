@@ -5,15 +5,15 @@
   "main": "./src/server.ts",
   "type": "commonjs",
   "scripts": {
-    "dev": "docker-compose -f docker-compose.local.yml up --build",
     "start": "nodemon --exec ts-node src/server.ts",
+    "start:docker": "docker-compose -f docker-compose.local.yml up --build",
     "test:unit": "jest 'src/tests/unit' --coverage --detectOpenHandles --no-cache",
     "test:integration": "docker-compose -f docker-compose.test.yml up --build",
     "test:compose": "NODE_ENV=test && jest 'src/tests/integration' --detectOpenHandles",
-    "docker-up": "docker-compose up -d",
-    "docker-down": "docker-compose down",
     "typeorm": "typeorm-ts-node-commonjs",
-    "generate": "typeorm migration:create src/migrations/PostRefactoring"
+    "generate": "typeorm migration:create src/migrations/PostRefactoring",
+    "docker-up": "docker-compose up -d",
+    "docker-down": "docker-compose down"
   },
   "keywords": [],
   "author": "",

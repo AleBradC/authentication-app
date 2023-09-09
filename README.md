@@ -1,8 +1,6 @@
-# Project Title
+# Authentication app
 
-Authentication app
-
-# Dependencies
+## Dependencies
 
 Backend:
 
@@ -20,47 +18,51 @@ Backend:
 
 Frontend:
 
+- in progress
+
 - React
 - React router
 
-# Description
+## Description
 
 Application where a user can register and login.
 When a user creates a team he will be the admin of that team, he can updated the team, add members, remove members and also delete the team.
 When an admin adds a new member in the team, the client will be notified.
 
-# Getting Started
+## Getting Started
 
-Setup:
+Follow these steps to get started with the project:
+Without installing Postgresql
 
-1. Backend:
+1. Clone the project
+2. Run `npm install`, to install all the server & client dependencies
+3. `cd server`
+4. Create an `.env` file in the server directory and add the following:
 
-- install postgresql
-- install docker for desktop
-- clone the project
-- cd server & npm i
-- add .env file with the following details: NODE_ENV=development, PORT=8080, DB_PORT=5432, DB_PASSWORD=your_password, USERNAME=your_postgresql_password, LOCAL_DB_HOST=postgresql-local and also add TEST_DB_HOST=postgresql-test (will be useful for integration tests), ACCESS_TOKEN_SECRET (generate a random secret key)
+   ```env
+    PORT=8080
+    DB_PORT=5432
 
-2. Frontend:
+    ACCESS_TOKEN_SECRET = <your_secret_token>
+   ```
 
-- cd client and run npm i
+   All the password, db name or username are already added in the files because the application will be running inside a docker container and there is no need to install any tool locally
 
-Run the application:
-
-- npm run dev -> to run the application in a docker container, docker compose up - will start the Server and Postgresql database
+5. run `start:docker` to run the server & data base in a docker container
+6. `cd client` & run `npm run start` to start the client (in progress)
 
 # Testing
 
 1. Unit tests:
 
-- cd server
-- npm run test:unit
+- `cd server`
+- `npm run test:unit`
 
 2. Integration tests (against a separate DB using Docker compose):
 
-- cd server
-- npm run test:integration - docker compose up - will start the Server and Postgres DB, in a different docker container created for the integration tests
+- `cd server`
+- `npm run test:integration` - docker compose up - will start the Server and Postgres DB, in a different docker container created for the integration tests
 
-# Documentation
+## Documentation
 
 - http://localhost:8080/api-docs

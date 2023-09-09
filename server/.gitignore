@@ -5,5 +5,6 @@ eslintrc
 /.env
 
 coverage
+./coverage
 
 .DS_Store
